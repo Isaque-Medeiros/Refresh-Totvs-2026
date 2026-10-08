@@ -1608,6 +1608,65 @@ body.totvs-theme {
     }
 }
 
+/* ------------------------ Login por e-mail (dispositivo) ------------------------ */
+
+#loginFields {
+    display: grid;
+    gap: 16px;
+}
+
+.login-device {
+    display: grid;
+    gap: 8px;
+    padding: 18px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    background: rgba(9, 24, 40, 0.72);
+    text-align: center;
+}
+
+.login-device-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+}
+
+.login-device strong {
+    font-size: 1.2rem;
+    color: var(--cyan);
+}
+
+.login-device .stack-actions {
+    justify-content: center;
+}
+
+/* --------------------------- Usuarios (gestao) --------------------------- */
+
+.user-form-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1.6fr 0.9fr auto;
+    gap: 12px;
+    align-items: end;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
+.user-form-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+    .user-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Impressao / PDF: pagina sem margem, sem cabecalho e sem rodape do navegador.
    Combinado com --kiosk-printing no start.bat, o PDF e gerado direto. */
 @page {

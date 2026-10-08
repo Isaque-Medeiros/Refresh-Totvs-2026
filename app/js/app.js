@@ -5,7 +5,8 @@ const TOTVSApp = (() => {
         visibleMachines: [],
         timerViewInterval: null,
         localClockInterval: null,
-        toastTimeout: null
+        toastTimeout: null,
+        lastEmail: ''
     };
 
     const MANUAL_STEP_INPUTS = [
@@ -150,17 +151,42 @@ const TOTVSApp = (() => {
         }
     }
 
-    function populateLoginUsers() {
+    // Preenche a lista de sugestoes de e-mail (autocompleta, mas deixa digitar).
+    function populateLoginEmails() {
         syncState();
-        const select = el('loginUsername');
-        if (!select) {
+        const datalist = el('loginEmailList');
+        if (!datalist) {
             return;
         }
 
-        const users = runtime.state.users.filter((user) => user.active);
-        select.innerHTML = users
-            .map((user) => `<option value="${user.username}">${user.displayName} (${user.username})</option>`)
+        datalist.innerHTML = runtime.state.users
+            .filter((user) => user.active && user.email)
+            .map((user) => `<option value="${user.email}">${user.displayName}</option>`)
             .join('');
+    }
+
+    function renderLoginScreen(prefillEmail) {
+        const device = TOTVSStorage.getRememberedDevice();
+        const deviceBox = el('loginDeviceBox');
+        const fields = el('loginFields');
+
+        if (deviceBox && fields) {
+            deviceBox.classList.toggle('hidden', !device);
+            fields.classList.toggle('hidden', Boolean(device));
+        }
+
+        if (device) {
+            el('loginDeviceName').innerText = device.displayName;
+            el('loginDeviceEmail').innerText = device.email || device.username;
+            el('loginDeviceShort').innerText = device.displayName;
+        }
+
+        populateLoginEmails();
+
+        const emailInput = el('loginEmail');
+        if (emailInput && prefillEmail) {
+            emailInput.value = prefillEmail;
+        }
     }
 
     function populateAnalystOptions() {
@@ -301,8 +327,8 @@ const TOTVSApp = (() => {
     function openLoginView() {
         el('loginView').classList.remove('hidden');
         el('appView').classList.add('hidden');
-        populateLoginUsers();
         el('loginPassword').value = '';
+        renderLoginScreen(runtime.lastEmail);
     }
 
     function openAppView() {
@@ -668,11 +694,25 @@ const TOTVSApp = (() => {
 
     function handleLogin(event) {
         event.preventDefault();
-        const username = el('loginUsername').value;
+        const email = el('loginEmail').value.trim();
         const password = el('loginPassword').value;
+        const remember = el('checkRememberDevice').checked;
+
+        if (!email) {
+            showToast('Informe o e-mail.', '!');
+            return;
+        }
 
         try {
-            TOTVSStorage.login(username, password);
+            const user = TOTVSStorage.login(email, password);
+
+            if (remember) {
+                TOTVSStorage.rememberDevice(user);
+            } else {
+                TOTVSStorage.forgetDevice();
+            }
+
+            runtime.lastEmail = '';
             syncState();
             openAppView();
             showToast(`Sessao iniciada para ${runtime.currentUser.displayName}.`, 'ok');
@@ -681,7 +721,40 @@ const TOTVSApp = (() => {
         }
     }
 
+    // Entrada em 1 clique pelo dispositivo lembrado.
+    function handleLoginWithDevice() {
+        const user = TOTVSStorage.loginFromDevice();
+        if (!user) {
+            showToast('O lembrete expirou. Entre com e-mail e senha.', '!');
+            renderLoginScreen('');
+            return;
+        }
+
+        syncState();
+        openAppView();
+        showToast(`Bem-vindo de volta, ${runtime.currentUser.displayName}.`, 'ok');
+    }
+
+    function handleSwitchAccount() {
+        const device = TOTVSStorage.getRememberedDevice();
+
+        el('loginDeviceBox').classList.add('hidden');
+        el('loginFields').classList.remove('hidden');
+        el('loginEmail').value = device ? (device.email || '') : '';
+        el('loginPassword').value = '';
+        el('loginPassword').focus();
+    }
+
+    function handleForgetDevice() {
+        TOTVSStorage.forgetDevice();
+        runtime.lastEmail = '';
+        renderLoginScreen('');
+        el('loginEmail').value = '';
+        showToast('Dispositivo esquecido. Entre com e-mail e senha.', 'ok');
+    }
+
     function handleLogout() {
+        runtime.lastEmail = runtime.currentUser ? (runtime.currentUser.email || '') : '';
         TOTVSStorage.logout();
         syncState();
         openLoginView();
@@ -1408,6 +1481,9 @@ const TOTVSApp = (() => {
 
     function bindEvents() {
         el('loginForm').addEventListener('submit', handleLogin);
+        el('btnLoginDevice').addEventListener('click', handleLoginWithDevice);
+        el('btnSwitchAccount').addEventListener('click', handleSwitchAccount);
+        el('btnForgetDevice').addEventListener('click', handleForgetDevice);
         el('btnLogout').addEventListener('click', handleLogout);
         el('machineForm').addEventListener('submit', handleMachineSubmit);
         el('btnResetForm').addEventListener('click', resetForm);
@@ -1472,9 +1548,22 @@ const TOTVSApp = (() => {
         syncState(true);
         if (runtime.currentUser) {
             openAppView();
-        } else {
-            openLoginView();
+            return;
         }
+
+        // Sem sessao: se o dispositivo esta lembrado e o usuario nao acabou de sair
+        // nesta aba, entra direto.
+        if (!TOTVSStorage.wasLoggedOut() && TOTVSStorage.getRememberedDevice()) {
+            const user = TOTVSStorage.loginFromDevice();
+            if (user) {
+                syncState();
+                openAppView();
+                showToast(`Bem-vindo de volta, ${runtime.currentUser.displayName}.`, 'ok');
+                return;
+            }
+        }
+
+        openLoginView();
     }
 
     function init() {

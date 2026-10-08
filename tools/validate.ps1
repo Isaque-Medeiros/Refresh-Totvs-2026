@@ -146,8 +146,8 @@ $appDom = Test-Page -Url "http://localhost:$port/app/index.html" -Budget 25000
 
 $checks = @(
     @{ Name = 'Pagina renderizou o titulo TOTVS';         Pattern = 'TOTVS Field Refresh 2026' },
-    @{ Name = 'login.js executou (select de usuarios cheio)'; Pattern = '<option value="gerente">' },
-    @{ Name = 'Analistas carregados na lista de login';   Pattern = '<option value="isaque">' },
+    @{ Name = 'login.js executou (datalist de e-mails cheio)'; Pattern = '<option value="gerente@db4serv.com.br">' },
+    @{ Name = 'Analista carregado no datalist de login';  Pattern = '<option value="isaque@db4serv.com.br">' },
     @{ Name = 'View de login visivel por padrao';         Pattern = 'id="loginView"' },
     @{ Name = 'View do app comeca oculta';                Pattern = 'id="appView" class="app-shell hidden"' },
     @{ Name = 'UI de sincronizacao GitHub presente';      Pattern = 'id="ghOwner"' },
@@ -170,7 +170,12 @@ $checks = @(
     @{ Name = 'Botao marcar como trocadas';               Pattern = 'id="btnMarkSwapped"' },
     @{ Name = 'Botao do painel de gestao (gerente)';      Pattern = 'manager-only" id="btnOpenManagement"' },
     @{ Name = 'Modulo de rollout carregado';              Pattern = 'js/rollout.js' },
-    @{ Name = 'Filtro de trocada presente';               Pattern = 'value="TROCADA"' }
+    @{ Name = 'Filtro de trocada presente';               Pattern = 'value="TROCADA"' },
+    @{ Name = 'Login por e-mail';                         Pattern = 'id="loginEmail"' },
+    @{ Name = 'Lembrar neste dispositivo';                Pattern = 'id="checkRememberDevice"' },
+    @{ Name = 'Bloco de dispositivo lembrado';            Pattern = 'id="loginDeviceBox"' },
+    @{ Name = 'Botao de entrar pelo dispositivo';         Pattern = 'id="btnLoginDevice"' },
+    @{ Name = 'Opcao de esquecer o dispositivo';          Pattern = 'id="btnForgetDevice"' }
 )
 
 $appFailures = 0
@@ -216,7 +221,12 @@ $mgmtChecks = @(
     @{ Name = 'Importar apontamentos';              Pattern = 'id="fileImport"' },
     @{ Name = 'Chart.js vendorizado carregado';     Pattern = 'js/vendor/chart.umd.js' },
     @{ Name = 'Modulo de rollout carregado';        Pattern = 'js/rollout.js' },
-    @{ Name = 'Script de gestao carregado';         Pattern = 'js/gestao.js' }
+    @{ Name = 'Script de gestao carregado';         Pattern = 'js/gestao.js' },
+    @{ Name = 'Tabela de usuarios';                 Pattern = 'id="usersTableBody"' },
+    @{ Name = 'Formulario de usuario (nome)';       Pattern = 'id="userName"' },
+    @{ Name = 'Formulario de usuario (e-mail)';     Pattern = 'id="userEmail"' },
+    @{ Name = 'Botao de adicionar usuario';         Pattern = 'id="bSaveUser"' },
+    @{ Name = 'Botao de cancelar edicao';           Pattern = 'id="bCancelUser"' }
 )
 
 $mgmtFailures = 0

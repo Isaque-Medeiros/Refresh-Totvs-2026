@@ -1,12 +1,12 @@
 ﻿============================================================
  TOTVS FIELD REFRESH 2026 - VALIDACAO
- Data: 08/10/2026 12:46:55
+ Data: 08/10/2026 13:45:04
 ============================================================
 
 [1/3] Verificacao de IDs (JavaScript x HTML)
 ------------------------------------------------------------
 
-Pagina: gestao.html  (52 IDs, 6 script(s))
+Pagina: gestao.html  (61 IDs, 6 script(s))
    - js/vendor/chart.umd.js
    - js/storage.js
    - js/importer-exporter.js
@@ -14,7 +14,7 @@ Pagina: gestao.html  (52 IDs, 6 script(s))
    - js/github-sync.js
    - js/gestao.js
 
-Pagina: index.html  (128 IDs, 6 script(s))
+Pagina: index.html  (138 IDs, 6 script(s))
    - js/storage.js
    - js/importer-exporter.js
    - js/rollout.js
@@ -24,8 +24,8 @@ Pagina: index.html  (128 IDs, 6 script(s))
 
 === TOTVS Field Refresh 2026 :: Verificacao de IDs ===
 Paginas ..........: 2
-IDs distintos ....: 176
-Referencias no JS : 251
+IDs distintos ....: 195
+Referencias no JS : 287
 
 OK: toda referencia de JS aponta para um ID existente na pagina que carrega o script.
 
@@ -56,12 +56,12 @@ Navegador: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
 ------------------------------------------------------------
 [OK] Servidor local ativo em http://localhost:8765/
 
-Resumo do smoke test: TODOS OS TESTES PASSARAM: 119/119
+Resumo do smoke test: TODOS OS TESTES PASSARAM: 144/144
 [3/3] Carregamento da aplicacao real (app/index.html)
 ------------------------------------------------------------
   [OK  ] Pagina renderizou o titulo TOTVS
-  [OK  ] login.js executou (select de usuarios cheio)
-  [OK  ] Analistas carregados na lista de login
+  [OK  ] login.js executou (datalist de e-mails cheio)
+  [OK  ] Analista carregado no datalist de login
   [OK  ] View de login visivel por padrao
   [OK  ] View do app comeca oculta
   [OK  ] UI de sincronizacao GitHub presente
@@ -85,6 +85,11 @@ Resumo do smoke test: TODOS OS TESTES PASSARAM: 119/119
   [OK  ] Botao do painel de gestao (gerente)
   [OK  ] Modulo de rollout carregado
   [OK  ] Filtro de trocada presente
+  [OK  ] Login por e-mail
+  [OK  ] Lembrar neste dispositivo
+  [OK  ] Bloco de dispositivo lembrado
+  [OK  ] Botao de entrar pelo dispositivo
+  [OK  ] Opcao de esquecer o dispositivo
 
 Resultado carregamento: OK
 
@@ -116,6 +121,11 @@ Resultado carregamento: OK
   [OK  ] Chart.js vendorizado carregado
   [OK  ] Modulo de rollout carregado
   [OK  ] Script de gestao carregado
+  [OK  ] Tabela de usuarios
+  [OK  ] Formulario de usuario (nome)
+  [OK  ] Formulario de usuario (e-mail)
+  [OK  ] Botao de adicionar usuario
+  [OK  ] Botao de cancelar edicao
 
 Resultado painel de gestao: OK
 

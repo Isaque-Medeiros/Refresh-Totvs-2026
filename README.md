@@ -34,7 +34,7 @@ TOTVS_Refresh_2026/
 │  ├─ usuarios.json          -> usuarios sem hash de senha (gerente)
 │  ├─ gestao.json            -> ajustes, observacoes e frentes (gerente)
 │  └─ analistas/<usuario>.json
-├─ tests/smoke.html          -> auto-teste de logica (119 verificacoes)
+├─ tests/smoke.html          -> auto-teste de logica (144 verificacoes)
 └─ tools/
    ├─ check-ids.ps1          -> confere se todo ID usado no JS existe no HTML
    ├─ serve.ps1              -> servidor local (necessario para o fetch dos JSON)
@@ -63,25 +63,58 @@ powershell -ExecutionPolicy Bypass -File tools\serve.ps1
 
 ---
 
-## Usuarios e senha
+## Usuarios, e-mail e senha
 
-| Usuario | Perfil | Acesso |
-|---|---|---|
-| `gerente` | Gerente de projeto | Todos os lotes, todos os registros, arquivos individuais de todos os analistas, criacao/exclusao de lote, `usuarios.json`, `dados-gerais.json`, restaurar snapshot |
-| `isaque` | Analista | Somente os proprios registros |
-| `vinicius` | Analista | Somente os proprios registros |
-| `guilherme` | Analista | Somente os proprios registros |
-| `davi` | Analista | Somente os proprios registros |
+O login e por **e-mail**: digite o endereco, o sistema confere se ele esta vinculado
+a um usuario cadastrado e entra.
+
+| E-mail | Usuario | Perfil | Acesso |
+|---|---|---|---|
+| `gerente@db4serv.com.br` | `gerente` | Gerente de projeto | Todos os lotes, todos os registros, arquivos individuais de todos os analistas, criacao/exclusao de lote, `usuarios.json`, `dados-gerais.json`, `gestao.json`, restaurar snapshot |
+| `isaque@db4serv.com.br` | `isaque` | Analista | Somente os proprios registros |
+| `vinicius@db4serv.com.br` | `vinicius` | Analista | Somente os proprios registros |
+| `guilherme@db4serv.com.br` | `guilherme` | Analista | Somente os proprios registros |
+| `davi@db4serv.com.br` | `davi` | Analista | Somente os proprios registros |
 
 - **Senha inicial de todos os perfis: `FieldTotvs2026`**
 - **Chave mestra para resetar a senha de um usuario: `FieldTotvs2026`**
 
-As senhas sao gravadas como **hash SHA-256** (nunca em texto puro) e o hash
-**nunca** e exportado para o repositorio: o `usuarios.json` guarda apenas
-id, usuario, nome, perfil e ativo.
+Os e-mails acima sao apenas o padrao inicial — o gerente troca na tela **Usuarios**
+do painel de gestao. O login tambem aceita o **usuario** (ex.: `gerente`), entao quem
+ja usava o sistema continua entrando do mesmo jeito.
 
-Cada usuario pode trocar a propria senha no botao **Senhas**. O gerente pode
-resetar a senha de qualquer analista informando a chave mestra.
+### Login rapido: "lembrar neste dispositivo"
+
+Na primeira vez, digite **e-mail + senha** com a opcao *Lembrar neste dispositivo*
+marcada. A partir dai:
+
+| Situacao | O que acontece |
+|---|---|
+| Abrir o sistema de novo naquele navegador | **Entra sozinho**, sem tela de login |
+| Clicar em *Sair* e voltar | Tela com o botao **"Entrar como Fulano"** — **1 clique** |
+| Clicar em *Entrar com outra conta* | Revela os campos para trocar de usuario |
+| Clicar em *Esquecer este dispositivo* | Apaga o lembrete e volta a pedir a senha |
+
+O lembrete vale por **30 dias**, fica gravado apenas naquele navegador e e descartado
+automaticamente se o usuario for **desativado**.
+
+### Gestao de usuarios (gerente)
+
+No painel de gestao, o card **Usuarios** resolve o cadastro sem tocar no codigo:
+
+- **Adicionar** usuario (nome + e-mail + perfil) — o `username` sai do e-mail;
+- **Editar** nome, e-mail e perfil;
+- **Ativar / desativar** — desativado nao loga;
+- **Redefinir senha** para o padrao;
+- **Excluir** — apenas quem **nao tem registros**; com registros, orienta a desativar.
+
+O sistema impede ficar sem nenhum gerente ativo e impede excluir o proprio usuario.
+
+As senhas sao gravadas como **hash SHA-256** (nunca em texto puro) e o hash
+**nunca** e exportado para o repositorio.
+
+Cada usuario troca a propria senha no botao **Senhas** do painel operacional; o gerente
+reseta a de qualquer analista.
 
 ---
 
@@ -398,6 +431,16 @@ Veja tambem `TIMELAPSE_ATUALIZACAO.md`.
 4. Nao existe servidor: a sincronizacao depende de configurar o token uma vez por
    maquina. O botao **Carregar dados publicados** permite que qualquer pessoa veja
    os dados publicados sem credencial.
+5. **Os e-mails ficam publicos** no `data/usuarios.json` (decisao consciente, para o
+   login funcionar igual em qualquer maquina). Se preferir escondê-los, da para
+   omitir o campo do arquivo sincronizado.
+6. **"Lembrar neste dispositivo" nao e uma segunda senha**: quem tiver acesso fisico
+   ao navegador entra sem digitar nada. E o comportamento normal de "lembrar
+   dispositivo" sem backend. O lembrete expira em 30 dias e ha o botao *Esquecer
+   este dispositivo*.
+7. Sem backend **nao existe como provar que a pessoa e dona do e-mail** (isso exigiria
+   enviar um codigo ou link, ou seja, um servico externo). O que o sistema faz e
+   conferir se o e-mail esta **vinculado a um usuario cadastrado**.
 
 ---
 
