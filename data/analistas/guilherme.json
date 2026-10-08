@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-08T19:18:56.155Z",
+  "exportedAt": "2026-10-08T19:20:10.551Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -13,23 +13,23 @@
     "role": "analyst"
   },
   "summary": {
-    "total": 10,
+    "total": 11,
     "doneCount": 0,
     "wipCount": 0,
-    "pausedCount": 10,
+    "pausedCount": 11,
     "errorCount": 0,
     "successRate": "100",
     "globalPercent": "0.0",
     "avgTimeString": "00m 00s",
-    "manualCount": 10,
+    "manualCount": 11,
     "stepAvgTimes": {
-      "1 FORMATAÇÃO E BIOS": "28m 12s",
+      "1 FORMATAÇÃO E BIOS": "23m 40s",
       "2 WINDOWS UPDATE": "20m 18s",
       "3 ATIVAR ADM E SUBIR DRIVERS": "20m 51s",
       "4 DOMINIO E ARGUS": "15m 00s"
     },
     "stepAvgSeconds": {
-      "1 FORMATAÇÃO E BIOS": 1692,
+      "1 FORMATAÇÃO E BIOS": 1420,
       "2 WINDOWS UPDATE": 1218,
       "3 ATIVAR ADM E SUBIR DRIVERS": 1251,
       "4 DOMINIO E ARGUS": 900
@@ -58,10 +58,10 @@
       {
         "analystId": "user_guilherme",
         "name": "Guilherme",
-        "total": 10,
+        "total": 11,
         "done": 0,
         "wip": 0,
-        "paused": 10,
+        "paused": 11,
         "errors": 0,
         "goalPercent": "0.0"
       },
@@ -79,6 +79,54 @@
     "errorList": []
   },
   "records": [
+    {
+      "id": "nb_1791487154357_i310vp",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132297",
+      "analystId": "user_guilherme",
+      "brand": "Dell",
+      "profile": "Local",
+      "processDate": "2026-10-07",
+      "currentStep": "1 FORMATAÇÃO E BIOS",
+      "currentStepIndex": 0,
+      "status": "PAUSADO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 60,
+        "2 WINDOWS UPDATE": 0,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
+        "4 DOMINIO E ARGUS": 0
+      },
+      "totalElapsedSeconds": 60,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": true,
+      "manualEntryBy": "user_guilherme",
+      "manualEntryAt": "2026-10-08T19:20:09.037Z",
+      "history": [
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_guilherme",
+          "note": "Tempos ajustados no lançamento manual",
+          "createdAt": "2026-10-08T19:20:09.037Z"
+        },
+        {
+          "action": "machine_created_manual",
+          "actorId": "user_guilherme",
+          "note": "Lançamento manual com tempo digitado",
+          "createdAt": "2026-10-08T19:19:14.357Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-08T19:19:14.357Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-08T19:19:14.357Z",
+      "updatedAt": "2026-10-08T19:20:09.037Z",
+      "completedAt": null,
+      "preparedAt": null,
+      "swappedAt": null,
+      "swappedBy": null
+    },
     {
       "id": "nb_1791487134651_9hc16n",
       "datasetId": "dataset_principal",
@@ -502,5 +550,6 @@
   ],
   "kind": "analyst",
   "username": "guilherme",
-  "analystId": "user_guilherme"
+  "analystId": "user_guilherme",
+  "deletedMachines": {}
 }
