@@ -1,6 +1,5 @@
 {
-  "kind": "analyst",
-  "exportedAt": null,
+  "exportedAt": "2026-10-08T15:00:10.356Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -13,14 +12,104 @@
     "displayName": "Isaque",
     "role": "analyst"
   },
-  "username": "isaque",
-  "analystId": "user_isaque",
   "summary": {
-    "total": 0,
+    "total": 1,
     "doneCount": 0,
-    "wipCount": 0,
+    "wipCount": 1,
     "pausedCount": 0,
-    "errorCount": 0
+    "errorCount": 0,
+    "successRate": "100",
+    "globalPercent": "0.0",
+    "avgTimeString": "00m 00s",
+    "stepAvgTimes": {
+      "1 FORMATAÇÃO E BIOS": "00m 01s",
+      "2 WINDOWS UPDATE": "00m 00s",
+      "3 ATIVAR ADM E SUBIR DRIVERS": "00m 00s",
+      "4 DOMINIO E ARGUS": "00m 00s"
+    },
+    "analystStats": [
+      {
+        "analystId": "user_isaque",
+        "name": "Isaque",
+        "total": 1,
+        "done": 0,
+        "wip": 1,
+        "paused": 0,
+        "errors": 0,
+        "goalPercent": "0.0"
+      },
+      {
+        "analystId": "user_vinicius",
+        "name": "Vinicius",
+        "total": 0,
+        "done": 0,
+        "wip": 0,
+        "paused": 0,
+        "errors": 0,
+        "goalPercent": "0.0"
+      },
+      {
+        "analystId": "user_guilherme",
+        "name": "Guilherme",
+        "total": 0,
+        "done": 0,
+        "wip": 0,
+        "paused": 0,
+        "errors": 0,
+        "goalPercent": "0.0"
+      },
+      {
+        "analystId": "user_davi",
+        "name": "Davi",
+        "total": 0,
+        "done": 0,
+        "wip": 0,
+        "paused": 0,
+        "errors": 0,
+        "goalPercent": "0.0"
+      }
+    ],
+    "errorList": []
   },
-  "records": []
+  "records": [
+    {
+      "id": "nb_1791471608848_vzj1zt",
+      "datasetId": "dataset_principal",
+      "hostname": "TEST",
+      "analystId": "user_isaque",
+      "brand": "Dell",
+      "profile": "Local",
+      "processDate": "2026-10-08",
+      "currentStep": "1 FORMATAÇÃO E BIOS",
+      "currentStepIndex": 0,
+      "status": "EM_ANDAMENTO",
+      "timerRunning": true,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 1,
+        "2 WINDOWS UPDATE": 0,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
+        "4 DOMINIO E ARGUS": 0
+      },
+      "totalElapsedSeconds": 1,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "history": [
+        {
+          "action": "machine_created",
+          "actorId": "user_isaque",
+          "note": "Cadastro inicial",
+          "createdAt": "2026-10-08T15:00:08.848Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-08T15:00:08.848Z",
+      "lastTickAt": "2026-10-08T15:00:10.356Z",
+      "createdAt": "2026-10-08T15:00:08.848Z",
+      "updatedAt": "2026-10-08T15:00:10.356Z",
+      "completedAt": null
+    }
+  ],
+  "kind": "analyst",
+  "username": "isaque",
+  "analystId": "user_isaque"
 }
