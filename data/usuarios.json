@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-08T17:24:56.543Z",
+  "exportedAt": "2026-10-08T18:40:07.328Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -13,7 +13,7 @@
       "displayName": "Gerente de Projeto",
       "role": "manager",
       "active": true,
-      "updatedAt": "2026-10-08T14:32:22.707Z"
+      "updatedAt": "2026-10-08T18:40:03.110Z"
     },
     {
       "id": "user_isaque",
@@ -21,7 +21,7 @@
       "displayName": "Isaque",
       "role": "analyst",
       "active": true,
-      "updatedAt": "2026-10-08T14:33:09.002Z"
+      "updatedAt": "2026-10-08T18:37:37.107Z"
     },
     {
       "id": "user_vinicius",
@@ -29,7 +29,7 @@
       "displayName": "Vinicius",
       "role": "analyst",
       "active": true,
-      "updatedAt": "2026-10-08T14:32:22.707Z"
+      "updatedAt": "2026-10-08T18:37:37.107Z"
     },
     {
       "id": "user_guilherme",
@@ -37,7 +37,7 @@
       "displayName": "Guilherme",
       "role": "analyst",
       "active": true,
-      "updatedAt": "2026-10-08T14:32:22.707Z"
+      "updatedAt": "2026-10-08T18:37:37.107Z"
     },
     {
       "id": "user_davi",
@@ -45,7 +45,7 @@
       "displayName": "Davi",
       "role": "analyst",
       "active": true,
-      "updatedAt": "2026-10-08T14:32:22.707Z"
+      "updatedAt": "2026-10-08T18:37:37.107Z"
     }
   ],
   "kind": "users",
@@ -56,7 +56,7 @@
       "displayName": "Isaque",
       "file": "data/analistas/isaque.json",
       "records": 3,
-      "updatedAt": "2026-10-08T17:24:53.723Z"
+      "updatedAt": "2026-10-08T18:40:04.624Z"
     },
     {
       "id": "user_vinicius",
@@ -80,7 +80,7 @@
       "displayName": "Davi",
       "file": "data/analistas/davi.json",
       "records": 2,
-      "updatedAt": "2026-10-08T17:24:53.723Z"
+      "updatedAt": "2026-10-08T18:05:51.441Z"
     }
   ]
 }
