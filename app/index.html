@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOTVS Field Refresh 2026 | DB4 Serv</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="totvs-theme">
+    <div class="background-glow"></div>
+
+    <section class="login-shell" id="loginView">
+        <div class="login-panel">
+            <div class="brand-logo-badge">
+                <span class="logo-totvs">TOTVS</span>
+                <span class="logo-tag">REFRESH 2026</span>
+            </div>
+
+            <div class="login-copy">
+                <span class="pill-tag">DB4 Serv for Totvs by Isaque de Medeiros</span>
+                <h1>Gestão em tempo real por perfil</h1>
+                <p>
+                    Painel estático com visão do gerente, área individual dos analistas,
+                    histórico com datas e exportações prontas para sincronização manual.
+                </p>
+            </div>
+
+            <form id="loginForm" class="login-form" autocomplete="off">
+                <div class="form-group">
+                    <label for="loginUsername">Usuário</label>
+                    <select id="loginUsername" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Senha</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Digite a senha">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Entrar no painel</button>
+                <p class="login-tip">
+                    Senha inicial dos perfis padrão: <strong>FieldTotvs2026</strong>
+                </p>
+            </form>
+        </div>
+    </section>
+
+    <div id="appView" class="app-shell hidden">
+        <header class="app-header">
+            <div class="header-brand">
+                <div class="brand-logo-badge">
+                    <span class="logo-totvs">TOTVS</span>
+                    <span class="logo-tag">REFRESH 2026</span>
+                </div>
+                <div class="brand-meta">
+                    <h1>Painel Operacional Field Service</h1>
+                    <span class="fleet-target">
+                        DB4 Serv for Totvs by Isaque de Medeiros
+                    </span>
+                </div>
+            </div>
+
+            <div class="header-widgets">
+                <div class="clock-card">
+                    <span class="clock-label">Horário Local</span>
+                    <span class="clock-time" id="localLiveClock">--:--:--</span>
+                    <span class="clock-date" id="localLiveDate">--/--/----</span>
+                </div>
+
+                <div class="session-card">
+                    <span class="session-role" id="sessionRoleLabel">Perfil</span>
+                    <strong id="sessionUserLabel">Usuário</strong>
+                    <span class="session-dataset">Lote: <span id="activeDatasetLabel">Operação Principal</span></span>
+                </div>
+
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="btnOpenPasswordModal">Senhas</button>
+                    <button class="btn btn-secondary" id="btnOpenSyncModal">Sync / Exportar</button>
+                    <button class="btn btn-primary" id="btnOpenReports">Dashboard & Relatórios</button>
+                    <button class="btn btn-outline" id="btnLogout">Sair</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="app-container">
+            <section class="hero-grid">
+                <article class="hero-card hero-card-wide">
+                    <div>
+                        <span class="section-eyebrow">Visão Operacional</span>
+                        <h2 id="heroGreeting">Olá</h2>
+                        <p id="heroDescription">
+                            Acompanhe o fluxo do lote atual, tempos por etapa e produtividade em tempo real.
+                        </p>
+                    </div>
+                    <div class="hero-meta">
+                        <div class="mini-stat">
+                            <span>Meta global</span>
+                            <strong>1.000</strong>
+                        </div>
+                        <div class="mini-stat">
+                            <span>Meta por analista</span>
+                            <strong>250</strong>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="hero-card">
+                    <span class="section-eyebrow">Sincronização</span>
+                    <h3>Modo estático pronto para GitHub</h3>
+                    <p>Exporte os arquivos gerais e individuais para publicar manualmente quando precisar.</p>
+                </article>
+            </section>
+
+            <section class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>Total no lote</span>
+                        <span class="kpi-icon">01</span>
+                    </div>
+                    <div class="kpi-body">
+                        <span class="kpi-value" id="kpiTotalMachines">0</span>
+                        <span class="kpi-sub" id="kpiTotalSub">Registros visíveis no lote atual</span>
+                    </div>
+                    <div class="kpi-progress"><div class="kpi-progress-bar" id="kpiBarTotal"></div></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>Em andamento</span>
+                        <span class="kpi-icon">02</span>
+                    </div>
+                    <div class="kpi-body">
+                        <span class="kpi-value text-orange" id="kpiWipMachines">0</span>
+                        <span class="kpi-sub">Máquinas com cronômetro ativo</span>
+                    </div>
+                    <div class="kpi-progress"><div class="kpi-progress-bar bg-orange" id="kpiBarWip"></div></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>Concluídas</span>
+                        <span class="kpi-icon">03</span>
+                    </div>
+                    <div class="kpi-body">
+                        <span class="kpi-value text-green" id="kpiDoneMachines">0</span>
+                        <span class="kpi-sub" id="kpiDonePercent">0% concluído</span>
+                    </div>
+                    <div class="kpi-progress"><div class="kpi-progress-bar bg-green" id="kpiBarDone"></div></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>Incidentes</span>
+                        <span class="kpi-icon">04</span>
+                    </div>
+                    <div class="kpi-body">
+                        <span class="kpi-value text-red" id="kpiErrorMachines">0</span>
+                        <span class="kpi-sub">Registros com alerta técnico</span>
+                    </div>
+                    <div class="kpi-progress"><div class="kpi-progress-bar bg-red" id="kpiBarErrors"></div></div>
+                </div>
+            </section>
+
+            <section class="card workspace-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="badge-dot"></span>
+                        <h2>Contexto do Lote</h2>
+                    </div>
+                    <span class="dataset-active-tag">Área ativa: <strong id="workspaceSummaryLabel">Operação Principal</strong></span>
+                </div>
+
+                <div class="workspace-grid">
+                    <div class="form-group">
+                        <label for="selectDataset">Lote / Tabela ativa</label>
+                        <select id="selectDataset" class="form-control"></select>
+                    </div>
+
+                    <div class="form-group manager-only">
+                        <label for="inputNewDatasetName">Criar novo lote</label>
+                        <div class="input-with-button">
+                            <input type="text" id="inputNewDatasetName" class="form-control" placeholder="Ex: Bancada 02">
+                            <button class="btn btn-secondary" id="btnCreateDataset">Criar</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Assinatura do sistema</label>
+                        <div class="read-only-box">DB4 Serv for Totvs by Isaque de Medeiros</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Resumo do perfil</label>
+                        <div class="read-only-box" id="userScopeSummary">Carregando escopo...</div>
+                    </div>
+                </div>
+
+                <div class="inline-actions manager-only">
+                    <button class="btn btn-outline" id="btnDeleteDataset">Excluir lote ativo</button>
+                </div>
+            </section>
+
+            <section class="card workflow-entry-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="badge-dot"></span>
+                        <h2>Entrada de Máquinas e Controle de Etapas</h2>
+                    </div>
+                    <div class="quick-status-indicators">
+                        <span class="helper-text">Cadastre uma ou várias máquinas por linha.</span>
+                    </div>
+                </div>
+
+                <form id="machineForm" class="machine-form" autocomplete="off">
+                    <input type="hidden" id="editMachineId" value="">
+
+                    <div class="form-grid">
+                        <div class="form-group col-hostnames">
+                            <label for="inputHostnames">Hostnames da(s) máquina(s) *</label>
+                            <textarea id="inputHostnames" class="form-control font-mono text-uppercase" rows="3" placeholder="SPON010134567&#10;SPON010134564&#10;SPON010134563" required></textarea>
+                        </div>
+
+                        <div class="form-group col-analyst">
+                            <label for="selectAnalyst">Analista responsável *</label>
+                            <select id="selectAnalyst" class="form-control" required></select>
+                        </div>
+
+                        <div class="form-group col-brand">
+                            <label for="selectBrand">Fabricante *</label>
+                            <select id="selectBrand" class="form-control">
+                                <option value="Dell">Dell</option>
+                                <option value="Lenovo">Lenovo</option>
+                                <option value="HP">HP</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-profile">
+                            <label for="selectProfile">Perfil de imagem *</label>
+                            <select id="selectProfile" class="form-control">
+                                <option value="Local">Usuário Local</option>
+                                <option value="Cloud">Usuário Cloud</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-date">
+                            <label for="inputProcessDate">Data da cronometragem *</label>
+                            <input type="date" id="inputProcessDate" class="form-control">
+                        </div>
+
+                        <div class="form-group col-step">
+                            <label for="selectStep">Etapa atual *</label>
+                            <select id="selectStep" class="form-control">
+                                <option value="1 FORMATAÇÃO E BIOS">1. FORMATAÇÃO E BIOS</option>
+                                <option value="2 WINDOWS UPDATE">2. WINDOWS UPDATE</option>
+                                <option value="3 ATIVAR ADM E SUBIR DRIVERS">3. ATIVAR ADM E SUBIR DRIVERS</option>
+                                <option value="4 DOMINIO E ARGUS">4. DOMINIO E ARGUS</option>
+                                <option value="CONCLUIDO">CONCLUIDO</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-autotimer" id="containerAutoTimer">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="checkAutoStartTimer" checked>
+                                <span class="checkmark"></span>
+                                <span class="checkbox-text">Iniciar cronômetro ao salvar</span>
+                            </label>
+                        </div>
+
+                        <div class="form-group col-error-toggle">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="checkHasError">
+                                <span class="checkmark"></span>
+                                <span class="checkbox-text">Registrar incidente técnico</span>
+                            </label>
+                        </div>
+
+                        <div class="form-group col-error-desc hidden" id="errorDetailsContainer">
+                            <label for="inputErrorDesc">Descrição do incidente</label>
+                            <input type="text" id="inputErrorDesc" class="form-control border-red" placeholder="Ex: Erro de BIOS, falha em driver, bloqueio de domínio">
+                        </div>
+
+                        <div class="form-group col-notes">
+                            <label for="inputNotes">Observações</label>
+                            <input type="text" id="inputNotes" class="form-control" placeholder="Ex: Equipamento novo, acessório faltando, dependência de rede">
+                        </div>
+                    </div>
+
+                    <div class="form-actions-bar">
+                        <div class="form-actions-left">
+                            <button type="submit" class="btn btn-success" id="btnSubmitForm">
+                                <span id="submitBtnText">Salvar / adicionar máquinas</span>
+                            </button>
+                            <button type="button" class="btn btn-outline" id="btnResetForm">Limpar</button>
+                        </div>
+                        <div class="form-actions-right">
+                            <span class="helper-text">Ao editar, o hostname fica travado para evitar sobrescritas acidentais.</span>
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+            <section class="toolbar-section">
+                <div class="toolbar-left">
+                    <div class="search-box">
+                        <input type="text" id="searchFilter" class="form-control" placeholder="Buscar por hostname, etapa, observação...">
+                    </div>
+
+                    <select id="filterAnalyst" class="form-control filter-select"></select>
+
+                    <select id="filterStatus" class="form-control filter-select">
+                        <option value="ALL">Todos os status</option>
+                        <option value="EM_ANDAMENTO">Em andamento</option>
+                        <option value="PAUSADO">Pausado</option>
+                        <option value="CONCLUIDO">Concluído</option>
+                        <option value="ERRO">Erro</option>
+                    </select>
+
+                    <select id="filterBrand" class="form-control filter-select">
+                        <option value="ALL">Todas as fabricantes</option>
+                        <option value="Dell">Dell</option>
+                        <option value="Lenovo">Lenovo</option>
+                        <option value="HP">HP</option>
+                    </select>
+                </div>
+
+                <div class="toolbar-right">
+                    <button class="btn btn-export" id="btnCopyForSheets">Copiar p/ planilha</button>
+                    <button class="btn btn-export-zap" id="btnCopyForWhatsapp">Copiar p/ WhatsApp</button>
+                    <label class="btn btn-secondary file-trigger manager-only">
+                        Restaurar snapshot
+                        <input type="file" id="fileRestoreBackup" accept=".json" hidden>
+                    </label>
+                </div>
+            </section>
+
+            <section class="card table-card">
+                <div class="table-responsive">
+                    <table class="totvs-table" id="machinesTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Data</th>
+                                <th>Hostname</th>
+                                <th>Analista</th>
+                                <th>Marca / Perfil</th>
+                                <th>Etapa atual</th>
+                                <th>Tempo da etapa</th>
+                                <th>Tempo total</th>
+                                <th>Última atualização</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="machinesTableBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="table-footer">
+                    <span class="table-count" id="tableCountLabel">Exibindo 0 registros</span>
+                    <span class="table-hint" id="tableScopeHint">Controles ao vivo liberados para o seu perfil.</span>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="modal-backdrop" id="modalReports">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h3>Dashboard e relatórios</h3>
+                </div>
+                <button class="btn-close" data-close-modal="modalReports">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-tabs">
+                    <button class="tab-btn active" data-tab="tabGeneralReport">Visão geral</button>
+                    <button class="tab-btn" data-tab="tabIndividualReport">Por analista</button>
+                    <button class="tab-btn" data-tab="tabErrorReport">Incidentes</button>
+                    <button class="tab-btn" data-tab="tabTextExport">Texto / WhatsApp</button>
+                </div>
+
+                <div class="tab-content active" id="tabGeneralReport">
+                    <div class="metrics-grid" id="reportsOverviewGrid"></div>
+                    <div class="distribution-section">
+                        <div class="section-head">
+                            <h4>Média por etapa</h4>
+                            <button class="btn btn-outline btn-sm" id="btnPrintGeneralReport">Imprimir visão geral</button>
+                        </div>
+                        <div class="step-distribution-list" id="repStepAvgTimeList"></div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tabIndividualReport">
+                    <div class="section-head">
+                        <h4>Produtividade individual</h4>
+                        <select id="reportAnalystSelect" class="form-control filter-select"></select>
+                    </div>
+                    <div class="analysts-cards-grid" id="analystsCardsContainer"></div>
+                    <div class="inline-actions">
+                        <button class="btn btn-outline btn-sm" id="btnPrintAnalystReport">Imprimir analista selecionado</button>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tabErrorReport">
+                    <div class="table-responsive">
+                        <table class="totvs-table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Hostname</th>
+                                    <th>Analista</th>
+                                    <th>Etapa</th>
+                                    <th>Descrição</th>
+                                    <th>Data</th>
+                                </tr>
+                            </thead>
+                            <tbody id="errorLogTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tabTextExport">
+                    <div class="txt-preview-header">
+                        <span>Texto pronto para envio:</span>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-outline" id="btnSelectTxtReport">Selecionar tudo</button>
+                            <button class="btn btn-sm btn-export-zap" id="btnCopyTxtReport">Copiar relatório</button>
+                        </div>
+                    </div>
+                    <textarea id="txtReportPreview" class="txt-preview-area font-mono" readonly></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-close-modal="modalReports">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="modalSync">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h3>Central de sincronização</h3>
+                </div>
+                <button class="btn-close" data-close-modal="modalSync">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="sync-card" id="ghSyncCard">
+                    <h4>Sincronização automática (GitHub)</h4>
+                    <p>
+                        Configure uma vez nesta máquina. A partir daí, cada salvamento envia os dados
+                        para o repositório automaticamente — sem exportar e importar JSON na mão.
+                    </p>
+
+                    <div class="sync-config-grid">
+                        <div class="form-group">
+                            <label for="ghOwner">Usuário / Organização</label>
+                            <input type="text" id="ghOwner" class="form-control" placeholder="isaque-medeiros" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="ghRepo">Repositório</label>
+                            <input type="text" id="ghRepo" class="form-control" placeholder="TOTVS_Refresh_2026" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="ghBranch">Branch</label>
+                            <input type="text" id="ghBranch" class="form-control" placeholder="main" autocomplete="off">
+                        </div>
+                        <div class="form-group gh-token-field">
+                            <label for="ghToken">Token (fine-grained · Contents: Read and write)</label>
+                            <input type="password" id="ghToken" class="form-control" placeholder="github_pat_..." autocomplete="off">
+                        </div>
+                    </div>
+
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="ghAutoSync" checked>
+                        <span class="checkmark"></span>
+                        <span class="checkbox-text">Enviar automaticamente a cada salvamento</span>
+                    </label>
+
+                    <div class="stack-actions">
+                        <button class="btn btn-primary" id="btnGhSaveConfig">Salvar configuração</button>
+                        <button class="btn btn-secondary" id="btnGhTest">Testar conexão</button>
+                        <button class="btn btn-secondary" id="btnGhPush">Enviar agora</button>
+                        <button class="btn btn-outline" id="btnGhPull">Baixar agora</button>
+                        <button class="btn btn-outline" id="btnGhPublished">Carregar dados publicados</button>
+                    </div>
+
+                    <div class="gh-status" id="ghStatusBox">
+                        <span class="gh-status-dot" id="ghStatusDot"></span>
+                        <span id="ghStatusText">Sincronização não configurada.</span>
+                    </div>
+                    <p class="helper-text" id="ghLastSyncLabel">Última sincronização: nunca</p>
+                </div>
+
+                <div class="sync-card">
+                    <h4>Arquivos prontos para GitHub</h4>
+                    <p>Baixe os arquivos gerais e individuais e publique manualmente onde preferir.</p>
+                    <div class="stack-actions">
+                        <button class="btn btn-primary manager-only" id="btnDownloadGeneralJson">Baixar dados-gerais.json</button>
+                        <button class="btn btn-secondary" id="btnDownloadMyJson">Baixar meu arquivo individual</button>
+                        <button class="btn btn-secondary manager-only" id="btnDownloadUsersJson">Baixar usuarios.json</button>
+                        <button class="btn btn-outline" id="btnDownloadSnapshot">Baixar snapshot completo</button>
+                    </div>
+                </div>
+
+                <div class="sync-card manager-only">
+                    <h4>Arquivo individual de cada analista</h4>
+                    <p>O gerente tem acesso aos arquivos individuais de todos os analistas do lote.</p>
+                    <div class="form-group">
+                        <label for="selectExportAnalyst">Analista</label>
+                        <select id="selectExportAnalyst" class="form-control"></select>
+                    </div>
+                    <div class="stack-actions">
+                        <button class="btn btn-secondary" id="btnDownloadAnalystJson">Baixar arquivo do analista</button>
+                        <button class="btn btn-outline" id="btnDownloadAllAnalysts">Baixar todos os arquivos individuais</button>
+                    </div>
+                </div>
+
+                <div class="sync-card">
+                    <h4>Timelapse da atualização</h4>
+                    <p>O projeto inclui um arquivo de registro do processo em <strong>TIMELAPSE_ATUALIZACAO.md</strong>.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-close-modal="modalSync">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="modalPassword">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h3>Gerenciamento de senhas</h3>
+                </div>
+                <button class="btn-close" data-close-modal="modalPassword">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="password-grid">
+                    <form id="ownPasswordForm" class="sync-card">
+                        <h4>Alterar minha senha</h4>
+                        <div class="form-group">
+                            <label for="inputCurrentPassword">Senha atual</label>
+                            <input type="password" id="inputCurrentPassword" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputNewPassword">Nova senha</label>
+                            <input type="password" id="inputNewPassword" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputConfirmPassword">Confirmar nova senha</label>
+                            <input type="password" id="inputConfirmPassword" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Atualizar minha senha</button>
+                    </form>
+
+                    <form id="resetPasswordForm" class="sync-card manager-only">
+                        <h4>Resetar senha de usuário</h4>
+                        <div class="form-group">
+                            <label for="resetTargetUser">Usuário</label>
+                            <select id="resetTargetUser" class="form-control"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputMasterSecret">Senha mestra</label>
+                            <input type="password" id="inputMasterSecret" class="form-control" placeholder="FieldTotvs2026">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputResetPassword">Nova senha para o usuário</label>
+                            <input type="password" id="inputResetPassword" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-secondary">Resetar senha do usuário</button>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-close-modal="modalPassword">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <section id="printArea" class="print-area"></section>
+
+    <div id="toastNotification" class="totvs-toast">
+        <span id="toastIcon" class="toast-icon">i</span>
+        <span id="toastMessage" class="toast-message">Operação concluída.</span>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/importer-exporter.js"></script>
+    <script src="js/github-sync.js"></script>
+    <script src="js/reports.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

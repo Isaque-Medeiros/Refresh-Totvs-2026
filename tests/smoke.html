@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Smoke Test | TOTVS Field Refresh 2026</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0b1626; color: #e8f1ff; margin: 0; padding: 24px; }
+        h1 { font-size: 1.3rem; margin-bottom: 4px; }
+        #summary { font-size: 1.1rem; font-weight: 700; padding: 14px 16px; border-radius: 10px; margin: 16px 0; }
+        #summary.pass { background: rgba(35, 209, 139, 0.16); border: 1px solid #23d18b; color: #23d18b; }
+        #summary.fail { background: rgba(255, 99, 136, 0.16); border: 1px solid #ff6388; color: #ff6388; }
+        #summary.running { background: rgba(31, 124, 255, 0.16); border: 1px solid #1f7cff; }
+        ol { list-style: none; padding: 0; margin: 0; }
+        li { padding: 10px 14px; margin-bottom: 6px; border-radius: 8px; border: 1px solid #24405f; font-size: 0.9rem; }
+        li.ok { border-color: #23d18b; }
+        li.no { border-color: #ff6388; background: rgba(255, 99, 136, 0.08); }
+        .tag { font-weight: 700; margin-right: 8px; }
+        li.ok .tag { color: #23d18b; }
+        li.no .tag { color: #ff6388; }
+        .detail { display: block; color: #8fa8c4; margin-top: 4px; font-family: Consolas, monospace; font-size: 0.82rem; }
+    </style>
+</head>
+<body>
+    <h1>TOTVS Field Refresh 2026 &mdash; Smoke Test</h1>
+    <p>Valida storage, permissoes, timers, senhas, merge com o GitHub e payloads.</p>
+    <div id="summary" class="running">Executando...</div>
+    <ol id="results"></ol>
+
+    <script src="../app/js/storage.js"></script>
+    <script src="../app/js/importer-exporter.js"></script>
+    <script src="../app/js/github-sync.js"></script>
+    <script src="../app/js/reports.js"></script>
+    <script>
+        const resultsEl = document.getElementById('results');
+        const summaryEl = document.getElementById('summary');
+        let passCount = 0;
+        let failCount = 0;
+
+        function record(name, ok, detail) {
+            if (ok) { passCount += 1; } else { failCount += 1; }
+            const li = document.createElement('li');
+            li.className = ok ? 'ok' : 'no';
+            li.innerHTML = `<span class="tag">${ok ? 'PASS' : 'FAIL'}</span>${name}` +
+                (detail && !ok ? `<span class="detail">${String(detail)}</span>` : '');
+            resultsEl.appendChild(li);
+        }
+
+        function ok(name, condition, detail) {
+            record(name, Boolean(condition), detail);
+        }
+
+        function equal(name, actual, expected) {
+            record(name, actual === expected, `esperado=${JSON.stringify(expected)} recebido=${JSON.stringify(actual)}`);
+        }
+
+        function throws(name, fn, expectedFragment) {
+            try {
+                fn();
+                record(name, false, 'nenhum erro foi lancado');
+            } catch (error) {
+                const message = String(error && error.message ? error.message : error);
+                record(name, message.toLowerCase().includes(String(expectedFragment).toLowerCase()),
+                    `mensagem="${message}" nao contem "${expectedFragment}"`);
+            }
+        }
+
+        function reset() {
+            [
+                'TOTVS_REFRESH_2026_STATE_V3',
+                'TOTVS_REFRESH_2026_SESSION_V3',
+                'TOTVS_REFRESH_2026_GITHUB_SYNC_V1',
+                'TOTVS_REFRESH_2026_GITHUB_STATUS_V1'
+            ].forEach((key) => localStorage.removeItem(key));
+        }
+
+        function finish() {
+            const failed = failCount > 0;
+            summaryEl.className = failed ? 'fail' : 'pass';
+            summaryEl.textContent = failed
+                ? `FALHOU: ${failCount} teste(s) com erro de ${passCount + failCount}`
+                : `TODOS OS TESTES PASSARAM: ${passCount}/${passCount}`;
+            document.title = failed ? 'SMOKE-FAIL' : 'SMOKE-PASS';
+        }
+    </script>
+
+    <script>
+        (async () => {
+            /* ---------------- Base64 UTF-8 com acentos ---------------- */
+            const sample = 'FORMATAÇÃO E BIOS · DOMINIO E ARGUS · çãõéí';
+            equal('base64 round-trip preserva acentos',
+                TOTVSGithubSync.decodeBase64(TOTVSGithubSync.encodeBase64(sample)), sample);
+
+            /* ---------------- Estado inicial ---------------- */
+            reset();
+            let state = TOTVSStorage.loadState();
+            equal('estado inicial tem 5 usuarios', state.users.length, 5);
+            equal('estado inicial tem 1 lote', state.datasets.length, 1);
+            ok('existe um usuario com perfil gerente', state.users.some((user) => user.role === 'manager'));
+
+            /* ---------------- Login ---------------- */
+            const manager = TOTVSStorage.login('gerente', 'FieldTotvs2026');
+            equal('login do gerente devolve o perfil manager', manager.role, 'manager');
+            throws('login com senha errada falha',
+                () => TOTVSStorage.login('gerente', 'senha-errada'), 'senha incorreta');
+
+            /* ---------------- Cadastro em lote ---------------- */
+            const basePayload = {
+                hostnames: 'SPON010134567\nSPON010134564\nSPON010134563',
+                analystId: 'user_isaque',
+                brand: 'Dell',
+                profile: 'Local',
+                processDate: TOTVSStorage.todayBrInput(),
+                step: '1 FORMATAÇÃO E BIOS',
+                autoStart: true,
+                hasError: false,
+                errorDescription: '',
+                notes: 'lote 1'
+            };
+
+            const result = TOTVSStorage.createMachines(basePayload, 'user_manager');
+            equal('cadastro em lote cria 3 registros', result.createdItems.length, 3);
+
+            /* ---------------- BUG ANTIGO (item 20 do guia) ---------------- */
+            const second = TOTVSStorage.createMachines(
+                { ...basePayload, hostnames: 'SPON010134570', notes: 'lote 2' },
+                'user_manager'
+            );
+            equal('salvar novas maquinas depois do primeiro lote funciona', second.createdItems.length, 1);
+            equal('total apos o segundo lote', TOTVSStorage.loadState().machines.length, 4);
+
+            const third = TOTVSStorage.createMachines(
+                { ...basePayload, hostnames: 'SPON010134567', notes: 'atualizado' },
+                'user_manager'
+            );
+            equal('reenvio do mesmo hostname nao duplica', TOTVSStorage.loadState().machines.length, 4);
+            equal('reenvio conta como atualizacao', third.updatedItems.length, 1);
+
+            /* ---------------- Timers ---------------- */
+            const target = TOTVSStorage.loadState().machines.find((m) => m.hostname === 'SPON010134567');
+            equal('cronometro inicia junto com o salvamento', target.timerRunning, true);
+            ok('registro guarda a data da cronometragem', Boolean(target.processDate));
+
+            TOTVSStorage.pauseMachine(target.id, 'user_manager');
+            equal('pausar desliga o cronometro',
+                TOTVSStorage.loadState().machines.find((m) => m.id === target.id).timerRunning, false);
+
+            TOTVSStorage.startMachine(target.id, 'user_manager');
+            equal('reiniciar religa o cronometro',
+                TOTVSStorage.loadState().machines.find((m) => m.id === target.id).timerRunning, true);
+
+            for (let index = 0; index < 4; index += 1) {
+                TOTVSStorage.nextMachineStep(target.id, 'user_manager');
+            }
+            const concluded = TOTVSStorage.loadState().machines.find((m) => m.id === target.id);
+            equal('apos 4 avancos a maquina fica CONCLUIDO', concluded.status, 'CONCLUIDO');
+            equal('ao concluir o cronometro para', concluded.timerRunning, false);
+            ok('ao concluir grava a data de conclusao', Boolean(concluded.completedAt));
+
+            /* ---------------- Permissoes ---------------- */
+            const openMachine = TOTVSStorage.loadState().machines.find(
+                (machine) => machine.analystId === 'user_isaque' && machine.status !== 'CONCLUIDO'
+            );
+            throws('analista nao pode excluir maquina de outro analista',
+                () => TOTVSStorage.deleteMachine(openMachine.id, 'user_vinicius'), 'permiss');
+            throws('analista nao pode criar lote',
+                () => TOTVSStorage.createDataset('Lote indevido', 'user_isaque'), 'gerente');
+            throws('analista nao pode excluir lote',
+                () => TOTVSStorage.deleteDataset('dataset_principal', 'user_isaque'), 'gerente');
+
+            /* ---------------- Senhas ---------------- */
+            throws('troca de senha exige a senha atual correta',
+                () => TOTVSStorage.changeOwnPassword('user_isaque', 'errada', 'NovaSenha123'), 'senha atual incorreta');
+
+            TOTVSStorage.changeOwnPassword('user_isaque', 'FieldTotvs2026', 'NovaSenha123');
+            equal('login funciona com a senha nova', TOTVSStorage.login('isaque', 'NovaSenha123').id, 'user_isaque');
+
+            throws('reset de senha exige a chave mestra',
+                () => TOTVSStorage.resetUserPassword('user_manager', 'user_isaque', 'chave-errada', 'Outra12345'), 'senha mestra');
+
+            TOTVSStorage.resetUserPassword('user_manager', 'user_isaque', 'FieldTotvs2026', 'FieldTotvs2026');
+            equal('reset devolve a senha padrao', TOTVSStorage.login('isaque', 'FieldTotvs2026').id, 'user_isaque');
+
+            /* ---------------- Merge por data ---------------- */
+            const older = { id: 'x1', updatedAt: '2026-01-01T00:00:00.000Z', notes: 'antigo' };
+            const newer = { id: 'x1', updatedAt: '2026-06-01T00:00:00.000Z', notes: 'novo' };
+            equal('merge mantem a versao mais recente', TOTVSStorage.mergeById([older], [newer])[0].notes, 'novo');
+            equal('merge nao rebaixa registro local mais novo', TOTVSStorage.mergeById([newer], [older])[0].notes, 'novo');
+            equal('merge adiciona registro inexistente', TOTVSStorage.mergeById([], [newer]).length, 1);
+
+            /* ---------------- Merge remoto por perfil ---------------- */
+            const remoteBundle = {
+                general: {
+                    activeDatasetId: 'dataset_principal',
+                    datasets: [{ id: 'dataset_principal', name: 'Operação Principal' }],
+                    records: [
+                        {
+                            id: 'rm_isaque', datasetId: 'dataset_principal', hostname: 'REMOTEISAQUE',
+                            analystId: 'user_isaque', brand: 'Dell', profile: 'Local', processDate: '2026-02-02',
+                            currentStep: '1 FORMATAÇÃO E BIOS', status: 'PAUSADO',
+                            updatedAt: '2026-02-02T10:00:00.000Z'
+                        },
+                        {
+                            id: 'rm_vinicius', datasetId: 'dataset_principal', hostname: 'REMOTEVINICIUS',
+                            analystId: 'user_vinicius', brand: 'HP', profile: 'Cloud', processDate: '2026-02-02',
+                            currentStep: '1 FORMATAÇÃO E BIOS', status: 'PAUSADO',
+                            updatedAt: '2026-02-02T10:00:00.000Z'
+                        }
+                    ]
+                },
+                analysts: [],
+                users: null
+            };
+
+            const analystUser = TOTVSStorage.getUserById(TOTVSStorage.loadState(), 'user_isaque');
+            TOTVSStorage.mergeRemoteBundle(remoteBundle, analystUser);
+            ok('analista absorve o proprio registro remoto',
+                TOTVSStorage.loadState().machines.some((m) => m.hostname === 'REMOTEISAQUE'));
+            ok('analista NAO absorve registro de outro analista',
+                !TOTVSStorage.loadState().machines.some((m) => m.hostname === 'REMOTEVINICIUS'));
+
+            const managerUser = TOTVSStorage.getUserById(TOTVSStorage.loadState(), 'user_manager');
+            TOTVSStorage.mergeRemoteBundle(remoteBundle, managerUser);
+            ok('gerente absorve registros de todos os analistas',
+                TOTVSStorage.loadState().machines.some((m) => m.hostname === 'REMOTEVINICIUS'));
+
+            /* ---------------- Merge nao quebra senha ---------------- */
+            const hashBefore = TOTVSStorage.loadState().users.find((u) => u.id === 'user_isaque').passwordHash;
+            TOTVSStorage.mergeRemoteBundle({
+                general: null,
+                analysts: [],
+                users: {
+                    users: [{
+                        id: 'user_isaque', username: 'isaque', displayName: 'Isaque Renomeado',
+                        role: 'analyst', active: true, updatedAt: '2030-01-01T00:00:00.000Z'
+                    }]
+                }
+            }, managerUser);
+            equal('merge remoto nao sobrescreve o hash de senha',
+                TOTVSStorage.loadState().users.find((u) => u.id === 'user_isaque').passwordHash, hashBefore);
+            equal('merge remoto aplica o nome quando e mais recente',
+                TOTVSStorage.loadState().users.find((u) => u.id === 'user_isaque').displayName, 'Isaque Renomeado');
+
+            /* ---------------- Restaurar snapshot exige gerente ---------------- */
+            const liveState = TOTVSStorage.loadState();
+            const snapshotJson = JSON.stringify(liveState);
+            throws('analista nao pode restaurar snapshot completo',
+                () => TOTVSStorage.restoreFullBackup(JSON.stringify({
+                    version: '3.0.0',
+                    datasets: [{ id: 'd1', name: 'D' }],
+                    users: [],
+                    machines: []
+                }), 'user_isaque'), 'apenas o gerente');
+            ok('gerente consegue restaurar snapshot',
+                Boolean(TOTVSStorage.restoreFullBackup(snapshotJson, 'user_manager')));
+
+            /* ---------------- Payloads do GitHub ---------------- */
+            const payloadState = TOTVSStorage.loadState();
+            const generalPayload = TOTVSGithubSync.buildGeneralPayload(payloadState);
+            equal('payload geral tem kind=general', generalPayload.kind, 'general');
+            equal('payload geral lista os 4 analistas',
+                Array.isArray(generalPayload.analystFiles) ? generalPayload.analystFiles.length : -1, 4);
+            ok('payload geral usa o caminho data/analistas/<usuario>.json',
+                generalPayload.analystFiles.some((entry) => entry.file === 'data/analistas/isaque.json'));
+            equal('payload geral inclui todos os registros',
+                generalPayload.records.length, payloadState.machines.length);
+
+            const isaqueUser = TOTVSStorage.getUserById(payloadState, 'user_isaque');
+            const userPayload = TOTVSGithubSync.buildUserPayload(payloadState, isaqueUser);
+            equal('payload individual tem kind=analyst', userPayload.kind, 'analyst');
+            ok('payload individual so tem registros do analista',
+                userPayload.records.every((record) => record.analystId === 'user_isaque'));
+            equal('caminho do arquivo individual',
+                TOTVSGithubSync.analystPath('isaque'), 'data/analistas/isaque.json');
+
+            const usersPayload = TOTVSGithubSync.buildUsersPayload(payloadState);
+            ok('payload de usuarios NAO expoe hash de senha',
+                usersPayload.users.every((user) => !('passwordHash' in user)));
+
+            /* ---------------- Gravacao no GitHub (fetch simulado) ---------------- */
+            const realFetch = window.fetch;
+            const apiCalls = [];
+            let putAttempts = 0;
+
+            TOTVSGithubSync.saveConfig({
+                owner: 'demo', repo: 'meu-repo', branch: 'main', token: 'token-fake', autoSync: false
+            });
+
+            window.fetch = async (url, options) => {
+                const method = (options && options.method) || 'GET';
+                apiCalls.push(`${method} ${String(url).replace('https://api.github.com', '')}`);
+
+                if (method === 'GET') {
+                    return {
+                        ok: true,
+                        status: 200,
+                        text: async () => JSON.stringify({
+                            sha: 'sha-1',
+                            path: 'data/analistas/isaque.json',
+                            content: TOTVSGithubSync.encodeBase64('{}')
+                        })
+                    };
+                }
+
+                putAttempts += 1;
+                if (putAttempts === 1) {
+                    return { ok: false, status: 409, text: async () => JSON.stringify({ message: 'sha mismatch' }) };
+                }
+                return {
+                    ok: true,
+                    status: 200,
+                    text: async () => JSON.stringify({ content: { sha: 'sha-2' }, commit: { sha: 'c1' } })
+                };
+            };
+
+            try {
+                await TOTVSGithubSync.pushUserFile(payloadState, isaqueUser);
+                equal('gravacao com conflito 409 e repetida automaticamente', putAttempts, 2);
+                ok('usa o endpoint de contents do arquivo individual',
+                    apiCalls.some((call) => call.startsWith('PUT /repos/demo/meu-repo/contents/data/analistas/isaque.json')));
+                ok('le o sha antes de enviar',
+                    apiCalls.some((call) => call.startsWith('GET /repos/demo/meu-repo/contents/data/analistas/isaque.json')));
+            } catch (error) {
+                record('gravacao com conflito 409 e repetida automaticamente', false, error.message);
+            } finally {
+                window.fetch = realFetch;
+                localStorage.removeItem('TOTVS_REFRESH_2026_GITHUB_SYNC_V1');
+                localStorage.removeItem('TOTVS_REFRESH_2026_GITHUB_STATUS_V1');
+            }
+
+            /* ---------------- Relatorios ---------------- */
+            const reportState = TOTVSStorage.loadState();
+            const metrics = TOTVSReports.calculateMetrics(reportState, reportState.machines);
+            equal('metricas contam o total de registros', metrics.total, reportState.machines.length);
+            ok('metricas contam as concluidas', metrics.doneCount >= 1);
+            ok('metricas geram a media da etapa 1',
+                typeof metrics.stepAvgTimes['1 FORMATAÇÃO E BIOS'] === 'string');
+            ok('relatorio imprimivel geral e gerado',
+                TOTVSReports.buildPrintableGeneralReport(reportState, metrics, reportState.machines).includes('print-report'));
+            ok('relatorio imprimivel individual e gerado',
+                TOTVSReports.buildPrintableAnalystReport(reportState, reportState.machines, 'user_isaque').includes('Relatório Individual'));
+
+            /* ---------------- Visibilidade por perfil ---------------- */
+            const visAnalyst = TOTVSStorage.getVisibleMachines(reportState, analystUser);
+            ok('analista ve apenas os proprios registros',
+                visAnalyst.every((machine) => machine.analystId === 'user_isaque'));
+            ok('gerente ve o lote inteiro',
+                TOTVSStorage.getVisibleMachines(reportState, managerUser).length >= visAnalyst.length);
+
+            finish();
+        })();
+    </script>
+</body>
+</html>

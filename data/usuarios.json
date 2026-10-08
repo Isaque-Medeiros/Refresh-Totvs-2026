@@ -1,0 +1,53 @@
+{
+  "kind": "users",
+  "exportedAt": null,
+  "organization": {
+    "appName": "TOTVS Field Refresh 2026",
+    "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
+    "totalGoal": 1000,
+    "analystGoal": 250
+  },
+  "users": [
+    {
+      "id": "user_manager",
+      "username": "gerente",
+      "displayName": "Gerente de Projeto",
+      "role": "manager",
+      "active": true,
+      "updatedAt": null
+    },
+    {
+      "id": "user_isaque",
+      "username": "isaque",
+      "displayName": "Isaque",
+      "role": "analyst",
+      "active": true,
+      "updatedAt": null
+    },
+    {
+      "id": "user_vinicius",
+      "username": "vinicius",
+      "displayName": "Vinicius",
+      "role": "analyst",
+      "active": true,
+      "updatedAt": null
+    },
+    {
+      "id": "user_guilherme",
+      "username": "guilherme",
+      "displayName": "Guilherme",
+      "role": "analyst",
+      "active": true,
+      "updatedAt": null
+    },
+    {
+      "id": "user_davi",
+      "username": "davi",
+      "displayName": "Davi",
+      "role": "analyst",
+      "active": true,
+      "updatedAt": null
+    }
+  ],
+  "analystFiles": []
+}

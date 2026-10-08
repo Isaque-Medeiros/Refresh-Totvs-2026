@@ -1,0 +1,54 @@
+﻿============================================================
+ TOTVS FIELD REFRESH 2026 - VALIDACAO
+ Data: 08/10/2026 11:01:36
+============================================================
+
+[1/3] Verificacao de IDs (JavaScript x HTML)
+------------------------------------------------------------
+
+=== TOTVS Field Refresh 2026 :: Verificacao de IDs ===
+IDs no HTML .......: 111
+Referencias no JS .: 161
+
+OK: toda referencia de JS aponta para um ID existente no HTML.
+
+Aviso: 10 ID(s) no HTML sem uso direto no JS (pode ser data-tab, label for, etc):
+  - ghStatusDot
+  - ghSyncCard
+  - machinesTable
+  - modalPassword
+  - modalReports
+  - modalSync
+  - tabErrorReport
+  - tabGeneralReport
+  - tabIndividualReport
+  - tabTextExport
+Resultado: OK
+
+Navegador: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+
+[2/3] Smoke test de logica (tests/smoke.html)
+------------------------------------------------------------
+[OK] Servidor local ativo em http://localhost:8765/
+
+Resumo do smoke test: TODOS OS TESTES PASSARAM: 53/53
+[3/3] Carregamento da aplicacao real (app/index.html)
+------------------------------------------------------------
+  [OK  ] Pagina renderizou o titulo TOTVS
+  [OK  ] login.js executou (select de usuarios cheio)
+  [OK  ] Analistas carregados na lista de login
+  [OK  ] View de login visivel por padrao
+  [OK  ] View do app comeca oculta
+  [OK  ] UI de sincronizacao GitHub presente
+  [OK  ] Campo de token presente
+  [OK  ] Botao de leitura publica presente
+  [OK  ] Download por analista presente
+  [OK  ] Botao de restaurar snapshot marcado gerente-only
+  [OK  ] Script github-sync.js carregado
+  [OK  ] Area de impressao presente
+
+Resultado carregamento: OK
+
+============================================================
+ RESULTADO FINAL: TUDO OK
+============================================================
