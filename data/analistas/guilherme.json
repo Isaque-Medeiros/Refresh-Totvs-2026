@@ -1,6 +1,5 @@
 {
-  "kind": "analyst",
-  "exportedAt": null,
+  "exportedAt": "2026-10-08T19:04:19.134Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -13,14 +12,117 @@
     "displayName": "Guilherme",
     "role": "analyst"
   },
-  "username": "guilherme",
-  "analystId": "user_guilherme",
   "summary": {
-    "total": 0,
+    "total": 1,
     "doneCount": 0,
     "wipCount": 0,
-    "pausedCount": 0,
-    "errorCount": 0
+    "pausedCount": 1,
+    "errorCount": 0,
+    "successRate": "100",
+    "globalPercent": "0.0",
+    "avgTimeString": "00m 00s",
+    "manualCount": 1,
+    "stepAvgTimes": {
+      "1 FORMATAÇÃO E BIOS": "00m 00s",
+      "2 WINDOWS UPDATE": "53m 00s",
+      "3 ATIVAR ADM E SUBIR DRIVERS": "22m 00s",
+      "4 DOMINIO E ARGUS": "00m 00s"
+    },
+    "stepAvgSeconds": {
+      "1 FORMATAÇÃO E BIOS": 0,
+      "2 WINDOWS UPDATE": 3180,
+      "3 ATIVAR ADM E SUBIR DRIVERS": 1320,
+      "4 DOMINIO E ARGUS": 0
+    },
+    "analystStats": [
+      {
+        "analystId": "user_isaque",
+        "name": "Isaque",
+        "total": 0,
+        "done": 0,
+        "wip": 0,
+        "paused": 0,
+        "errors": 0,
+        "goalPercent": "0.0"
+      },
+      {
+        "analystId": "user_vinicius",
+        "name": "Vinicius",
+        "total": 0,
+        "done": 0,
+        "wip": 0,
+        "paused": 0,
+        "errors": 0,
+        "goalPercent": "0.0"
+      },
+      {
+        "analystId": "user_guilherme",
+        "name": "Guilherme",
+        "total": 1,
+        "done": 0,
+        "wip": 0,
+        "paused": 1,
+        "errors": 0,
+        "goalPercent": "0.0"
+      },
+      {
+        "analystId": "user_davi",
+        "name": "Davi",
+        "total": 0,
+        "done": 0,
+        "wip": 0,
+        "paused": 0,
+        "errors": 0,
+        "goalPercent": "0.0"
+      }
+    ],
+    "errorList": []
   },
-  "records": []
+  "records": [
+    {
+      "id": "nb_1791486257631_comtbq",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132306",
+      "analystId": "user_guilherme",
+      "brand": "HP",
+      "profile": "Local",
+      "processDate": "2026-10-06",
+      "currentStep": "1 FORMATAÇÃO E BIOS",
+      "currentStepIndex": 0,
+      "status": "PAUSADO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 0,
+        "2 WINDOWS UPDATE": 3180,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1320,
+        "4 DOMINIO E ARGUS": 0
+      },
+      "totalElapsedSeconds": 4500,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": true,
+      "manualEntryBy": "user_guilherme",
+      "manualEntryAt": "2026-10-08T19:04:17.631Z",
+      "history": [
+        {
+          "action": "machine_created_manual",
+          "actorId": "user_guilherme",
+          "note": "Lançamento manual com tempo digitado",
+          "createdAt": "2026-10-08T19:04:17.631Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-08T19:04:17.631Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-08T19:04:17.631Z",
+      "updatedAt": "2026-10-08T19:04:17.631Z",
+      "completedAt": null,
+      "preparedAt": null,
+      "swappedAt": null,
+      "swappedBy": null
+    }
+  ],
+  "kind": "analyst",
+  "username": "guilherme",
+  "analystId": "user_guilherme"
 }
