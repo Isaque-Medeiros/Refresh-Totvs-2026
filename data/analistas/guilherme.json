@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-08T19:09:44.759Z",
+  "exportedAt": "2026-10-08T19:10:49.105Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -13,26 +13,26 @@
     "role": "analyst"
   },
   "summary": {
-    "total": 1,
+    "total": 2,
     "doneCount": 0,
     "wipCount": 0,
-    "pausedCount": 1,
+    "pausedCount": 2,
     "errorCount": 0,
     "successRate": "100",
     "globalPercent": "0.0",
     "avgTimeString": "00m 00s",
-    "manualCount": 1,
+    "manualCount": 2,
     "stepAvgTimes": {
-      "1 FORMATAÇÃO E BIOS": "24m 00s",
-      "2 WINDOWS UPDATE": "09m 00s",
-      "3 ATIVAR ADM E SUBIR DRIVERS": "30m 00s",
-      "4 DOMINIO E ARGUS": "12m 00s"
+      "1 FORMATAÇÃO E BIOS": "32m 00s",
+      "2 WINDOWS UPDATE": "13m 00s",
+      "3 ATIVAR ADM E SUBIR DRIVERS": "23m 30s",
+      "4 DOMINIO E ARGUS": "15m 00s"
     },
     "stepAvgSeconds": {
-      "1 FORMATAÇÃO E BIOS": 1440,
-      "2 WINDOWS UPDATE": 540,
-      "3 ATIVAR ADM E SUBIR DRIVERS": 1800,
-      "4 DOMINIO E ARGUS": 720
+      "1 FORMATAÇÃO E BIOS": 1920,
+      "2 WINDOWS UPDATE": 780,
+      "3 ATIVAR ADM E SUBIR DRIVERS": 1410,
+      "4 DOMINIO E ARGUS": 900
     },
     "analystStats": [
       {
@@ -58,10 +58,10 @@
       {
         "analystId": "user_guilherme",
         "name": "Guilherme",
-        "total": 1,
+        "total": 2,
         "done": 0,
         "wip": 0,
-        "paused": 1,
+        "paused": 2,
         "errors": 0,
         "goalPercent": "0.0"
       },
@@ -79,6 +79,48 @@
     "errorList": []
   },
   "records": [
+    {
+      "id": "nb_1791486647601_r8wc41",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132240",
+      "analystId": "user_guilherme",
+      "brand": "Dell",
+      "profile": "Local",
+      "processDate": "2026-10-08",
+      "currentStep": "1 FORMATAÇÃO E BIOS",
+      "currentStepIndex": 0,
+      "status": "PAUSADO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 2400,
+        "2 WINDOWS UPDATE": 1020,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1020,
+        "4 DOMINIO E ARGUS": 1080
+      },
+      "totalElapsedSeconds": 5520,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": true,
+      "manualEntryBy": "user_guilherme",
+      "manualEntryAt": "2026-10-08T19:10:47.601Z",
+      "history": [
+        {
+          "action": "machine_created_manual",
+          "actorId": "user_guilherme",
+          "note": "Lançamento manual com tempo digitado",
+          "createdAt": "2026-10-08T19:10:47.601Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-08T19:10:47.601Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-08T19:10:47.601Z",
+      "updatedAt": "2026-10-08T19:10:47.601Z",
+      "completedAt": null,
+      "preparedAt": null,
+      "swappedAt": null,
+      "swappedBy": null
+    },
     {
       "id": "nb_1791486583255_dfc8zq",
       "datasetId": "dataset_principal",
