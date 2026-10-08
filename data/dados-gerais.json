@@ -1,6 +1,6 @@
 {
   "version": "3.0.0",
-  "exportedAt": "2026-10-08T18:40:05.871Z",
+  "exportedAt": "2026-10-08T18:42:49.986Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -25,13 +25,13 @@
     "stepAvgTimes": {
       "1 FORMATAÇÃO E BIOS": "00m 05s",
       "2 WINDOWS UPDATE": "00m 04s",
-      "3 ATIVAR ADM E SUBIR DRIVERS": "28m 03s",
+      "3 ATIVAR ADM E SUBIR DRIVERS": "28m 35s",
       "4 DOMINIO E ARGUS": "11m 46s"
     },
     "stepAvgSeconds": {
       "1 FORMATAÇÃO E BIOS": 5,
       "2 WINDOWS UPDATE": 4,
-      "3 ATIVAR ADM E SUBIR DRIVERS": 1683,
+      "3 ATIVAR ADM E SUBIR DRIVERS": 1715,
       "4 DOMINIO E ARGUS": 706
     },
     "analystStats": [
@@ -160,10 +160,10 @@
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 6,
         "2 WINDOWS UPDATE": 4,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 5480,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 5638,
         "4 DOMINIO E ARGUS": 0
       },
-      "totalElapsedSeconds": 5490,
+      "totalElapsedSeconds": 5648,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -191,9 +191,9 @@
         }
       ],
       "currentStepStartedAt": "2026-10-08T17:08:29.075Z",
-      "lastTickAt": "2026-10-08T18:40:04.624Z",
+      "lastTickAt": "2026-10-08T18:42:48.533Z",
       "createdAt": "2026-10-08T17:08:16.842Z",
-      "updatedAt": "2026-10-08T18:40:04.624Z",
+      "updatedAt": "2026-10-08T18:42:48.533Z",
       "completedAt": null,
       "preparedAt": null,
       "swappedAt": null,
@@ -394,7 +394,7 @@
       "displayName": "Isaque",
       "file": "data/analistas/isaque.json",
       "records": 3,
-      "updatedAt": "2026-10-08T18:40:04.624Z"
+      "updatedAt": "2026-10-08T18:42:48.533Z"
     },
     {
       "id": "user_vinicius",
