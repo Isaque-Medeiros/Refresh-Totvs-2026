@@ -1,0 +1,604 @@
+/*
+ * TOTVS Field Refresh 2026 - Sincronizacao automatica com o GitHub
+ * ---------------------------------------------------------------------------
+ * Grava e le os arquivos de dados direto no repositorio usando a Contents API
+ * (https://api.github.com). O objetivo e que cada analista salve e o dado ja
+ * apareca versionado no GitHub, sem exportar/importar JSON manualmente.
+ *
+ * Estrutura de arquivos no repositorio:
+ *   data/dados-gerais.json          -> indice geral + manifest dos analistas (gerente)
+ *   data/usuarios.json              -> usuarios sem hash de senha (gerente)
+ *   data/analistas/<username>.json  -> arquivo individual de cada analista
+ *
+ * Regra anti-conflito: cada analista escreve SOMENTE o proprio arquivo.
+ * O gerente escreve o arquivo geral e o de usuarios. Assim dois analistas
+ * nunca disputam a mesma gravacao.
+ */
+const TOTVSGithubSync = (() => {
+    const CONFIG_KEY = 'TOTVS_REFRESH_2026_GITHUB_SYNC_V1';
+    const STATUS_KEY = 'TOTVS_REFRESH_2026_GITHUB_STATUS_V1';
+    const API_BASE = 'https://api.github.com';
+    const API_VERSION = '2022-11-28';
+    const AUTO_SYNC_DEBOUNCE_MS = 1500;
+    const MAX_CONFLICT_RETRIES = 3;
+
+    const PATH_GENERAL = 'data/dados-gerais.json';
+    const PATH_USERS = 'data/usuarios.json';
+    const PATH_MANAGEMENT = 'data/gestao.json';
+    const ANALYST_DIR = 'data/analistas';
+    // Caminho relativo usado para LER os arquivos publicados (GitHub Pages) sem token.
+    const PUBLISHED_BASE = '../data';
+
+    const state = {
+        config: null,
+        status: 'idle',
+        message: 'Sincronizacao nao configurada.',
+        lastSyncAt: null,
+        pending: 0,
+        listeners: [],
+        queue: Promise.resolve(),
+        debounceTimer: null
+    };
+
+    function analystPath(username) {
+        return `${ANALYST_DIR}/${String(username || '').trim().toLowerCase()}.json`;
+    }
+
+    async function fetchJsonRelative(url) {
+        const response = await fetch(url, { cache: 'no-store' });
+        if (!response.ok) {
+            return null;
+        }
+        try {
+            return await response.json();
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function nowIso() {
+        return new Date().toISOString();
+    }
+
+    function delay(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    /* ------------------------------ Base64 UTF-8 ------------------------------ */
+
+    function encodeBase64(text) {
+        const bytes = new TextEncoder().encode(String(text || ''));
+        let binary = '';
+        bytes.forEach((byte) => {
+            binary += String.fromCharCode(byte);
+        });
+        return btoa(binary);
+    }
+
+    function decodeBase64(base64) {
+        const binary = atob(String(base64 || '').replace(/\s+/g, ''));
+        const bytes = new Uint8Array(binary.length);
+        for (let index = 0; index < binary.length; index += 1) {
+            bytes[index] = binary.charCodeAt(index);
+        }
+        return new TextDecoder('utf-8').decode(bytes);
+    }
+
+    /* -------------------------------- Config --------------------------------- */
+
+    function getConfig() {
+        if (state.config) {
+            return state.config;
+        }
+        try {
+            const raw = localStorage.getItem(CONFIG_KEY);
+            state.config = raw ? JSON.parse(raw) : null;
+        } catch (error) {
+            console.error('Falha ao ler configuracao do GitHub:', error);
+            state.config = null;
+        }
+        return state.config;
+    }
+
+    function saveConfig(config) {
+        const normalized = {
+            owner: String(config.owner || '').trim(),
+            repo: String(config.repo || '').trim(),
+            branch: String(config.branch || 'main').trim() || 'main',
+            token: String(config.token || '').trim(),
+            autoSync: Boolean(config.autoSync)
+        };
+        state.config = normalized;
+        localStorage.setItem(CONFIG_KEY, JSON.stringify(normalized));
+        writeLocalStatus('idle', 'Configuracao salva. Use "Testar conexao" para validar.');
+        return normalized;
+    }
+
+    function isConfigured() {
+        const config = getConfig();
+        return Boolean(config && config.owner && config.repo && config.token);
+    }
+
+    /* -------------------------------- Status --------------------------------- */
+
+    function readLocalStatus() {
+        try {
+            const raw = localStorage.getItem(STATUS_KEY);
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                state.lastSyncAt = parsed.lastSyncAt || null;
+            }
+        } catch (error) {
+            state.lastSyncAt = null;
+        }
+        return state.lastSyncAt;
+    }
+
+    function writeLocalStatus(status, message, lastSyncAt) {
+        state.status = status;
+        state.message = message;
+        if (lastSyncAt) {
+            state.lastSyncAt = lastSyncAt;
+        }
+
+        localStorage.setItem(STATUS_KEY, JSON.stringify({
+            status: state.status,
+            message: state.message,
+            lastSyncAt: state.lastSyncAt
+        }));
+
+        state.listeners.forEach((listener) => {
+            try {
+                listener(getStatus());
+            } catch (error) {
+                console.error('Listener de status falhou:', error);
+            }
+        });
+    }
+
+    function getStatus() {
+        const config = getConfig();
+        return {
+            configured: isConfigured(),
+            status: state.status,
+            message: state.message,
+            lastSyncAt: state.lastSyncAt,
+            pending: state.pending,
+            autoSync: Boolean(config && config.autoSync)
+        };
+    }
+
+    function onStatus(listener) {
+        if (typeof listener === 'function') {
+            state.listeners.push(listener);
+        }
+    }
+
+    /* ----------------------------- Chamadas HTTP ----------------------------- */
+
+    function buildHeaders(config) {
+        return {
+            Authorization: `Bearer ${config.token}`,
+            Accept: 'application/vnd.github+json',
+            'X-GitHub-Api-Version': API_VERSION,
+            'Content-Type': 'application/json'
+        };
+    }
+
+    function describeError(result) {
+        const detail = result && result.data && result.data.message ? result.data.message : '';
+        switch (result && result.status) {
+            case 401:
+                return 'Token invalido ou expirado. Gere um novo token no GitHub.';
+            case 403:
+                return 'Sem permissao. O token precisa de "Contents: Read and write" neste repositorio.';
+            case 404:
+                return 'Repositorio ou branch nao encontrado. Confira usuario, repositorio e branch.';
+            case 409:
+                return 'Conflito de versao no arquivo. Tentando novamente...';
+            case 422:
+                return `O GitHub recusou a gravacao. ${detail}`.trim();
+            default:
+                return `Falha na API do GitHub (HTTP ${result ? result.status : '?'}). ${detail}`.trim();
+        }
+    }
+
+    async function apiRequest(config, method, path, body) {
+        const response = await fetch(`${API_BASE}${path}`, {
+            method,
+            headers: buildHeaders(config),
+            body: body ? JSON.stringify(body) : undefined
+        });
+
+        const text = await response.text();
+        let data = null;
+        if (text) {
+            try {
+                data = JSON.parse(text);
+            } catch (error) {
+                data = { message: text };
+            }
+        }
+
+        return { ok: response.ok, status: response.status, data };
+    }
+
+    function contentsPath(config, filePath, withRef) {
+        const base = `/repos/${encodeURIComponent(config.owner)}/${encodeURIComponent(config.repo)}/contents/${filePath}`;
+        return withRef ? `${base}?ref=${encodeURIComponent(config.branch)}` : base;
+    }
+
+    /* --------------------------- Leitura / gravacao --------------------------- */
+
+    async function readFile(config, filePath) {
+        const result = await apiRequest(config, 'GET', contentsPath(config, filePath, true));
+        if (result.status === 404) {
+            return null;
+        }
+        if (!result.ok) {
+            throw new Error(describeError(result));
+        }
+
+        let parsed = null;
+        try {
+            parsed = JSON.parse(decodeBase64(result.data.content));
+        } catch (error) {
+            throw new Error(`O arquivo ${filePath} esta corrompido no repositorio.`);
+        }
+
+        return { sha: result.data.sha, path: result.data.path, data: parsed };
+    }
+
+    async function writeFile(config, filePath, payload, message) {
+        const content = encodeBase64(JSON.stringify(payload, null, 2));
+
+        for (let attempt = 1; attempt <= MAX_CONFLICT_RETRIES; attempt += 1) {
+            const current = await apiRequest(config, 'GET', contentsPath(config, filePath, true));
+            const body = { message, content, branch: config.branch };
+            if (current.ok && current.data && current.data.sha) {
+                body.sha = current.data.sha;
+            }
+
+            const result = await apiRequest(config, 'PUT', contentsPath(config, filePath, false), body);
+            if (result.ok) {
+                return result.data;
+            }
+
+            if (result.status === 409 || result.status === 422) {
+                await delay(400 * attempt);
+                continue;
+            }
+
+            throw new Error(describeError(result));
+        }
+
+        throw new Error(`Nao foi possivel gravar ${filePath}: conflito persistente de versao.`);
+    }
+
+    /* --------------------------- Payloads de dados --------------------------- */
+
+    function buildAnalystManifest(state) {
+        return state.users
+            .filter((user) => user.role === 'analyst')
+            .map((user) => {
+                const owned = state.machines.filter((machine) => machine.analystId === user.id);
+                const newest = owned.reduce((latest, machine) => {
+                    const time = new Date(machine.updatedAt || 0).getTime();
+                    return time > latest ? time : latest;
+                }, 0);
+                return {
+                    id: user.id,
+                    username: user.username,
+                    displayName: user.displayName,
+                    file: analystPath(user.username),
+                    records: owned.length,
+                    updatedAt: newest ? new Date(newest).toISOString() : null
+                };
+            });
+    }
+
+    function buildGeneralPayload(state) {
+        const base = TOTVSImporterExporter.buildGeneralExport(state);
+        return {
+            ...base,
+            kind: 'general',
+            analystFiles: buildAnalystManifest(state),
+            records: state.machines.map((machine) => ({ ...machine }))
+        };
+    }
+
+    function buildUserPayload(state, user) {
+        const base = TOTVSImporterExporter.buildUserExport(state, user.id);
+        return {
+            ...base,
+            kind: 'analyst',
+            username: user.username,
+            analystId: user.id,
+            records: state.machines
+                .filter((machine) => machine.analystId === user.id)
+                .map((machine) => ({ ...machine }))
+        };
+    }
+
+    function buildUsersPayload(state) {
+        const base = TOTVSImporterExporter.buildUsersExport(state);
+        return {
+            ...base,
+            kind: 'users',
+            analystFiles: buildAnalystManifest(state)
+        };
+    }
+
+    // Ajustes, observacoes da daily e frentes do painel de gestao.
+    function buildManagementPayload() {
+        const management = TOTVSStorage.loadManagement();
+        const state = TOTVSStorage.loadState();
+
+        return {
+            kind: 'management',
+            exportedAt: nowIso(),
+            organization: state.organization,
+            adjustments: management.adjustments,
+            notes: management.notes,
+            frentes: management.frentes,
+            updatedAt: management.updatedAt
+        };
+    }
+
+    /* ------------------------------- Operacoes ------------------------------- */
+
+    function requireConfig() {
+        if (!isConfigured()) {
+            throw new Error('Sincronizacao nao configurada. Informe usuario, repositorio e token.');
+        }
+        return getConfig();
+    }
+
+    async function testConnection() {
+        const config = requireConfig();
+        const path = `/repos/${encodeURIComponent(config.owner)}/${encodeURIComponent(config.repo)}`;
+        const result = await apiRequest(config, 'GET', path);
+        if (!result.ok) {
+            throw new Error(describeError(result));
+        }
+
+        const canWrite = Boolean(result.data.permissions && result.data.permissions.push);
+        if (!canWrite) {
+            throw new Error('Token valido, porem sem permissao de escrita. Gere o token com "Contents: Read and write".');
+        }
+
+        return {
+            fullName: result.data.full_name,
+            defaultBranch: result.data.default_branch,
+            canWrite
+        };
+    }
+
+    async function listAnalystFiles(config) {
+        const result = await apiRequest(config, 'GET', contentsPath(config, ANALYST_DIR, true));
+        if (!result.ok || !Array.isArray(result.data)) {
+            return [];
+        }
+        return result.data
+            .filter((item) => item.type === 'file' && /\.json$/i.test(item.name))
+            .map((item) => item.name.replace(/\.json$/i, '').toLowerCase());
+    }
+
+    async function fetchBundle() {
+        const config = requireConfig();
+        const bundle = { general: null, users: null, management: null, analysts: [], fetchedAt: nowIso() };
+
+        const general = await readFile(config, PATH_GENERAL);
+        if (general && general.data) {
+            bundle.general = general.data;
+        }
+
+        const users = await readFile(config, PATH_USERS);
+        if (users && users.data) {
+            bundle.users = users.data;
+        }
+
+        const management = await readFile(config, PATH_MANAGEMENT);
+        if (management && management.data) {
+            bundle.management = management.data;
+        }
+
+        const manifestNames = bundle.general && Array.isArray(bundle.general.analystFiles)
+            ? bundle.general.analystFiles.map((entry) => String(entry.username || '').toLowerCase())
+            : [];
+        const directoryNames = await listAnalystFiles(config).catch(() => []);
+        const usernames = Array.from(new Set([...manifestNames, ...directoryNames].filter(Boolean)));
+
+        for (const username of usernames) {
+            const file = await readFile(config, analystPath(username));
+            if (file && file.data) {
+                bundle.analysts.push({ username, data: file.data });
+            }
+        }
+
+        return bundle;
+    }
+
+    async function fetchPublishedBundle() {
+        try {
+            const general = await fetchJsonRelative(`${PUBLISHED_BASE}/dados-gerais.json`);
+            if (!general) {
+                return null;
+            }
+
+            const bundle = { general, users: null, management: null, analysts: [], fetchedAt: nowIso(), source: 'published' };
+
+            const users = await fetchJsonRelative(`${PUBLISHED_BASE}/usuarios.json`);
+            if (users) {
+                bundle.users = users;
+            }
+
+            const management = await fetchJsonRelative(`${PUBLISHED_BASE}/gestao.json`);
+            if (management) {
+                bundle.management = management;
+            }
+
+            // Nomes vindos do manifest do arquivo geral.
+            const manifestNames = (Array.isArray(general.analystFiles) ? general.analystFiles : [])
+                .map((entry) => String(entry.username || '').trim().toLowerCase());
+
+            // Nomes vindos do usuarios.json: garante que um analista recem-criado seja
+            // lido mesmo que o gerente ainda nao tenha sincronizado o arquivo geral.
+            const userNames = (bundle.users && Array.isArray(bundle.users.users) ? bundle.users.users : [])
+                .filter((user) => user && user.role === 'analyst')
+                .map((user) => String(user.username || '').trim().toLowerCase());
+
+            const usernames = Array.from(new Set([...manifestNames, ...userNames].filter(Boolean)));
+
+            for (const username of usernames) {
+                const data = await fetchJsonRelative(`${PUBLISHED_BASE}/analistas/${username}.json`);
+                if (data) {
+                    bundle.analysts.push({ username, data });
+                }
+            }
+
+            return bundle;
+        } catch (error) {
+            // Leitura publica indisponivel (ex: pagina aberta direto por file://).
+            return null;
+        }
+    }
+
+    async function pushUserFile(state, user) {
+        const config = requireConfig();
+        return writeFile(
+            config,
+            analystPath(user.username),
+            buildUserPayload(state, user),
+            `chore(dados): atualiza registros de ${user.username}`
+        );
+    }
+
+    async function pushGeneralFile(state) {
+        const config = requireConfig();
+        return writeFile(config, PATH_GENERAL, buildGeneralPayload(state), 'chore(dados): atualiza dados gerais');
+    }
+
+    async function pushUsersFile(state) {
+        const config = requireConfig();
+        return writeFile(config, PATH_USERS, buildUsersPayload(state), 'chore(dados): atualiza usuarios');
+    }
+
+    async function pushManagementFile() {
+        const config = requireConfig();
+        return writeFile(config, PATH_MANAGEMENT, buildManagementPayload(), 'chore(dados): atualiza configuracao de gestao');
+    }
+
+    async function syncNow(state, user) {
+        const results = [];
+        results.push(await pushUserFile(state, user));
+
+        if (user.role === 'manager') {
+            results.push(await pushGeneralFile(state));
+            results.push(await pushUsersFile(state));
+            results.push(await pushManagementFile());
+        }
+
+        return results;
+    }
+
+    /* ------------------------ Fila e sincronizacao em lote ------------------------ */
+
+    function enqueue(task) {
+        state.pending += 1;
+        writeLocalStatus(state.status, state.message);
+
+        state.queue = state.queue
+            .catch(() => null)
+            .then(task)
+            .catch((error) => {
+                console.error('Falha na sincronizacao com o GitHub:', error);
+                writeLocalStatus('error', error.message || 'Falha na sincronizacao com o GitHub.');
+            })
+            .then(() => {
+                state.pending = Math.max(0, state.pending - 1);
+                writeLocalStatus(state.status, state.message);
+            });
+
+        return state.queue;
+    }
+
+    function getQueue() {
+        return state.queue;
+    }
+
+    function scheduleAutoSync(taskBuilder) {
+        const config = getConfig();
+        if (!isConfigured() || !config.autoSync || typeof taskBuilder !== 'function') {
+            return;
+        }
+
+        if (state.debounceTimer) {
+            clearTimeout(state.debounceTimer);
+        }
+
+        state.debounceTimer = setTimeout(() => {
+            state.debounceTimer = null;
+            enqueue(taskBuilder);
+        }, AUTO_SYNC_DEBOUNCE_MS);
+    }
+
+    function markSuccess(message) {
+        writeLocalStatus('ok', message, nowIso());
+    }
+
+    function markError(message) {
+        writeLocalStatus('error', message);
+    }
+
+    function markBusy(message) {
+        writeLocalStatus('syncing', message);
+    }
+
+    function markIdle(message) {
+        writeLocalStatus('idle', message);
+    }
+
+    function init() {
+        readLocalStatus();
+        if (isConfigured()) {
+            markIdle('Sincronizacao configurada e pronta.');
+        }
+    }
+
+    return {
+        ANALYST_DIR,
+        AUTO_SYNC_DEBOUNCE_MS,
+        PATH_GENERAL,
+        PATH_MANAGEMENT,
+        PATH_USERS,
+        analystPath,
+        buildGeneralPayload,
+        buildManagementPayload,
+        buildUserPayload,
+        buildUsersPayload,
+        decodeBase64,
+        encodeBase64,
+        enqueue,
+        fetchBundle,
+        fetchPublishedBundle,
+        getConfig,
+        getQueue,
+        getStatus,
+        init,
+        isConfigured,
+        markBusy,
+        markError,
+        markIdle,
+        markSuccess,
+        onStatus,
+        pushGeneralFile,
+        pushManagementFile,
+        pushUserFile,
+        pushUsersFile,
+        saveConfig,
+        scheduleAutoSync,
+        syncNow,
+        testConnection
+    };
+})();

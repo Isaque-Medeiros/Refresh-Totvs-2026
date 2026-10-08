@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status Report · Rollout TOTVS | Painel de Gestão</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="totvs-theme">
+    <div class="background-glow"></div>
+
+    <section class="login-shell hidden" id="deniedView">
+        <div class="login-panel">
+            <div class="brand-logo-badge">
+                <span class="logo-totvs">TOTVS</span>
+                <span class="logo-tag">GESTÃO</span>
+            </div>
+            <div class="login-copy">
+                <span class="pill-tag">DB4 Serv for Totvs by Isaque de Medeiros</span>
+                <h1>Acesso restrito</h1>
+                <p id="deniedMessage">
+                    Esta tela é exclusiva do gerente de projeto. Entre como gerente no
+                    painel operacional para abri-la.
+                </p>
+            </div>
+            <div class="stack-actions">
+                <a class="btn btn-primary" href="index.html">Ir para o login</a>
+            </div>
+        </div>
+    </section>
+
+    <div id="managementView" class="app-shell hidden">
+        <header class="app-header">
+            <div class="header-brand">
+                <div class="brand-logo-badge">
+                    <span class="logo-totvs">TOTVS</span>
+                    <span class="logo-tag">STATUS REPORT</span>
+                </div>
+                <div class="brand-meta">
+                    <h1>Status Report · Rollout de máquinas TOTVS</h1>
+                    <span class="fleet-target" id="managementSubtitle">1.000 máquinas · 05/10/2026 a 29/01/2027</span>
+                </div>
+            </div>
+
+            <div class="header-widgets">
+                <div class="live-card" id="liveCard">
+                    <span class="live-dot" id="liveDot"></span>
+                    <div class="live-copy">
+                        <strong id="liveLabel">Ao vivo</strong>
+                        <span id="liveDetail">Atualizado agora</span>
+                    </div>
+                    <button class="btn btn-outline btn-xs" id="btnToggleLive">Pausar</button>
+                </div>
+
+                <div class="session-card">
+                    <span class="session-role">Perfil</span>
+                    <strong id="managementUser">--</strong>
+                    <span class="session-dataset" id="managementSync">Sincronização: --</span>
+                </div>
+
+                <div class="clock-card">
+                    <span class="clock-label">Horário Local</span>
+                    <span class="clock-time" id="managementClock">--:--:--</span>
+                    <span class="clock-date" id="managementDate">--/--/----</span>
+                </div>
+
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="btnPrintDashboard">Imprimir painel</button>
+                    <button class="btn btn-secondary" id="btnExportBackup">Exportar backup</button>
+                    <label class="btn btn-secondary file-trigger">
+                        Importar apontamentos
+                        <input type="file" id="fileImport" accept=".json" multiple hidden>
+                    </label>
+                    <button class="btn btn-secondary" id="btnPushGh">Enviar agora</button>
+                    <button class="btn btn-outline" id="btnPullGh">Baixar agora</button>
+                    <a class="btn btn-outline" href="index.html">Painel operacional</a>
+                </div>
+            </div>
+        </header>
+
+        <main class="app-container">
+            <section class="kpi-grid" id="managementKpis"></section>
+
+            <section class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="badge-dot"></span>
+                        <h2>Evolução acumulada · plano x realizado</h2>
+                    </div>
+                    <span class="helper-text">linha tracejada = plano de trocas</span>
+                </div>
+                <div class="chart-box" id="burndownChart"></div>
+            </section>
+
+            <section class="charts-grid-2">
+                <section class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="badge-dot"></span>
+                            <h2>Por analista (acumulado)</h2>
+                        </div>
+                    </div>
+                    <div class="chart-box chart-box-sm" id="analystChart"></div>
+                </section>
+
+                <section class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="badge-dot"></span>
+                            <h2>Últimos 10 dias lançados</h2>
+                        </div>
+                    </div>
+                    <div class="chart-box chart-box-sm" id="dailyChart"></div>
+                </section>
+            </section>
+
+            <section class="card" id="formCard">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="badge-dot"></span>
+                        <h2>Lançamento do dia</h2>
+                    </div>
+                    <span class="helper-text" id="roMsg">
+                        Os números das máquinas entram sozinhos; o ajuste é somado a eles.
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label for="fDate">Data</label>
+                    <div class="inline-with-message">
+                        <input type="date" id="fDate" class="form-control">
+                        <span class="helper-text" id="loadMsg">Novo lançamento</span>
+                    </div>
+                </div>
+
+                <div class="adjust-grid adjust-grid-head">
+                    <span>Analista</span>
+                    <span>Preparadas <em>máq. + ajuste</em></span>
+                    <span>Trocadas <em>máq. + ajuste</em></span>
+                    <span>Total no dia</span>
+                    <span>Máquinas do dia</span>
+                </div>
+
+                <div id="adjustRows"></div>
+
+                <div class="form-group">
+                    <label for="fObs">Observações da daily</label>
+                    <textarea id="fObs" class="form-control" rows="3" placeholder="Bloqueios, no-shows, decisões..."></textarea>
+                </div>
+
+                <div class="inline-actions">
+                    <button class="btn btn-primary" id="bSaveDay">Salvar dia</button>
+                    <button class="btn btn-outline" id="bDeleteDay">Excluir ajustes do dia</button>
+                    <button class="btn btn-export-zap" id="bCopyDaily">Copiar resumo para a daily</button>
+                    <span class="helper-text" id="saveMsg"></span>
+                </div>
+            </section>
+
+            <section class="charts-grid-2">
+                <section class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="badge-dot"></span>
+                            <h2>Frentes · superado</h2>
+                        </div>
+                    </div>
+                    <div class="frentes-list" id="okList"></div>
+                    <div class="inline-with-message">
+                        <input type="text" id="okNew" class="form-control" placeholder="Novo item superado">
+                        <button class="btn btn-sm btn-secondary" id="okAdd">Adicionar</button>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="badge-dot"></span>
+                            <h2>Frentes · pendente</h2>
+                        </div>
+                    </div>
+                    <div class="frentes-list" id="pdList"></div>
+                    <div class="inline-with-message">
+                        <input type="text" id="pdNew" class="form-control" placeholder="Nova pendência">
+                        <button class="btn btn-sm btn-secondary" id="pdAdd">Adicionar</button>
+                    </div>
+                </section>
+            </section>
+
+            <section class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="badge-dot"></span>
+                        <h2>Histórico diário</h2>
+                    </div>
+                    <span class="helper-text" id="historyCountLabel">0 dia(s) lançado(s)</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="totvs-table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th class="n">Prep.</th>
+                                <th class="n">Trocas</th>
+                                <th class="n">Acum. trocas</th>
+                                <th class="n">Plano</th>
+                                <th class="n">Desvio</th>
+                                <th>Status</th>
+                                <th>Obs.</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="badge-dot"></span>
+                        <h2>Operação ao vivo</h2>
+                    </div>
+                    <span class="helper-text">o que está acontecendo na bancada agora</span>
+                </div>
+
+                <div class="ops-grid">
+                    <div class="ops-block">
+                        <h4>Em andamento agora <span class="ops-count" id="inProgressCount">0</span></h4>
+                        <div class="table-responsive">
+                            <table class="totvs-table table-sm">
+                                <thead>
+                                    <tr><th>Hostname</th><th>Analista</th><th>Etapa</th><th class="n">Tempo</th></tr>
+                                </thead>
+                                <tbody id="inProgressBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="ops-block">
+                        <h4>Preparadas aguardando troca <span class="ops-count" id="waitingCount">0</span></h4>
+                        <div class="table-responsive">
+                            <table class="totvs-table table-sm">
+                                <thead>
+                                    <tr><th>Hostname</th><th>Analista</th><th>Preparada em</th></tr>
+                                </thead>
+                                <tbody id="waitingSwapBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="ops-block">
+                        <h4>Incidentes abertos <span class="ops-count" id="incidentCount">0</span></h4>
+                        <div class="table-responsive">
+                            <table class="totvs-table table-sm">
+                                <thead>
+                                    <tr><th>Hostname</th><th>Analista</th><th>Etapa</th><th>Descrição</th></tr>
+                                </thead>
+                                <tbody id="incidentsBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="ops-block">
+                        <h4>Tempo médio por etapa</h4>
+                        <div id="stepTimesBody"></div>
+                    </div>
+
+                    <div class="ops-block ops-block-wide">
+                        <h4>Atingimento por analista</h4>
+                        <div class="table-responsive">
+                            <table class="totvs-table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Analista</th>
+                                        <th class="n">Preparadas</th>
+                                        <th class="n">Trocadas</th>
+                                        <th class="n">Aguardando troca</th>
+                                        <th class="n">Em andamento</th>
+                                        <th class="n">Incidentes</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="analystOpsBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <section id="printArea" class="print-area"></section>
+
+    <div id="toastNotification" class="totvs-toast">
+        <span id="toastIcon" class="toast-icon">i</span>
+        <span id="toastMessage" class="toast-message">Operação concluída.</span>
+    </div>
+
+    <script src="js/vendor/chart.umd.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/importer-exporter.js"></script>
+    <script src="js/rollout.js"></script>
+    <script src="js/github-sync.js"></script>
+    <script src="js/gestao.js"></script>
+</body>
+</html>

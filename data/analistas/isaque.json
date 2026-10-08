@@ -1,0 +1,26 @@
+{
+  "kind": "analyst",
+  "exportedAt": null,
+  "organization": {
+    "appName": "TOTVS Field Refresh 2026",
+    "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
+    "totalGoal": 1000,
+    "analystGoal": 250
+  },
+  "user": {
+    "id": "user_isaque",
+    "username": "isaque",
+    "displayName": "Isaque",
+    "role": "analyst"
+  },
+  "username": "isaque",
+  "analystId": "user_isaque",
+  "summary": {
+    "total": 0,
+    "doneCount": 0,
+    "wipCount": 0,
+    "pausedCount": 0,
+    "errorCount": 0
+  },
+  "records": []
+}
