@@ -218,16 +218,52 @@ Registrar, em formato resumido, a evolucao da atualizacao da interface e da logi
 
 ---
 
+### Sessao 7 - Filtros, PDF profissional e refinamento de layout
+
+72. **Novo modulo `app/js/filters.js`**: regra unica de filtro e ordenacao usada
+    pelas duas telas (operacional e gestao). Filtra por busca livre, SPON,
+    responsavel, status derivado, fabricante, perfil e intervalo de datas, e ordena
+    por ultima atualizacao, data registrada, preparada em, hostname, analista,
+    etapa, status ou tempo total (crescente/decrescente).
+73. **Barras de filtro nas telas**: `app/index.html` e `app/gestao.html` ganharam
+    busca SPON, status, intervalo de datas com atalhos (Hoje / Ontem / Ultimos 7
+    dias / Este mes), ordenacao, resumo dos filtros ativos e os botoes *Limpar
+    filtros* e *Selecionar todos os filtrados*.
+74. **Novo modulo `app/js/print-layout.js`**: monta o documento A4 (cabecalho com
+    marca, KPIs, tabelas com cabecalho repetido, quebra de pagina controlada e
+    blocos de grafico), usado pelos relatorios do painel operacional e pelo painel
+    de gestao.
+75. **PDF profissional**: `styles.css` ganhou `@page { size: A4 portrait;
+    margin: 12mm 10mm 14mm }` e um bloco `@media print` completo (oculta tudo
+    exceto `.print-area`, tabelas com `table-layout: fixed`, `break-inside: avoid`
+    e `thead` repetido), alem de refinamento de layout e cores nos dois paineis.
+76. **Causa do travamento do smoke test (corrigida)**: o `login` passou a ser
+    `async` (PBKDF2). Sob o `--virtual-time-budget` do `validate.ps1` cada operacao
+    de PBKDF2 consome tempo de relogio virtual e o relatorio ficava preso em
+    "Executando...". O smoke passou a ligar `window.__TOTVS_TEST_WEAK_HASH__`, o que
+    faz o `storage` usar o SHA-256 iterado (sincrono) **apenas nos testes**; as
+    telas da aplicacao continuam com PBKDF2.
+77. **Smoke test ampliado e consertado**: passou a carregar `filters.js` e
+    `print-layout.js`, corrigiu as assercoes de titulo dos relatorios e subiu para
+    **147 verificacoes**, incluindo filtros (SPON, analista, busca, intervalo de
+    datas, status derivado, ordenacao e resumo) e a linha do gerente no consolidado.
+78. **`validate.ps1` atualizado**: as verificacoes de filtro passaram a checar os
+    controles reais da tela (`filterStatus`, `filterSpon`, `sortMachines` e os
+    atalhos de data), que agora sao montados pelo JS.
+
+---
+
+
 ## Resultado da validacao
 
 Executado por `tools/validate.ps1` (Edge headless sobre servidor local):
 
 | Etapa | Resultado |
 |---|---|
-| Verificacao de IDs (por pagina) | 2 paginas, 287 referencias no JS, todas validas |
-| Smoke test de logica | **144/144 testes aprovados** |
-| Carregamento da aplicacao real | 31/31 verificacoes aprovadas |
-| Painel de gestao do gerente | 31/31 verificacoes aprovadas |
+| Verificacao de IDs (por pagina) | 2 paginas, 315 referencias no JS, todas validas |
+| Smoke test de logica | **147/147 testes aprovados** |
+| Carregamento da aplicacao real | 30/30 verificacoes aprovadas |
+| Painel de gestao do gerente | 26/26 verificacoes aprovadas |
 
 ---
 
@@ -242,6 +278,17 @@ Ponto de atencao aberto: **as 4 etapas de bancada nao existem no processo atual 
 cliente** (que trabalha com preparadas/trocadas). Elas vieram do `GuiaDev.md` e foram
 mantidas a pedido. Se a equipe nao usar o cronometro por etapa na pratica, vale reavaliar
 se elas devem continuar no formulario ou virar um modo opcional.
+
+Observacoes da Sessao 7:
+
+- O PDF A4 passou a usar margem de impressao (`margin: 12mm 10mm 14mm`), diferente do
+  pedido literal de "sem margem". A margem deixa o relatorio mais apresentavel e evita
+  corte nas bordas; para voltar borda a borda, basta por `margin: 0` no `@page` do
+  `styles.css`.
+- A flag `window.__TOTVS_TEST_WEAK_HASH__` existe **somente** para o smoke test rodar
+  rapido e deterministico. Ela nao e ligada em nenhuma tela: a aplicacao real continua
+  usando PBKDF2 (WebCrypto) para validar e criar senhas.
+
 
 
 

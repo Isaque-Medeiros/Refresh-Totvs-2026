@@ -662,10 +662,10 @@
             return;
         }
 
-        const rows = stats.rows.slice().reverse();
+        const rows = filteredHistoryRows(stats).slice().reverse();
         const label = el('historyCountLabel');
         if (label) {
-            label.innerText = `${rows.length} dia(s) lançado(s)`;
+            label.innerText = `${rows.length} de ${stats.rows.length} dia(s)`;
         }
 
         if (!rows.length) {
@@ -717,14 +717,241 @@
         return result;
     }
 
+    /* --------------------------- Filtros da operacao --------------------------- */
+
+    function filterContext() {
+        return {
+            analystName: (machine) => TOTVSStorage.getAnalystName(runtime.state, machine.analystId)
+        };
+    }
+
+    function valueOf(id, fallback) {
+        const node = el(id);
+        return node && node.value !== '' && node.value !== undefined ? node.value : fallback;
+    }
+
+    function readOpsFilters() {
+        return {
+            search: valueOf('mgmtSearch', ''),
+            spon: valueOf('mgmtSpon', ''),
+            analystId: valueOf('mgmtAnalyst', 'ALL'),
+            status: valueOf('mgmtStatus', 'ALL'),
+            dateFrom: valueOf('mgmtDateFrom', ''),
+            dateTo: valueOf('mgmtDateTo', ''),
+            dateField: 'processDate',
+            sortKey: valueOf('mgmtSort', 'updatedAt'),
+            sortDirection: valueOf('mgmtSortDir', 'desc')
+        };
+    }
+
+    function populateOpsFilterOptions() {
+        const owners = TOTVSStorage.getResponsibleUsers(runtime.state);
+
+        const analyst = el('mgmtAnalyst');
+        if (analyst && !analyst.options.length) {
+            analyst.innerHTML = [
+                '<option value="ALL">Todos os responsáveis</option>',
+                ...owners.map((owner) => `<option value="${owner.id}">${owner.displayName}</option>`)
+            ].join('');
+        }
+
+        const status = el('mgmtStatus');
+        if (status && !status.options.length) {
+            status.innerHTML = TOTVSFilters.statusOptionsHtml('ALL');
+        }
+
+        const sort = el('mgmtSort');
+        if (sort && !sort.options.length) {
+            sort.innerHTML = TOTVSFilters.sortOptionsHtml('updatedAt');
+        }
+
+        const swapDate = el('inputMgmtSwapDate');
+        if (swapDate && !swapDate.value) {
+            swapDate.value = TOTVSStorage.todayBrInput();
+        }
+    }
+
+    function renderOpsFilterSummary(filtered, options) {
+        const label = el('mgmtFilterSummary');
+        if (!label) {
+            return;
+        }
+
+        const chips = [];
+        if (String(options.search || '').trim()) {
+            chips.push(`busca "${String(options.search).trim()}"`);
+        }
+        if (String(options.spon || '').trim()) {
+            chips.push(`SPON "${String(options.spon).trim().toUpperCase()}"`);
+        }
+        if (options.analystId !== 'ALL') {
+            chips.push(`responsável: ${TOTVSStorage.getAnalystName(runtime.state, options.analystId)}`);
+        }
+        if (options.status !== 'ALL') {
+            const found = TOTVSFilters.STATUS_OPTIONS.filter((item) => item.value === options.status)[0];
+            chips.push(`status: ${found ? found.label : options.status}`);
+        }
+        if (options.dateFrom || options.dateTo) {
+            chips.push(`registrada ${options.dateFrom || '...'} → ${options.dateTo || '...'}`);
+        }
+
+        label.innerText = chips.length
+            ? `${filtered.length} de ${runtime.state.machines.length} máquina(s) · filtros: ${chips.join(' · ')}`
+            : `${filtered.length} de ${runtime.state.machines.length} máquina(s) · sem filtros aplicados`;
+    }
+
+    function createDivergenceBadge(machine) {
+        if (!TOTVSRollout.hasDateDivergence(machine)) {
+            return '';
+        }
+        const saved = TOTVSRollout.toDateKey(machine.preparedAt || machine.completedAt);
+        return ` <span class="badge badge-status-pause" title="Salva no sistema em ${TOTVSRollout.brDate(saved)}">data corrigida</span>`;
+    }
+
+    /* --------------------- Selecao em lote (aguardando troca) --------------------- */
+
+    function getSelectedWaitingIds() {
+        return Array.from(document.querySelectorAll('[data-waiting-id]'))
+            .filter((node) => node.checked)
+            .map((node) => node.getAttribute('data-waiting-id'));
+    }
+
+    function updateWaitingSelection() {
+        const ids = getSelectedWaitingIds();
+        const label = el('waitingSelectedLabel');
+        if (label) {
+            label.innerText = `${ids.length} selecionada(s)`;
+        }
+
+        const selectAll = el('selectAllWaiting');
+        if (selectAll) {
+            const nodes = Array.from(document.querySelectorAll('[data-waiting-id]'));
+            selectAll.checked = nodes.length > 0 && ids.length === nodes.length;
+            selectAll.indeterminate = ids.length > 0 && ids.length < nodes.length;
+        }
+    }
+
+    function setWaitingSelection(checked) {
+        Array.from(document.querySelectorAll('[data-waiting-id]')).forEach((node) => {
+            node.checked = checked;
+        });
+        updateWaitingSelection();
+    }
+
+    function markSelectedWaiting() {
+        const ids = getSelectedWaitingIds();
+        if (!ids.length) {
+            showToast('Selecione ao menos uma máquina na lista.', '!');
+            return;
+        }
+
+        const swapDate = valueOf('inputMgmtSwapDate', TOTVSStorage.todayBrInput());
+
+        try {
+            const result = TOTVSStorage.markMachinesSwapped(ids, swapDate, runtime.currentUser.id);
+            refresh();
+            queueSync();
+            const extra = result.skipped.length ? ` (${result.skipped.length} ignorada(s))` : '';
+            showToast(`${result.swapped.length} máquina(s) trocada(s) em ${result.date}${extra}.`, 'ok');
+        } catch (error) {
+            showToast(error.message, '!');
+        }
+    }
+
+    function applyOpsQuickRange(kind) {
+        const today = new Date();
+        const key = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        let from = '';
+        let to = '';
+
+        if (kind === 'today') {
+            from = key(today);
+            to = from;
+        } else if (kind === 'yesterday') {
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            from = key(yesterday);
+            to = from;
+        } else if (kind === 'last7') {
+            const start = new Date(today);
+            start.setDate(start.getDate() - 6);
+            from = key(start);
+            to = key(today);
+        }
+
+        const fromNode = el('mgmtDateFrom');
+        const toNode = el('mgmtDateTo');
+        if (fromNode) fromNode.value = from;
+        if (toNode) toNode.value = to;
+        refresh();
+    }
+
+    function clearOpsFilters() {
+        ['mgmtSearch', 'mgmtSpon', 'mgmtDateFrom', 'mgmtDateTo'].forEach((id) => {
+            const node = el(id);
+            if (node) node.value = '';
+        });
+
+        const analyst = el('mgmtAnalyst');
+        if (analyst) analyst.value = 'ALL';
+        const status = el('mgmtStatus');
+        if (status) status.value = 'ALL';
+        const sort = el('mgmtSort');
+        if (sort) sort.value = 'updatedAt';
+        const direction = el('mgmtSortDir');
+        if (direction) direction.value = 'desc';
+
+        refresh();
+        showToast('Filtros da operação limpos.', 'ok');
+    }
+
+    function filteredHistoryRows(stats) {
+        const from = valueOf('histFilterFrom', '');
+        const to = valueOf('histFilterTo', '');
+        const status = valueOf('histFilterStatus', 'ALL');
+
+        return stats.rows.filter((row) => {
+            if (from && row.date < from) {
+                return false;
+            }
+            if (to && row.date > to) {
+                return false;
+            }
+            if (status !== 'ALL') {
+                const plan = TOTVSRollout.planForDay(row.date);
+                if (TOTVSRollout.dayStatus(row.cumT - plan).key !== status) {
+                    return false;
+                }
+            }
+            return true;
+        });
+    }
+
+    function clearHistoryFilters() {
+        ['histFilterFrom', 'histFilterTo'].forEach((id) => {
+            const node = el(id);
+            if (node) node.value = '';
+        });
+        const status = el('histFilterStatus');
+        if (status) status.value = 'ALL';
+        refresh();
+    }
+
     function renderOperational(stats) {
-        const machines = runtime.state.machines.slice();
+        const options = readOpsFilters();
+        const filterOptions = { ...options, sortKey: options.sortKey };
+        const allMachines = TOTVSFilters.applyFilters(runtime.state.machines, filterOptions, filterContext());
         const nowMs = Date.now();
 
+        renderOpsFilterSummary(allMachines, options);
+
         // Em andamento agora: quem esta em qual etapa neste instante.
-        const inProgress = machines
-            .filter((machine) => machine.status === 'EM_ANDAMENTO')
-            .sort((left, right) => new Date(right.updatedAt || 0) - new Date(left.updatedAt || 0));
+        const inProgress = TOTVSFilters.sortMachines(
+            allMachines.filter((machine) => machine.status === 'EM_ANDAMENTO'),
+            options.sortKey,
+            options.sortDirection,
+            filterContext()
+        );
 
         el('inProgressCount').innerText = String(inProgress.length);
         el('inProgressBody').innerHTML = inProgress.length
@@ -745,28 +972,45 @@
             }).join('')
             : emptyRow(4, 'Nenhuma máquina em andamento agora.');
 
-        // Preparadas aguardando troca.
-        const waiting = machines
-            .filter((machine) => machine.status === 'CONCLUIDO' && !machine.swappedAt)
-            .sort((left, right) => String(left.preparedAt || '').localeCompare(String(right.preparedAt || '')));
+        // Preparadas aguardando troca: lista COMPLETA (antes ficava limitada a 12
+        // linhas, o que escondia maquinas de outros analistas).
+        const waiting = TOTVSFilters.sortMachines(
+            allMachines.filter((machine) => TOTVSRollout.isPrepared(machine) && !machine.swappedAt),
+            options.sortKey === 'updatedAt' ? 'preparedAt' : options.sortKey,
+            options.sortDirection === 'desc' ? 'asc' : 'desc',
+            filterContext()
+        );
 
         el('waitingCount').innerText = String(waiting.length);
         el('waitingSwapBody').innerHTML = waiting.length
-            ? waiting.slice(0, 12).map((machine) => `
-                <tr>
-                    <td class="font-mono">${machine.hostname}</td>
-                    <td>${TOTVSStorage.getAnalystName(runtime.state, machine.analystId)}</td>
-                    <td>${TOTVSRollout.brDate(TOTVSRollout.toDateKey(machine.preparedAt))}</td>
-                </tr>
-            `).join('')
-            : emptyRow(3, 'Nada aguardando troca.');
+            ? waiting.map((machine) => {
+                const official = TOTVSRollout.officialPrepDateKey(machine);
+                const saved = TOTVSRollout.toDateKey(machine.preparedAt || machine.completedAt);
+                return `
+                    <tr>
+                        <td class="cell-select"><input type="checkbox" data-waiting-id="${machine.id}" aria-label="Selecionar ${machine.hostname}"></td>
+                        <td class="font-mono">${machine.hostname}</td>
+                        <td>${TOTVSStorage.getAnalystName(runtime.state, machine.analystId)}</td>
+                        <td>${TOTVSRollout.brDate(official)}${createDivergenceBadge(machine)}</td>
+                        <td class="helper-text">${TOTVSRollout.brDate(saved)}</td>
+                    </tr>
+                `;
+            }).join('')
+            : emptyRow(5, 'Nada aguardando troca.');
+
+        updateWaitingSelection();
 
         // Incidentes.
-        const incidents = machines.filter((machine) => machine.hasError || machine.status === 'ERRO');
+        const incidents = TOTVSFilters.sortMachines(
+            allMachines.filter((machine) => machine.hasError || machine.status === 'ERRO'),
+            options.sortKey,
+            options.sortDirection,
+            filterContext()
+        );
 
         el('incidentCount').innerText = String(incidents.length);
         el('incidentsBody').innerHTML = incidents.length
-            ? incidents.slice(0, 12).map((machine) => `
+            ? incidents.map((machine) => `
                 <tr>
                     <td class="font-mono">${machine.hostname}</td>
                     <td>${TOTVSStorage.getAnalystName(runtime.state, machine.analystId)}</td>
@@ -779,7 +1023,7 @@
         // Tempo medio por etapa.
         const stepHost = el('stepTimesBody');
         if (stepHost) {
-            const averages = stepAverageSeconds(machines);
+            const averages = stepAverageSeconds(allMachines);
             const max = Math.max(...TOTVSStorage.PROCESS_STEPS.map((step) => Number(averages[step] || 0)), 1);
 
             stepHost.innerHTML = TOTVSStorage.PROCESS_STEPS.map((step) => {
@@ -800,8 +1044,8 @@
         const analystHost = el('analystOpsBody');
         if (analystHost) {
             analystHost.innerHTML = stats.analystRows.map((row) => `
-                <tr>
-                    <td>${row.name}</td>
+                <tr${row.isManager ? ' class="row-manager"' : ''}>
+                    <td>${row.name}${row.isManager ? ' <span class="badge badge-profile-local">gerente</span>' : ''}</td>
                     <td class="n text-green">${formatNumber(row.prep)}</td>
                     <td class="n text-orange">${formatNumber(row.swap)}</td>
                     <td class="n">${formatNumber(row.waitingSwap)}</td>
@@ -826,29 +1070,85 @@
         const analyst = canvasImage('analystChart');
         const daily = canvasImage('dailyChart');
 
-        const html = `
-            <article class="print-report">
-                <h1>Status Report - Rollout de maquinas TOTVS</h1>
-                <h3>DB4 Serv for Totvs by Isaque de Medeiros</h3>
-                <p>Emitido em ${new Date().toLocaleString('pt-BR')} | referencia ${TOTVSRollout.brDate(stats.referenceDate)}</p>
+        const historyRows = stats.rows.slice().reverse().map((row) => {
+            const plan = TOTVSRollout.planForDay(row.date);
+            const deviation = row.cumT - plan;
+            return [
+                TOTVSRollout.brDate(row.date),
+                String(row.prep),
+                String(row.swap),
+                String(row.cumT),
+                String(plan),
+                `${deviation >= 0 ? '+' : ''}${deviation}`,
+                TOTVSRollout.dayStatus(deviation).label
+            ];
+        });
 
-                <section class="print-grid">
-                    <div class="print-card"><strong>Trocadas</strong><div>${formatNumber(stats.cumT)}</div></div>
-                    <div class="print-card"><strong>Preparadas</strong><div>${formatNumber(stats.cumP)}</div></div>
-                    <div class="print-card"><strong>Plano ate hoje</strong><div>${formatNumber(stats.planToday)}</div></div>
-                    <div class="print-card"><strong>Desvio</strong><div>${stats.deviation >= 0 ? '+' : ''}${formatNumber(stats.deviation)}</div></div>
-                    <div class="print-card"><strong>% do total</strong><div>${stats.percent}%</div></div>
-                    <div class="print-card"><strong>Ritmo medio</strong><div>${stats.avgRate ? `${stats.avgRate.toFixed(1)}/dia` : '—'}</div></div>
-                    <div class="print-card"><strong>Projecao</strong><div>${stats.projected}</div></div>
-                    <div class="print-card"><strong>Dias uteis restantes</strong><div>${formatNumber(stats.remainingBusinessDays)}</div></div>
-                </section>
+        const analystRows = stats.analystRows.map((row) => [
+            row.isManager ? `${row.name} (gerente)` : row.name,
+            String(row.prep),
+            String(row.swap),
+            String(row.waitingSwap),
+            String(row.inProgress),
+            String(row.errors)
+        ]);
 
-                ${burn ? `<h2>Evolucao acumulada - plano x realizado</h2><img class="print-chart" src="${burn}" alt="Evolucao acumulada">` : ''}
-                ${analyst ? `<h2>Por analista (acumulado)</h2><img class="print-chart" src="${analyst}" alt="Por analista">` : ''}
-                ${daily ? `<h2>Ultimos 10 dias lancados</h2><img class="print-chart" src="${daily}" alt="Ultimos 10 dias">` : ''}
-                ${printTables(stats)}
-            </article>
-        `;
+        const waitingRows = runtime.state.machines
+            .filter((machine) => TOTVSRollout.isPrepared(machine) && !machine.swappedAt)
+            .sort((left, right) => String(TOTVSRollout.officialPrepDateKey(left) || '')
+                .localeCompare(String(TOTVSRollout.officialPrepDateKey(right) || '')))
+            .map((machine) => [
+                TOTVSStorage.getAnalystName(runtime.state, machine.analystId),
+                machine.hostname,
+                TOTVSRollout.brDate(TOTVSRollout.officialPrepDateKey(machine)),
+                TOTVSRollout.brDate(TOTVSRollout.toDateKey(machine.preparedAt || machine.completedAt))
+            ]);
+
+        const html = TOTVSPrintLayout.document({
+            title: 'Status Report · Rollout de máquinas TOTVS',
+            subtitle: runtime.state.organization.signature,
+            meta: [
+                { label: 'Emitido em', value: TOTVSPrintLayout.nowStamp() },
+                { label: 'Referência', value: TOTVSRollout.brDate(stats.referenceDate) },
+                { label: 'Período', value: `${TOTVSRollout.brDate(TOTVSRollout.START_DATE)} a ${TOTVSRollout.brDate(TOTVSRollout.END_DATE)}` }
+            ],
+            body: `${TOTVSPrintLayout.kpis([
+                { label: 'Trocadas', value: formatNumber(stats.cumT) },
+                { label: 'Preparadas', value: formatNumber(stats.cumP) },
+                { label: 'Plano até hoje', value: formatNumber(stats.planToday) },
+                { label: 'Desvio', value: `${stats.deviation >= 0 ? '+' : ''}${formatNumber(stats.deviation)}` },
+                { label: '% do total', value: `${stats.percent}%` },
+                { label: 'Ritmo médio', value: stats.avgRate ? `${stats.avgRate.toFixed(1)}/dia` : '—' },
+                { label: 'Projeção', value: stats.projected },
+                { label: 'Dias úteis restantes', value: formatNumber(stats.remainingBusinessDays) }
+            ])}
+            ${TOTVSPrintLayout.sectionTitle('Evolução e comparações', 'plano x realizado')}
+            ${TOTVSPrintLayout.chartGrid([
+                TOTVSPrintLayout.chartBlock(burn, 'Evolução acumulada'),
+                TOTVSPrintLayout.chartBlock(analyst, 'Por analista'),
+                TOTVSPrintLayout.chartBlock(daily, 'Últimos 10 dias')
+            ])}
+            ${TOTVSPrintLayout.sectionTitle('Histórico diário', `${historyRows.length} dia(s)`)}
+            ${TOTVSPrintLayout.table({
+                headers: ['Data', 'Preparadas', 'Trocas', 'Acumulado', 'Plano', 'Desvio', 'Status'],
+                rows: historyRows,
+                rightAlign: [0, 1, 2, 3, 4, 5],
+                emptyText: 'Nenhum apontamento registrado.'
+            })}
+            ${TOTVSPrintLayout.sectionTitle('Atingimento por analista', 'concluídas sobre a meta individual')}
+            ${TOTVSPrintLayout.table({
+                headers: ['Analista', 'Preparadas', 'Trocadas', 'Aguardando troca', 'Em andamento', 'Incidentes'],
+                rows: analystRows,
+                rightAlign: [1, 2, 3, 4, 5]
+            })}
+            ${TOTVSPrintLayout.sectionTitle('Preparadas aguardando troca', `${waitingRows.length} máquina(s)`)}
+            ${TOTVSPrintLayout.table({
+                headers: ['Analista', 'Hostname', 'Registrada em', 'Salva no sistema'],
+                rows: waitingRows,
+                rightAlign: [2, 3],
+                emptyText: 'Nada aguardando troca.'
+            })}`
+        });
 
         const area = el('printArea');
         area.innerHTML = html;
@@ -861,50 +1161,6 @@
         window.addEventListener('afterprint', cleanup);
         window.print();
         setTimeout(cleanup, 5000);
-    }
-
-    function printTables(stats) {
-        return `
-            <h2>Historico diario</h2>
-            <table>
-                <thead>
-                    <tr><th>Data</th><th>Prep.</th><th>Trocas</th><th>Acum.</th><th>Plano</th><th>Desvio</th><th>Status</th></tr>
-                </thead>
-                <tbody>
-                    ${stats.rows.slice().reverse().map((row) => {
-                        const plan = TOTVSRollout.planForDay(row.date);
-                        const deviation = row.cumT - plan;
-                        const status = TOTVSRollout.dayStatus(deviation);
-                        return `<tr>
-                            <td>${TOTVSRollout.brDate(row.date)}</td>
-                            <td>${row.prep}</td>
-                            <td>${row.swap}</td>
-                            <td>${row.cumT}</td>
-                            <td>${plan}</td>
-                            <td>${deviation >= 0 ? '+' : ''}${deviation}</td>
-                            <td>${status.label}</td>
-                        </tr>`;
-                    }).join('')}
-                </tbody>
-            </table>
-
-            <h2>Atingimento por analista</h2>
-            <table>
-                <thead>
-                    <tr><th>Analista</th><th>Preparadas</th><th>Trocadas</th><th>Aguardando troca</th><th>Em andamento</th><th>Incidentes</th></tr>
-                </thead>
-                <tbody>
-                    ${stats.analystRows.map((row) => `<tr>
-                        <td>${row.name}</td>
-                        <td>${row.prep}</td>
-                        <td>${row.swap}</td>
-                        <td>${row.waitingSwap}</td>
-                        <td>${row.inProgress}</td>
-                        <td>${row.errors}</td>
-                    </tr>`).join('')}
-                </tbody>
-            </table>
-        `;
     }
 
     function exportBackup() {
@@ -1340,6 +1596,40 @@
             fillAdjustForm(button.getAttribute('data-edit-day'));
             el('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
+
+        // Filtros da operacao ao vivo.
+        ['mgmtSearch', 'mgmtSpon', 'mgmtAnalyst', 'mgmtStatus', 'mgmtDateFrom', 'mgmtDateTo', 'mgmtSort', 'mgmtSortDir'].forEach((id) => {
+            const node = el(id);
+            if (!node) {
+                return;
+            }
+            node.addEventListener('input', () => renderOperational(runtime.stats));
+            node.addEventListener('change', () => renderOperational(runtime.stats));
+        });
+
+        el('btnMgmtClearFilters').addEventListener('click', clearOpsFilters);
+        el('mgmtChipToday').addEventListener('click', () => applyOpsQuickRange('today'));
+        el('mgmtChipYesterday').addEventListener('click', () => applyOpsQuickRange('yesterday'));
+        el('mgmtChipLast7').addEventListener('click', () => applyOpsQuickRange('last7'));
+
+        el('waitingSwapBody').addEventListener('change', (event) => {
+            if (event.target.matches('[data-waiting-id]')) {
+                updateWaitingSelection();
+            }
+        });
+        el('selectAllWaiting').addEventListener('change', (event) => setWaitingSelection(event.target.checked));
+        el('btnSelectAllWaiting').addEventListener('click', () => setWaitingSelection(true));
+        el('btnSwapSelectedWaiting').addEventListener('click', markSelectedWaiting);
+
+        // Filtros do historico diario.
+        ['histFilterFrom', 'histFilterTo', 'histFilterStatus'].forEach((id) => {
+            const node = el(id);
+            if (!node) {
+                return;
+            }
+            node.addEventListener('change', () => renderHistory(runtime.stats));
+        });
+        el('btnClearHistFilters').addEventListener('click', clearHistoryFilters);
     }
 
     function init() {
@@ -1353,6 +1643,7 @@
 
         buildAdjustRows();
         bindActions();
+        populateOpsFilterOptions();
         refresh();
         fillAdjustForm(TOTVSRollout.todayKey());
         startLive();

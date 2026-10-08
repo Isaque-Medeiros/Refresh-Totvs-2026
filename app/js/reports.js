@@ -307,120 +307,146 @@ const TOTVSReports = (() => {
 
     function buildPrintableGeneralCharts(state, metrics) {
         const dataset = TOTVSStorage.getDatasetById(state, state.activeDatasetId);
-        return `
-            <article class="print-report">
-                <h1>Graficos Gerais - TOTVS Field Refresh 2026</h1>
-                <h3>${state.organization.signature}</h3>
-                <p>Lote: ${dataset ? dataset.name : 'Operacao Principal'} | Emitido em ${new Date().toLocaleString('pt-BR')}</p>
-                ${buildGeneralCharts(state, metrics)}
-            </article>
-        `;
+        return TOTVSPrintLayout.document({
+            title: 'Gráficos Gerais · Rollout de máquinas',
+            subtitle: state.organization.signature,
+            meta: [
+                { label: 'Lote', value: dataset ? dataset.name : 'Operação Principal' },
+                { label: 'Emitido em', value: TOTVSPrintLayout.nowStamp() },
+                { label: 'Máquinas', value: `${metrics.total} no lote atual` }
+            ],
+            body: `${TOTVSPrintLayout.kpis([
+                { label: 'Total', value: metrics.total },
+                { label: 'Concluídas', value: metrics.doneCount, hint: `${metrics.globalPercent}% da meta global` },
+                { label: 'Em andamento', value: metrics.wipCount },
+                { label: 'Incidentes', value: metrics.errorCount },
+                { label: 'Tempo médio', value: metrics.avgTimeString }
+            ])}
+            ${TOTVSPrintLayout.sectionTitle('Distribuição e comparação', 'dados do lote ativo')}
+            ${buildGeneralCharts(state, metrics)}`
+        });
     }
 
     function buildPrintableAnalystCharts(state, machines, analystId) {
         const analyst = TOTVSStorage.getUserById(state, analystId);
-        return `
-            <article class="print-report">
-                <h1>Graficos por Analista - TOTVS Field Refresh 2026</h1>
-                <h3>${analyst ? analyst.displayName : 'Analista'}</h3>
-                <p>Emitido em ${new Date().toLocaleString('pt-BR')}</p>
-                ${buildAnalystCharts(state, machines, analystId)}
-            </article>
-        `;
+        const scoped = machines.filter((machine) => machine.analystId === analystId);
+        const metrics = calculateMetrics(state, scoped);
+
+        return TOTVSPrintLayout.document({
+            title: 'Gráficos por analista',
+            subtitle: analyst ? analyst.displayName : 'Analista',
+            meta: [
+                { label: 'Emitido em', value: TOTVSPrintLayout.nowStamp() },
+                { label: 'Máquinas', value: `${metrics.total} no total` }
+            ],
+            body: `${TOTVSPrintLayout.kpis([
+                { label: 'Total', value: metrics.total },
+                { label: 'Concluídas', value: metrics.doneCount },
+                { label: 'Em andamento', value: metrics.wipCount },
+                { label: 'Incidentes', value: metrics.errorCount },
+                { label: 'Tempo médio', value: metrics.avgTimeString }
+            ])}
+            ${TOTVSPrintLayout.sectionTitle('Indicadores do analista', 'meta individual de 250 máquinas')}
+            ${buildAnalystCharts(state, machines, analystId)}`
+        });
     }
+
+    function machineRows(state, machines) {
+        return machines.map((machine) => [
+            TOTVSRollout.toDateKey(machine.processDate) || '--',
+            machine.hostname,
+            TOTVSStorage.getAnalystName(state, machine.analystId),
+            `${machine.brand} / ${machine.profile}`,
+            machine.currentStep,
+            TOTVSFilters.statusLabel(machine),
+            TOTVSImporterExporter.formatTimeFriendly(machine.totalElapsedSeconds)
+        ]);
+    }
+
+    const MACHINE_HEADERS = ['Data registrada', 'Hostname', 'Analista', 'Marca / Perfil', 'Etapa', 'Status', 'Tempo total'];
+    const MACHINE_RIGHT_ALIGN = [0, 6];
 
     function buildPrintableGeneralReport(state, metrics, machines) {
         const dataset = TOTVSStorage.getDatasetById(state, state.activeDatasetId);
-        return `
-            <article class="print-report">
-                <h1>TOTVS Field Refresh 2026</h1>
-                <h3>${state.organization.signature}</h3>
-                <p>Lote: ${dataset ? dataset.name : 'Operação Principal'} | Emitido em ${new Date().toLocaleString('pt-BR')}</p>
-                <section class="print-grid">
-                    <div class="print-card"><strong>Total</strong><div>${metrics.total}</div></div>
-                    <div class="print-card"><strong>Concluídas</strong><div>${metrics.doneCount}</div></div>
-                    <div class="print-card"><strong>Em andamento</strong><div>${metrics.wipCount}</div></div>
-                    <div class="print-card"><strong>Incidentes</strong><div>${metrics.errorCount}</div></div>
-                </section>
-                ${buildGeneralCharts(state, metrics)}
-                <h2>Média por etapa</h2>
-                <table>
-                    <thead>
-                        <tr><th>Etapa</th><th>Média</th></tr>
-                    </thead>
-                    <tbody>
-                        ${TOTVSStorage.PROCESS_STEPS.map((step) => `<tr><td>${step}</td><td>${metrics.stepAvgTimes[step]}</td></tr>`).join('')}
-                    </tbody>
-                </table>
-                <h2>Resumo de máquinas</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Hostname</th>
-                            <th>Analista</th>
-                            <th>Etapa</th>
-                            <th>Status</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${machines.map((machine) => `
-                            <tr>
-                                <td>${machine.processDate || '--'}</td>
-                                <td>${machine.hostname}</td>
-                                <td>${TOTVSStorage.getAnalystName(state, machine.analystId)}</td>
-                                <td>${machine.currentStep}</td>
-                                <td>${machine.status}</td>
-                                <td>${TOTVSImporterExporter.formatTimeFriendly(machine.totalElapsedSeconds)}</td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            </article>
-        `;
+        const stepRows = TOTVSStorage.PROCESS_STEPS.map((step) => [step, metrics.stepAvgTimes[step]]);
+        const analystRows = metrics.analystStats.map((stat) => [
+            stat.name,
+            String(stat.total),
+            String(stat.done),
+            String(stat.wip),
+            String(stat.paused),
+            String(stat.errors),
+            `${stat.goalPercent}%`
+        ]);
+
+        return TOTVSPrintLayout.document({
+            title: 'Relatório geral do rollout',
+            subtitle: state.organization.signature,
+            meta: [
+                { label: 'Lote', value: dataset ? dataset.name : 'Operação Principal' },
+                { label: 'Emitido em', value: TOTVSPrintLayout.nowStamp() },
+                { label: 'Meta do projeto', value: `1.000 máquinas (${metrics.globalPercent}% concluído)` }
+            ],
+            body: `${TOTVSPrintLayout.kpis([
+                { label: 'Total de máquinas', value: metrics.total },
+                { label: 'Concluídas', value: metrics.doneCount, hint: `${metrics.globalPercent}% da meta global` },
+                { label: 'Em andamento', value: metrics.wipCount },
+                { label: 'Pausadas', value: metrics.pausedCount },
+                { label: 'Incidentes', value: metrics.errorCount, hint: `Aproveitamento ${metrics.successRate}%` },
+                { label: 'Tempo médio', value: metrics.avgTimeString, hint: 'Base nas concluídas' }
+            ])}
+            ${TOTVSPrintLayout.sectionTitle('Média por etapa', 'tempo médio das máquinas do lote')}
+            ${TOTVSPrintLayout.table({ headers: ['Etapa', 'Tempo médio'], rows: stepRows })}
+            ${TOTVSPrintLayout.sectionTitle('Produtividade por analista', 'concluídas sobre a meta individual de 250')}
+            ${TOTVSPrintLayout.table({
+                headers: ['Analista', 'Total', 'Concluídas', 'Em andamento', 'Pausadas', 'Incidentes', 'Meta'],
+                rows: analystRows,
+                rightAlign: [1, 2, 3, 4, 5, 6],
+                emptyText: 'Nenhum analista cadastrado.'
+            })}
+            ${TOTVSPrintLayout.sectionTitle('Resumo de máquinas', `${machines.length} registro(s)`)}
+            ${TOTVSPrintLayout.table({
+                headers: MACHINE_HEADERS,
+                rows: machineRows(state, machines),
+                rightAlign: MACHINE_RIGHT_ALIGN,
+                emptyText: 'Nenhuma máquina registrada no lote.'
+            })}`
+        });
     }
 
     function buildPrintableAnalystReport(state, machines, analystId) {
         const analyst = TOTVSStorage.getUserById(state, analystId);
         const analystMachines = machines.filter((machine) => machine.analystId === analystId);
         const metrics = calculateMetrics(state, analystMachines);
-        return `
-            <article class="print-report">
-                <h1>Relatório Individual</h1>
-                <h3>${analyst ? analyst.displayName : 'Analista'}</h3>
-                <p>Emitido em ${new Date().toLocaleString('pt-BR')}</p>
-                <section class="print-grid">
-                    <div class="print-card"><strong>Total</strong><div>${metrics.total}</div></div>
-                    <div class="print-card"><strong>Concluídas</strong><div>${metrics.doneCount}</div></div>
-                    <div class="print-card"><strong>Em andamento</strong><div>${metrics.wipCount}</div></div>
-                    <div class="print-card"><strong>Incidentes</strong><div>${metrics.errorCount}</div></div>
-                </section>
-                ${buildAnalystCharts(state, machines, analystId)}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Hostname</th>
-                            <th>Etapa</th>
-                            <th>Status</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${analystMachines.map((machine) => `
-                            <tr>
-                                <td>${machine.processDate || '--'}</td>
-                                <td>${machine.hostname}</td>
-                                <td>${machine.currentStep}</td>
-                                <td>${machine.status}</td>
-                                <td>${TOTVSImporterExporter.formatTimeFriendly(machine.totalElapsedSeconds)}</td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            </article>
-        `;
+        const dataset = TOTVSStorage.getDatasetById(state, state.activeDatasetId);
+        const stepRows = TOTVSStorage.PROCESS_STEPS.map((step) => [step, metrics.stepAvgTimes[step]]);
+
+        return TOTVSPrintLayout.document({
+            title: 'Relatório individual do analista',
+            subtitle: analyst ? analyst.displayName : 'Analista',
+            meta: [
+                { label: 'Lote', value: dataset ? dataset.name : 'Operação Principal' },
+                { label: 'Emitido em', value: TOTVSPrintLayout.nowStamp() },
+                { label: 'Meta individual', value: '250 máquinas' }
+            ],
+            body: `${TOTVSPrintLayout.kpis([
+                { label: 'Total', value: metrics.total },
+                { label: 'Concluídas', value: metrics.doneCount, hint: `${metrics.globalPercent}% da meta do projeto` },
+                { label: 'Em andamento', value: metrics.wipCount },
+                { label: 'Pausadas', value: metrics.pausedCount },
+                { label: 'Incidentes', value: metrics.errorCount },
+                { label: 'Tempo médio', value: metrics.avgTimeString }
+            ])}
+            ${TOTVSPrintLayout.sectionTitle('Média por etapa', 'tempo médio do analista')}
+            ${TOTVSPrintLayout.table({ headers: ['Etapa', 'Tempo médio'], rows: stepRows })}
+            ${TOTVSPrintLayout.sectionTitle('Máquinas do analista', `${analystMachines.length} registro(s)`)}
+            ${TOTVSPrintLayout.table({
+                headers: MACHINE_HEADERS,
+                rows: machineRows(state, analystMachines),
+                rightAlign: MACHINE_RIGHT_ALIGN,
+                emptyText: 'Nenhuma máquina registrada para este analista.'
+            })}`
+        });
     }
 
     return {

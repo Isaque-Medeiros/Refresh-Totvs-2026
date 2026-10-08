@@ -170,7 +170,10 @@ $checks = @(
     @{ Name = 'Botao marcar como trocadas';               Pattern = 'id="btnMarkSwapped"' },
     @{ Name = 'Botao do painel de gestao (gerente)';      Pattern = 'manager-only" id="btnOpenManagement"' },
     @{ Name = 'Modulo de rollout carregado';              Pattern = 'js/rollout.js' },
-    @{ Name = 'Filtro de trocada presente';               Pattern = 'value="TROCADA"' },
+    @{ Name = 'Filtro de status presente';                Pattern = 'id="filterStatus"' },
+    @{ Name = 'Filtro por SPON presente';                 Pattern = 'id="filterSpon"' },
+    @{ Name = 'Ordenacao de maquinas presente';           Pattern = 'id="sortMachines"' },
+    @{ Name = 'Atalhos de data presentes';                Pattern = 'id="chipLast7"' },
     @{ Name = 'Login com seletor de usuario';             Pattern = 'id="loginUsername"' }
 )
 

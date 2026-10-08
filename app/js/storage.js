@@ -142,9 +142,220 @@ const TOTVSStorage = (() => {
         return `${date.getFullYear()}-${month}-${day}`;
     }
 
+    function isoToDateKey(value) {
+        if (!value) {
+            return null;
+        }
+        const raw = String(value);
+        if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+            return raw;
+        }
+        const date = new Date(raw);
+        if (Number.isNaN(date.getTime())) {
+            return null;
+        }
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${date.getFullYear()}-${month}-${day}`;
+    }
+
     function formatDateTime(isoDate) {
         if (!isoDate) return '--';
         return new Date(isoDate).toLocaleString('pt-BR');
+    }
+
+    /* --------------------------- Credenciais de acesso ---------------------------
+     * A senha nunca sai da maquina em texto: o que viaja no repositorio e um hash
+     * com salt aleatorio e varias iteracoes (PBKDF2-SHA256 quando o navegador
+     * suporta WebCrypto; SHA-256 iterado como reserva).
+     *
+     * O `passwordHash` antigo (SHA-256 puro, sem salt) continua aceito apenas para
+     * compatibilidade e e REMOVIDO no primeiro login valido. Era exatamente isso
+     * que fazia a senha padrao voltar a funcionar depois de uma troca.
+     * -------------------------------------------------------------------------- */
+
+    const PBKDF2_ITERATIONS = 150000;
+    const ITERATED_SHA256_ROUNDS = 400;
+
+    let credentialsUpgradedOnLogin = false;
+
+    function supportsWebCrypto() {
+        // O smoke test liga esta flag para usar o SHA-256 iterado (sincrono): sob o
+        // --virtual-time-budget do validate.ps1 o PBKDF2 consome tempo de relogio
+        // virtual e travava o relatorio. As telas da aplicacao seguem com PBKDF2.
+        if (typeof window !== 'undefined' && window.__TOTVS_TEST_WEAK_HASH__) {
+            return false;
+        }
+        return Boolean(
+            typeof window !== 'undefined'
+            && window.crypto
+            && window.crypto.subtle
+            && typeof window.crypto.subtle.deriveBits === 'function'
+        );
+    }
+
+    function randomHex(byteLength) {
+        const bytes = new Uint8Array(byteLength);
+        if (typeof window !== 'undefined' && window.crypto && window.crypto.getRandomValues) {
+            window.crypto.getRandomValues(bytes);
+        } else {
+            for (let index = 0; index < byteLength; index += 1) {
+                bytes[index] = Math.floor(Math.random() * 256);
+            }
+        }
+        return Array.from(bytes).map((byte) => byte.toString(16).padStart(2, '0')).join('');
+    }
+
+    function hexToBytes(hex) {
+        const clean = String(hex || '').replace(/[^0-9a-f]/gi, '');
+        const bytes = new Uint8Array(Math.floor(clean.length / 2));
+        for (let index = 0; index < bytes.length; index += 1) {
+            bytes[index] = parseInt(clean.substr(index * 2, 2), 16);
+        }
+        return bytes;
+    }
+
+    function bytesToHex(buffer) {
+        return Array.from(new Uint8Array(buffer))
+            .map((byte) => byte.toString(16).padStart(2, '0'))
+            .join('');
+    }
+
+    function iteratedSha256(password, saltHex, rounds) {
+        let value = `${saltHex}\u0000${password}`;
+        const total = Math.max(1, Math.floor(Number(rounds) || 1));
+        for (let index = 0; index < total; index += 1) {
+            value = sha256(value);
+        }
+        return value;
+    }
+
+    async function pbkdf2Hash(password, saltHex, iterations) {
+        const encoder = new TextEncoder();
+        const keyMaterial = await window.crypto.subtle.importKey(
+            'raw',
+            encoder.encode(String(password || '')),
+            'PBKDF2',
+            false,
+            ['deriveBits']
+        );
+        const bits = await window.crypto.subtle.deriveBits(
+            {
+                name: 'PBKDF2',
+                salt: hexToBytes(saltHex),
+                iterations: Math.max(1, Math.floor(Number(iterations) || PBKDF2_ITERATIONS)),
+                hash: 'SHA-256'
+            },
+            keyMaterial,
+            256
+        );
+        return bytesToHex(bits);
+    }
+
+    function normalizeCredentials(raw) {
+        if (!raw || typeof raw !== 'object') {
+            return null;
+        }
+
+        const hash = String(raw.hash || '').trim();
+        const salt = String(raw.salt || '').trim();
+        const algo = raw.algo === 'sha256-iter' ? 'sha256-iter'
+            : (raw.algo === 'pbkdf2-sha256' ? 'pbkdf2-sha256' : '');
+
+        if (!hash || !salt || !algo) {
+            return null;
+        }
+        if (algo === 'pbkdf2-sha256' && !supportsWebCrypto()) {
+            return null;
+        }
+
+        return {
+            algo,
+            iterations: Math.max(
+                1,
+                Math.floor(Number(raw.iterations) || (algo === 'pbkdf2-sha256' ? PBKDF2_ITERATIONS : ITERATED_SHA256_ROUNDS))
+            ),
+            salt,
+            hash,
+            updatedAt: raw.updatedAt || null
+        };
+    }
+
+    async function createCredentials(password) {
+        const secret = String(password || '');
+        const salt = randomHex(16);
+
+        if (supportsWebCrypto()) {
+            return {
+                algo: 'pbkdf2-sha256',
+                iterations: PBKDF2_ITERATIONS,
+                salt,
+                hash: await pbkdf2Hash(secret, salt, PBKDF2_ITERATIONS),
+                updatedAt: nowIso()
+            };
+        }
+
+        return {
+            algo: 'sha256-iter',
+            iterations: ITERATED_SHA256_ROUNDS,
+            salt,
+            hash: iteratedSha256(secret, salt, ITERATED_SHA256_ROUNDS),
+            updatedAt: nowIso()
+        };
+    }
+
+    // Retorna { ok, error }. Nunca cai para a senha padrao quando existe credencial
+    // cadastrada - era esse o furo que reabria o login antigo.
+    async function checkPassword(user, password) {
+        if (!user) {
+            return { ok: false, error: 'Usuário não encontrado.' };
+        }
+
+        const raw = user.credentials;
+        if (raw && typeof raw === 'object' && raw.hash && raw.salt) {
+            if (raw.algo === 'pbkdf2-sha256' && !supportsWebCrypto()) {
+                return {
+                    ok: false,
+                    error: 'Este navegador nao valida senha segura (PBKDF2). Use Chrome/Edge atualizado ou HTTPS.'
+                };
+            }
+            const attempt = raw.algo === 'sha256-iter'
+                ? iteratedSha256(String(password || ''), raw.salt, raw.iterations)
+                : await pbkdf2Hash(String(password || ''), raw.salt, raw.iterations);
+            return { ok: attempt === raw.hash };
+        }
+
+        if (user.passwordHash) {
+            return { ok: user.passwordHash === sha256(String(password || '')) };
+        }
+
+        // Usuario sem nenhuma credencial: vale a senha inicial do projeto.
+        return { ok: sha256(String(password || '')) === sha256(MASTER_RESET_SECRET) };
+    }
+
+    // Aplica a credencial vinda do repositorio somente quando ela e mais recente.
+    function applyRemoteCredentials(user, remoteCredentials) {
+        const normalized = normalizeCredentials(remoteCredentials);
+        if (!user || !normalized) {
+            return false;
+        }
+
+        const localTime = normalizeCredentials(user.credentials)
+            ? new Date(user.credentials.updatedAt || 0).getTime()
+            : 0;
+        const remoteTime = new Date(normalized.updatedAt || 0).getTime();
+
+        if (localTime && remoteTime <= localTime) {
+            return false;
+        }
+
+        user.credentials = normalized;
+        delete user.passwordHash;
+        return true;
+    }
+
+    function getCredentialsSnapshot(user) {
+        return normalizeCredentials(user && user.credentials) || null;
     }
 
     function createDefaultUsers() {
@@ -242,6 +453,14 @@ const TOTVSStorage = (() => {
 
     function getAnalystUsers(state) {
         return state.users.filter((user) => user.role === 'analyst' && user.active);
+    }
+
+    // Responsaveis que podem receber maquinas: os analistas e o proprio gerente
+    // (quando ele registra no proprio nome).
+    function getResponsibleUsers(state) {
+        const analysts = getAnalystUsers(state);
+        const managers = state.users.filter((user) => user.role === 'manager' && user.active);
+        return analysts.concat(managers);
     }
 
     function getDatasetById(state, datasetId) {
@@ -425,7 +644,9 @@ const TOTVSStorage = (() => {
             analystId,
             brand: machine.brand || 'Dell',
             profile: machine.profile || 'Local',
-            processDate: machine.processDate || todayBrInput(),
+            processDate: machine.processDate
+                || isoToDateKey(machine.preparedAt || machine.createdAt)
+                || todayBrInput(),
             currentStep: machine.currentStep === 'CONCLUIDO' ? 'CONCLUIDO' : currentStep,
             currentStepIndex,
             status,
@@ -576,23 +797,30 @@ const TOTVSStorage = (() => {
         list.forEach((remote) => {
             if (!remote || !remote.id) return;
             const local = state.users.find((item) => item.id === remote.id);
+            const remoteCredentials = remote.credentials || remote.password || null;
 
             if (!local) {
-                // Usuario novo vindo do repositorio entra com a senha padrao.
-                state.users.push({
+                // Usuario novo vindo do repositorio: aproveita a credencial quando ela
+                // vier no payload; sem isso, entra com a senha inicial do projeto.
+                const created = {
                     id: remote.id,
                     username: remote.username || remote.id,
                     displayName: remote.displayName || remote.username || 'Usuario',
                     role: remote.role === 'manager' ? 'manager' : 'analyst',
-                    passwordHash: sha256(MASTER_RESET_SECRET),
                     active: remote.active !== false,
                     createdAt: nowIso(),
                     updatedAt: remote.updatedAt || nowIso()
-                });
+                };
+
+                if (!applyRemoteCredentials(created, remoteCredentials)) {
+                    created.passwordHash = sha256(MASTER_RESET_SECRET);
+                }
+
+                state.users.push(created);
                 return;
             }
 
-            // Nunca sobrescreve o hash de senha; apenas dados cadastrais mais recentes.
+            // Dados cadastrais mais recentes vem do repositorio.
             const remoteTime = new Date(remote.updatedAt || 0).getTime();
             const localTime = new Date(local.updatedAt || 0).getTime();
             if (remoteTime > localTime) {
@@ -600,6 +828,10 @@ const TOTVSStorage = (() => {
                 local.active = remote.active !== false;
                 local.updatedAt = remote.updatedAt;
             }
+
+            // A senha so muda quando a credencial remota e mais nova. Assim a troca
+            // feita no notebook chega aqui, e a troca feita aqui nunca e rebaixada.
+            applyRemoteCredentials(local, remoteCredentials);
         });
     }
 
@@ -660,8 +892,26 @@ const TOTVSStorage = (() => {
         const absorbed = state.machines.length - beforeCount;
         const removed = applyDeletions(state);
 
-        if (isManager && bundle && bundle.users) {
+        // Credenciais viajam com o dono do arquivo: cada analista carrega a propria
+        // senha no seu JSON, e o usuarios.json (escrito pelo gerente) carrega a de
+        // todos - e assim que um reset feito pelo gerente chega nas outras maquinas.
+        // Isso roda para qualquer perfil, inclusive ANTES do login.
+        if (bundle && bundle.users && Array.isArray(bundle.users.users)) {
             mergeUsers(state, bundle.users.users);
+        }
+
+        if (bundle && Array.isArray(bundle.analysts)) {
+            bundle.analysts.forEach((entry) => {
+                const data = entry && entry.data;
+                const owner = (data && data.user) || null;
+                if (!owner || !owner.id) {
+                    return;
+                }
+                const local = state.users.find((user) => user.id === owner.id);
+                if (local) {
+                    applyRemoteCredentials(local, data.credentials || owner.credentials || null);
+                }
+            });
         }
 
         if (isManager && bundle && bundle.management) {
@@ -823,7 +1073,8 @@ const TOTVSStorage = (() => {
         return saved;
     }
 
-    function login(username, password) {
+    async function login(username, password) {
+        credentialsUpgradedOnLogin = false;
         const state = loadState();
         const user = getUserByUsername(state, username);
 
@@ -833,8 +1084,22 @@ const TOTVSStorage = (() => {
         if (!user.active) {
             throw new Error('Usuário inativo. Procure o gerente de projeto.');
         }
-        if (user.passwordHash !== sha256(password)) {
+
+        const verdict = await checkPassword(user, password);
+        if (verdict.error) {
+            throw new Error(verdict.error);
+        }
+        if (!verdict.ok) {
             throw new Error('Senha incorreta.');
+        }
+
+        // Login valido com credencial antiga (SHA-256 puro): migra para o formato
+        // forte e apaga o hash antigo, para a senha anterior deixar de funcionar.
+        if (!normalizeCredentials(user.credentials)) {
+            user.credentials = await createCredentials(password);
+            delete user.passwordHash;
+            user.updatedAt = nowIso();
+            credentialsUpgradedOnLogin = true;
         }
 
         setSession({
@@ -842,32 +1107,43 @@ const TOTVSStorage = (() => {
             loginAt: nowIso()
         });
 
-        audit(state, 'login', user.id, { username: user.username });
+        audit(state, 'login', user.id, { username: user.username, credentialsUpgraded: credentialsUpgradedOnLogin });
         saveState(state);
         return user;
+    }
+
+    function wasCredentialsUpgraded() {
+        return credentialsUpgradedOnLogin;
     }
 
     function logout() {
         clearSession();
     }
 
-    function changeOwnPassword(userId, currentPassword, newPassword) {
+    async function changeOwnPassword(userId, currentPassword, newPassword) {
         const state = loadState();
         const user = getUserById(state, userId);
         if (!user) {
             throw new Error('Usuário não encontrado.');
         }
-        if (user.passwordHash !== sha256(currentPassword)) {
+
+        const verdict = await checkPassword(user, currentPassword);
+        if (verdict.error) {
+            throw new Error(verdict.error);
+        }
+        if (!verdict.ok) {
             throw new Error('Senha atual incorreta.');
         }
-        user.passwordHash = sha256(newPassword);
+
+        user.credentials = await createCredentials(newPassword);
+        delete user.passwordHash;
         user.updatedAt = nowIso();
         audit(state, 'change_password', userId, { scope: 'own' });
         saveState(state);
         return true;
     }
 
-    function resetUserPassword(managerUserId, targetUserId, masterSecret, newPassword) {
+    async function resetUserPassword(managerUserId, targetUserId, masterSecret, newPassword) {
         const state = loadState();
         const manager = getUserById(state, managerUserId);
         if (!manager || manager.role !== 'manager') {
@@ -885,7 +1161,8 @@ const TOTVSStorage = (() => {
             throw new Error('Usuário alvo não encontrado.');
         }
 
-        target.passwordHash = sha256(newPassword);
+        target.credentials = await createCredentials(newPassword);
+        delete target.passwordHash;
         target.updatedAt = nowIso();
         audit(state, 'reset_password', managerUserId, { targetUserId });
         saveState(state);
@@ -1078,7 +1355,10 @@ const TOTVSStorage = (() => {
                 existing.status = resolveMachineStatus(nextStep, nextTimerRunning, payload.hasError);
                 existing.currentStepStartedAt = stepChanged ? nowIso() : existing.currentStepStartedAt;
                 existing.lastTickAt = nextTimerRunning ? nowIso() : null;
-                existing.completedAt = nextStep === 'CONCLUIDO' ? nowIso() : null;
+                existing.completedAt = nextStep === 'CONCLUIDO' ? (existing.completedAt || nowIso()) : null;
+                existing.preparedAt = nextStep === 'CONCLUIDO'
+                    ? (existing.preparedAt || existing.completedAt)
+                    : null;
                 existing.updatedAt = nowIso();
                 existing.history.unshift(createHistoryEntry(
                     isManual ? 'machine_updated_manual' : 'machine_updated',
@@ -1281,6 +1561,136 @@ const TOTVSStorage = (() => {
         return machine;
     }
 
+    // Atualizacao em lote: usada pelo "selecionar todos" da tabela operacional.
+    // Aplica somente os campos informados e registra tudo na trilha de auditoria.
+    function bulkUpdateMachines(machineIds, patch, actorId) {
+        const state = processRunningTimers();
+        const actor = getUserById(state, actorId);
+        if (!actor) {
+            throw new Error('Sessão inválida.');
+        }
+        if (!Array.isArray(machineIds) || !machineIds.length) {
+            throw new Error('Selecione ao menos uma máquina.');
+        }
+
+        const source = patch || {};
+        const updated = [];
+        const skipped = [];
+
+        machineIds.forEach((machineId) => {
+            const machine = state.machines.find((item) => item.id === machineId);
+            if (!machine) {
+                return;
+            }
+            if (!canEditMachine(actor, machine)) {
+                skipped.push({ hostname: machine.hostname, reason: 'sem permissao' });
+                return;
+            }
+
+            const changes = [];
+
+            if (source.analystId && source.analystId !== machine.analystId) {
+                if (!getUserById(state, source.analystId)) {
+                    throw new Error('O analista escolhido para o lote não existe.');
+                }
+                machine.analystId = source.analystId;
+                changes.push('analista');
+            }
+            if (source.brand && source.brand !== machine.brand) {
+                machine.brand = source.brand;
+                changes.push('fabricante');
+            }
+            if (source.profile && source.profile !== machine.profile) {
+                machine.profile = source.profile;
+                changes.push('perfil');
+            }
+            if (source.processDate && source.processDate !== machine.processDate) {
+                machine.processDate = source.processDate;
+                changes.push('data registrada');
+            }
+            if (typeof source.notes === 'string' && source.notes !== machine.notes) {
+                machine.notes = source.notes;
+                changes.push('observacao');
+            }
+            if (source.step && source.step !== machine.currentStep) {
+                const step = source.step;
+                machine.currentStep = step;
+                machine.currentStepIndex = step === 'CONCLUIDO' ? PROCESS_STEPS.length : PROCESS_STEPS.indexOf(step);
+                machine.currentStepStartedAt = nowIso();
+                machine.timerRunning = step === 'CONCLUIDO' ? false : machine.timerRunning;
+                machine.status = resolveMachineStatus(step, machine.timerRunning, machine.hasError);
+                machine.completedAt = step === 'CONCLUIDO' ? (machine.completedAt || nowIso()) : null;
+                machine.preparedAt = step === 'CONCLUIDO' ? (machine.preparedAt || machine.completedAt) : null;
+                machine.lastTickAt = machine.timerRunning ? nowIso() : null;
+                changes.push('etapa');
+            }
+            if (source.clearError && (machine.hasError || machine.status === 'ERRO')) {
+                machine.hasError = false;
+                machine.errorDetails = null;
+                machine.status = resolveMachineStatus(machine.currentStep, machine.timerRunning, false);
+                changes.push('incidente encerrado');
+            }
+            if (source.swapDate && !machine.swappedAt) {
+                machine.swappedAt = source.swapDate;
+                machine.swappedBy = actorId;
+                changes.push('troca');
+            }
+            if (source.clearSwap && machine.swappedAt) {
+                machine.swappedAt = null;
+                machine.swappedBy = null;
+                changes.push('troca desfeita');
+            }
+
+            if (!changes.length) {
+                return;
+            }
+
+            machine.updatedAt = nowIso();
+            machine.history.unshift(createHistoryEntry('machine_bulk_updated', actorId, `Lote: ${changes.join(', ')}`));
+            updated.push(machine);
+        });
+
+        if (!updated.length) {
+            const motivo = skipped.length
+                ? ` (${skipped.length} sem permissão)`
+                : ' (nenhuma alteração aplicável)';
+            throw new Error(`Nenhuma máquina foi atualizada${motivo}.`);
+        }
+
+        audit(state, 'bulk_update', actorId, { count: updated.length, fields: Object.keys(source) });
+        saveState(state);
+        return { updated, skipped };
+    }
+
+    function bulkDeleteMachines(machineIds, actorId) {
+        const state = processRunningTimers();
+        const actor = getUserById(state, actorId);
+        if (!actor) {
+            throw new Error('Sessão inválida.');
+        }
+        if (!Array.isArray(machineIds) || !machineIds.length) {
+            throw new Error('Selecione ao menos uma máquina.');
+        }
+
+        const deletable = state.machines.filter((machine) => (
+            machineIds.indexOf(machine.id) !== -1 && canEditMachine(actor, machine)
+        ));
+
+        if (!deletable.length) {
+            throw new Error('Nenhuma máquina selecionada pode ser excluída.');
+        }
+
+        registerMachineDeletions(state, deletable, actorId);
+        const ids = deletable.map((machine) => machine.id);
+        state.machines = state.machines.filter((machine) => ids.indexOf(machine.id) === -1);
+        audit(state, 'bulk_delete', actorId, {
+            count: deletable.length,
+            hostnames: deletable.map((machine) => machine.hostname)
+        });
+        saveState(state);
+        return { deleted: deletable, skipped: machineIds.length - deletable.length };
+    }
+
     function startMachine(machineId, actorId) {
         const state = processRunningTimers();
         const actor = getUserById(state, actorId);
@@ -1407,6 +1817,8 @@ const TOTVSStorage = (() => {
         MASTER_RESET_SECRET,
         PROCESS_STEPS,
         TOTAL_PROJECT_GOAL,
+        bulkDeleteMachines,
+        bulkUpdateMachines,
         changeOwnPassword,
         createDataset,
         createMachines,
@@ -1416,14 +1828,17 @@ const TOTVSStorage = (() => {
         getAllMachinesByDataset,
         getAnalystName,
         getAnalystUsers,
+        getCredentialsSnapshot,
         getCurrentUser,
         getDatasetById,
+        getResponsibleUsers,
         getSanitizedUsers,
         getSession,
         getStateSummary,
         getUserById,
         getDeletionsForAnalyst,
         applyDeletions,
+        applyRemoteCredentials,
         mergeDeletions,
         loadState,
         login,
@@ -1449,6 +1864,7 @@ const TOTVSStorage = (() => {
         unmarkMachineSwapped,
         updateMachine,
         getVisibleMachines,
+        wasCredentialsUpgraded,
         sha256
     };
 })();

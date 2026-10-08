@@ -194,6 +194,30 @@
                     </div>
                     <span class="helper-text" id="historyCountLabel">0 dia(s) lançado(s)</span>
                 </div>
+
+                <div class="filter-bar filter-bar-compact">
+                    <div class="filter-bar-row">
+                        <label class="filter-field">
+                            <span>De</span>
+                            <input type="date" id="histFilterFrom" class="form-control">
+                        </label>
+                        <label class="filter-field">
+                            <span>até</span>
+                            <input type="date" id="histFilterTo" class="form-control">
+                        </label>
+                        <label class="filter-field">
+                            <span>Status do dia</span>
+                            <select id="histFilterStatus" class="form-control filter-select">
+                                <option value="ALL">Todos</option>
+                                <option value="ok">no plano</option>
+                                <option value="warn">atenção</option>
+                                <option value="bad">atrasado</option>
+                            </select>
+                        </label>
+                        <button type="button" class="btn btn-outline btn-sm" id="btnClearHistFilters">Limpar</button>
+                    </div>
+                </div>
+
                 <div class="table-responsive">
                     <table class="totvs-table table-sm">
                         <thead>
@@ -223,10 +247,57 @@
                     <span class="helper-text">o que está acontecendo na bancada agora</span>
                 </div>
 
+                <div class="filter-bar">
+                    <div class="filter-bar-row">
+                        <div class="search-box">
+                            <input type="text" id="mgmtSearch" class="form-control" placeholder="Buscar hostname, analista, etapa, observação..." aria-label="Busca geral da operação">
+                        </div>
+
+                        <input type="text" id="mgmtSpon" class="form-control filter-input filter-spon font-mono text-uppercase" placeholder="Buscar SPON" aria-label="Busca por SPON">
+
+                        <select id="mgmtAnalyst" class="form-control filter-select" aria-label="Responsável"></select>
+
+                        <select id="mgmtStatus" class="form-control filter-select" aria-label="Status"></select>
+
+                        <label class="filter-field">
+                            <span>De</span>
+                            <input type="date" id="mgmtDateFrom" class="form-control">
+                        </label>
+
+                        <label class="filter-field">
+                            <span>até</span>
+                            <input type="date" id="mgmtDateTo" class="form-control">
+                        </label>
+
+                        <label class="filter-field">
+                            <span>Ordenar por</span>
+                            <select id="mgmtSort" class="form-control filter-select"></select>
+                        </label>
+
+                        <label class="filter-field">
+                            <span>Direção</span>
+                            <select id="mgmtSortDir" class="form-control filter-select filter-select-sm">
+                                <option value="desc">Maior / mais recente</option>
+                                <option value="asc">Menor / mais antigo</option>
+                            </select>
+                        </label>
+
+                        <div class="date-quick" role="group" aria-label="Atalhos de data">
+                            <button type="button" class="chip" id="mgmtChipToday">Hoje</button>
+                            <button type="button" class="chip" id="mgmtChipYesterday">Ontem</button>
+                            <button type="button" class="chip" id="mgmtChipLast7">Últimos 7 dias</button>
+                        </div>
+
+                        <button type="button" class="btn btn-outline btn-sm" id="btnMgmtClearFilters">Limpar filtros</button>
+                    </div>
+
+                    <span class="filter-summary" id="mgmtFilterSummary">Sem filtros aplicados.</span>
+                </div>
+
                 <div class="ops-grid">
                     <div class="ops-block">
                         <h4>Em andamento agora <span class="ops-count" id="inProgressCount">0</span></h4>
-                        <div class="table-responsive">
+                        <div class="table-responsive table-scroll">
                             <table class="totvs-table table-sm">
                                 <thead>
                                     <tr><th>Hostname</th><th>Analista</th><th>Etapa</th><th class="n">Tempo</th></tr>
@@ -238,19 +309,35 @@
 
                     <div class="ops-block">
                         <h4>Preparadas aguardando troca <span class="ops-count" id="waitingCount">0</span></h4>
-                        <div class="table-responsive">
+                        <div class="table-responsive table-scroll">
                             <table class="totvs-table table-sm">
                                 <thead>
-                                    <tr><th>Hostname</th><th>Analista</th><th>Preparada em</th></tr>
+                                    <tr>
+                                        <th class="cell-select"><input type="checkbox" id="selectAllWaiting" aria-label="Selecionar todas as preparadas listadas"></th>
+                                        <th>Hostname</th>
+                                        <th>Analista</th>
+                                        <th>Registrada em</th>
+                                        <th>Salva no sistema</th>
+                                    </tr>
                                 </thead>
                                 <tbody id="waitingSwapBody"></tbody>
                             </table>
+                        </div>
+
+                        <div class="inline-actions ops-actions">
+                            <label class="bulk-field">
+                                <span>Data da troca</span>
+                                <input type="date" id="inputMgmtSwapDate" class="form-control">
+                            </label>
+                            <button class="btn btn-secondary btn-sm" id="btnSelectAllWaiting">Selecionar todas as listadas</button>
+                            <button class="btn btn-primary btn-sm" id="btnSwapSelectedWaiting">Marcar selecionadas como trocadas</button>
+                            <span class="helper-text" id="waitingSelectedLabel">0 selecionada(s)</span>
                         </div>
                     </div>
 
                     <div class="ops-block">
                         <h4>Incidentes abertos <span class="ops-count" id="incidentCount">0</span></h4>
-                        <div class="table-responsive">
+                        <div class="table-responsive table-scroll">
                             <table class="totvs-table table-sm">
                                 <thead>
                                     <tr><th>Hostname</th><th>Analista</th><th>Etapa</th><th>Descrição</th></tr>
@@ -299,7 +386,9 @@
     <script src="js/storage.js"></script>
     <script src="js/importer-exporter.js"></script>
     <script src="js/rollout.js"></script>
+    <script src="js/filters.js"></script>
     <script src="js/github-sync.js"></script>
+    <script src="js/print-layout.js"></script>
     <script src="js/gestao.js"></script>
 </body>
 </html>

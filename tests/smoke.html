@@ -29,7 +29,9 @@
     <script src="../app/js/storage.js"></script>
     <script src="../app/js/importer-exporter.js"></script>
     <script src="../app/js/rollout.js"></script>
+    <script src="../app/js/filters.js"></script>
     <script src="../app/js/github-sync.js"></script>
+    <script src="../app/js/print-layout.js"></script>
     <script src="../app/js/reports.js"></script>
     <script>
         const resultsEl = document.getElementById('results');
@@ -57,6 +59,17 @@
         function throws(name, fn, expectedFragment) {
             try {
                 fn();
+                record(name, false, 'nenhum erro foi lancado');
+            } catch (error) {
+                const message = String(error && error.message ? error.message : error);
+                record(name, message.toLowerCase().includes(String(expectedFragment).toLowerCase()),
+                    `mensagem="${message}" nao contem "${expectedFragment}"`);
+            }
+        }
+
+        async function throwsAsync(name, fn, expectedFragment) {
+            try {
+                await fn();
                 record(name, false, 'nenhum erro foi lancado');
             } catch (error) {
                 const message = String(error && error.message ? error.message : error);
@@ -104,6 +117,10 @@
 
     <script>
         (async () => {
+            // Mantem o smoke test rapido e deterministico: sem WebCrypto o storage
+            // usa o SHA-256 iterado (sincrono). A aplicacao real continua com PBKDF2.
+            window.__TOTVS_TEST_WEAK_HASH__ = true;
+
             /* ---------------- Base64 UTF-8 com acentos ---------------- */
             const sample = 'FORMATAÇÃO E BIOS · DOMINIO E ARGUS · çãõéí';
             equal('base64 round-trip preserva acentos',
@@ -117,10 +134,21 @@
             ok('existe um usuario com perfil gerente', state.users.some((user) => user.role === 'manager'));
 
             /* ---------------- Login ---------------- */
-            const manager = TOTVSStorage.login('gerente', 'FieldTotvs2026');
+            const manager = await TOTVSStorage.login('gerente', 'FieldTotvs2026');
             equal('login do gerente devolve o perfil manager', manager.role, 'manager');
-            throws('login com senha errada falha',
+            await throwsAsync('login com senha errada falha',
                 () => TOTVSStorage.login('gerente', 'senha-errada'), 'senha incorreta');
+            ok('login migra o hash antigo para credencial com salt',
+                Boolean(TOTVSStorage.loadState().users.find((u) => u.id === 'user_manager').credentials));
+            equal('apos migrar, o hash antigo deixa de existir',
+                'passwordHash' in TOTVSStorage.loadState().users.find((u) => u.id === 'user_manager'), false);
+            ok('credencial guarda salt e iteracoes',
+                (() => {
+                    const cred = TOTVSStorage.getCredentialsSnapshot(
+                        TOTVSStorage.loadState().users.find((u) => u.id === 'user_manager')
+                    );
+                    return Boolean(cred && cred.salt && cred.iterations >= 100 && cred.hash);
+                })());
 
             /* ---------------- Cadastro em lote ---------------- */
             const basePayload = {
@@ -187,17 +215,21 @@
                 () => TOTVSStorage.deleteDataset('dataset_principal', 'user_isaque'), 'gerente');
 
             /* ---------------- Senhas ---------------- */
-            throws('troca de senha exige a senha atual correta',
+            await throwsAsync('troca de senha exige a senha atual correta',
                 () => TOTVSStorage.changeOwnPassword('user_isaque', 'errada', 'NovaSenha123'), 'senha atual incorreta');
 
-            TOTVSStorage.changeOwnPassword('user_isaque', 'FieldTotvs2026', 'NovaSenha123');
-            equal('login funciona com a senha nova', TOTVSStorage.login('isaque', 'NovaSenha123').id, 'user_isaque');
+            await TOTVSStorage.changeOwnPassword('user_isaque', 'FieldTotvs2026', 'NovaSenha123');
+            equal('login funciona com a senha nova', (await TOTVSStorage.login('isaque', 'NovaSenha123')).id, 'user_isaque');
 
-            throws('reset de senha exige a chave mestra',
+            // BUG CORRIGIDO: a senha anterior nao pode continuar valendo depois da troca.
+            await throwsAsync('senha antiga deixa de funcionar apos a troca',
+                () => TOTVSStorage.login('isaque', 'FieldTotvs2026'), 'senha incorreta');
+
+            await throwsAsync('reset de senha exige a chave mestra',
                 () => TOTVSStorage.resetUserPassword('user_manager', 'user_isaque', 'chave-errada', 'Outra12345'), 'senha mestra');
 
-            TOTVSStorage.resetUserPassword('user_manager', 'user_isaque', 'FieldTotvs2026', 'FieldTotvs2026');
-            equal('reset devolve a senha padrao', TOTVSStorage.login('isaque', 'FieldTotvs2026').id, 'user_isaque');
+            await TOTVSStorage.resetUserPassword('user_manager', 'user_isaque', 'FieldTotvs2026', 'FieldTotvs2026');
+            equal('reset devolve a senha padrao', (await TOTVSStorage.login('isaque', 'FieldTotvs2026')).id, 'user_isaque');
 
             /* ---------------- Merge por data ---------------- */
             const older = { id: 'x1', updatedAt: '2026-01-01T00:00:00.000Z', notes: 'antigo' };
@@ -436,7 +468,7 @@
             ok('relatorio imprimivel geral e gerado',
                 TOTVSReports.buildPrintableGeneralReport(reportState, metrics, reportState.machines).includes('print-report'));
             ok('relatorio imprimivel individual e gerado',
-                TOTVSReports.buildPrintableAnalystReport(reportState, reportState.machines, 'user_isaque').includes('Relatório Individual'));
+                TOTVSReports.buildPrintableAnalystReport(reportState, reportState.machines, 'user_isaque').includes('Relatório individual do analista'));
 
             /* ---------------- Visibilidade por perfil ---------------- */
             const visAnalyst = TOTVSStorage.getVisibleMachines(reportState, analystUser);
@@ -542,9 +574,9 @@
             ok('grafico do analista gera as barras',
                 TOTVSReports.buildAnalystCharts(chartState, chartState.machines, 'user_isaque').includes('chart-bar'));
             ok('impressao do grafico geral monta o relatorio',
-                TOTVSReports.buildPrintableGeneralCharts(chartState, chartMetrics).includes('Graficos Gerais'));
+                TOTVSReports.buildPrintableGeneralCharts(chartState, chartMetrics).includes('Gráficos Gerais'));
             ok('impressao do grafico do analista monta o relatorio',
-                TOTVSReports.buildPrintableAnalystCharts(chartState, chartState.machines, 'user_isaque').includes('Graficos por Analista'));
+                TOTVSReports.buildPrintableAnalystCharts(chartState, chartState.machines, 'user_isaque').includes('Gráficos por analista'));
 
             /* ---------------- Travas de permissao dos graficos ---------------- */
             const chartHost = document.createElement('div');
@@ -625,7 +657,9 @@
             ok('gestao projeta o termino quando ha ritmo',
                 typeof management.projected === 'string' && management.projected !== '—');
             ok('gestao conta os dias uteis restantes', management.remainingBusinessDays > 0);
-            equal('gestao lista os 4 analistas', management.analystRows.length, 4);
+            equal('gestao lista todos os responsaveis (4 analistas + gerente)',
+                management.analystRows.length, TOTVSStorage.getResponsibleUsers(rolloutState).length);
+            ok('gestao marca a linha do gerente', management.analystRows.some((row) => row.isManager));
 
             const burndown = TOTVSRollout.buildBurndownSeries(rolloutState, rolloutState.machines, null, '2026-10-20');
             equal('burndown cobre todos os dias uteis do periodo',
@@ -674,6 +708,48 @@
                 managementPayload.frentes.ok.length === 1 && managementPayload.frentes.pd.length === 1);
             equal('caminho do arquivo de gestao',
                 TOTVSGithubSync.PATH_MANAGEMENT, 'data/gestao.json');
+
+            /* ---------------- Filtros e ordenacao (TOTVSFilters) ---------------- */
+            const filterNames = { user_isaque: 'Isaque', user_vinicius: 'Vinicius', user_davi: 'Davi' };
+            const filterSamples = [
+                { id: 'f1', hostname: 'SPON010100001', analystId: 'user_isaque', brand: 'Dell', profile: 'Cloud', status: 'CONCLUIDO', currentStep: 'CONCLUIDO', processDate: '2026-10-01', preparedAt: '2026-10-01T09:00:00.000Z', swappedAt: '', totalElapsedSeconds: 600, stepDurations: {}, hasError: false },
+                { id: 'f2', hostname: 'SPON010100002', analystId: 'user_vinicius', brand: 'Lenovo', profile: 'Local', status: 'EM_ANDAMENTO', currentStep: '2 WINDOWS UPDATE', processDate: '2026-10-02', swappedAt: '', totalElapsedSeconds: 300, stepDurations: {}, hasError: false },
+                { id: 'f3', hostname: 'SPON010100003', analystId: 'user_isaque', brand: 'HP', profile: 'Cloud', status: 'CONCLUIDO', currentStep: 'CONCLUIDO', processDate: '2026-10-03', preparedAt: '2026-10-03T09:00:00.000Z', swappedAt: '2026-10-20', totalElapsedSeconds: 900, stepDurations: {}, hasError: false },
+                { id: 'f4', hostname: 'SPON010100004', analystId: 'user_davi', brand: 'Dell', profile: 'Local', status: 'ERRO', currentStep: '4 DOMINIO E ARGUS', processDate: '2026-10-04', swappedAt: '', totalElapsedSeconds: 120, stepDurations: {}, hasError: true }
+            ];
+            const filterCtx = { analystName: (machine) => filterNames[machine.analystId] || '' };
+
+            equal('filtro por SPON restringe ao hostname',
+                TOTVSFilters.applyFilters(filterSamples, { spon: 'SPON010100003' }, filterCtx).length, 1);
+            equal('filtro por analista separa os registros',
+                TOTVSFilters.applyFilters(filterSamples, { analystId: 'user_isaque' }, filterCtx).length, 2);
+            equal('busca livre encontra pelo nome do analista com contexto',
+                TOTVSFilters.applyFilters(filterSamples, { search: 'vinicius' }, filterCtx).length, 1);
+            equal('intervalo de datas usa processDate',
+                TOTVSFilters.applyFilters(filterSamples, { dateFrom: '2026-10-03', dateTo: '2026-10-04' }, filterCtx).length, 2);
+            equal('filtro de trocada usa a chave derivada de status',
+                TOTVSFilters.applyFilters(filterSamples, { status: 'TROCADA' }, filterCtx).length, 1);
+            equal('filtro de incidente usa hasError',
+                TOTVSFilters.applyFilters(filterSamples, { status: 'ERRO' }, filterCtx).length, 1);
+
+            equal('statusKey marca preparada quando concluida', TOTVSFilters.statusKey(filterSamples[0]), 'PREPARADA');
+            equal('statusLabel traduz a maquina trocada', TOTVSFilters.statusLabel(filterSamples[2]), 'Trocada');
+
+            equal('ordenacao ascendente por hostname', TOTVSFilters.sortMachines(filterSamples, 'hostname', 'asc', filterCtx)[0].id, 'f1');
+            equal('ordenacao descendente por hostname', TOTVSFilters.sortMachines(filterSamples, 'hostname', 'desc', filterCtx)[0].id, 'f4');
+            equal('ordenacao por tempo total traz a maior primeiro', TOTVSFilters.sortMachines(filterSamples, 'totalTime', 'desc', filterCtx)[0].id, 'f3');
+
+            const filterSummary = TOTVSFilters.summarize(filterSamples);
+            equal('resumo conta todas as linhas', filterSummary.total, 4);
+            equal('resumo conta as preparadas', filterSummary.prepared, 2);
+            equal('resumo conta as aguardando troca', filterSummary.waitingSwap, 1);
+            equal('resumo conta os incidentes', filterSummary.errors, 1);
+
+            ok('lista de ordenacao marca a opcao escolhida',
+                TOTVSFilters.sortOptionsHtml('hostname').includes('value="hostname" selected'));
+            equal('data pura nao sofre conversao de fuso no filtro',
+                TOTVSFilters.toDateKey('2026-10-20'), '2026-10-20');
+
 
             finish();
         })();

@@ -1593,6 +1593,160 @@ body.totvs-theme {
     font-family: 'JetBrains Mono', monospace;
 }
 
+/* ------------------------- Filtros, chips e datas ------------------------- */
+
+.filter-bar {
+    display: grid;
+    gap: 8px;
+    margin: 14px 0;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: rgba(9, 24, 40, 0.55);
+}
+
+.filter-bar-compact {
+    margin: 0 0 12px;
+    padding: 10px 12px;
+}
+
+.filter-bar-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.filter-field {
+    display: grid;
+    gap: 4px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+.filter-field .form-control {
+    text-transform: none;
+    letter-spacing: normal;
+    font-weight: 400;
+    min-width: 140px;
+}
+
+.filter-select {
+    min-width: 170px;
+    max-width: 260px;
+}
+
+.filter-select-sm {
+    min-width: 150px;
+}
+
+.filter-input {
+    min-width: 160px;
+}
+
+.filter-spon {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.filter-summary {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+}
+
+.date-quick {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.date-quick-sm {
+    margin-top: 6px;
+}
+
+.chip {
+    border: 1px solid var(--border);
+    background: rgba(9, 24, 40, 0.72);
+    color: var(--text-soft);
+    border-radius: 999px;
+    padding: 7px 12px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.16s ease, color 0.16s ease, background 0.16s ease;
+}
+
+.chip:hover,
+.chip:focus-visible {
+    border-color: var(--border-strong);
+    color: var(--cyan);
+    outline: none;
+}
+
+.chip.is-active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #04121f;
+}
+
+.bulk-check {
+    font-size: 0.78rem;
+}
+
+.bulk-edit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px 14px;
+    margin: 14px 0;
+}
+
+.bulk-edit-wide {
+    grid-column: 1 / -1;
+}
+
+.table-scroll {
+    max-height: 340px;
+    overflow: auto;
+}
+
+.ops-actions {
+    margin-top: 12px;
+}
+
+.row-manager {
+    background: rgba(103, 215, 255, 0.05);
+}
+
+.table-empty {
+    text-align: center;
+    padding: 22px;
+    color: var(--text-muted);
+}
+
+/* Card recolhivel (entrada de maquinas do gerente). */
+.workflow-entry-card.is-collapsed .machine-form {
+    display: none;
+}
+
+.workflow-entry-card .card-header {
+    gap: 12px;
+}
+
+/* Cabecalho fixo das tabelas longas. */
+.table-responsive {
+    position: relative;
+}
+
+.totvs-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    backdrop-filter: blur(6px);
+}
+
 @media (max-width: 900px) {
     .ops-grid {
         grid-template-columns: 1fr;
@@ -1606,13 +1760,138 @@ body.totvs-theme {
     .adjust-grid-head {
         display: none;
     }
+
+    .filter-bar-row {
+        align-items: stretch;
+    }
+
+    .search-box,
+    .filter-select,
+    .filter-select-sm,
+    .filter-input {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+    }
 }
 
-/* Impressao / PDF: pagina sem margem, sem cabecalho e sem rodape do navegador.
-   Combinado com --kiosk-printing no start.bat, o PDF e gerado direto. */
+/* ------------------------------- Responsivo ------------------------------- */
+
+@media (min-width: 1600px) {
+    .app-container {
+        max-width: 1680px;
+    }
+
+    .kpi-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .totvs-table {
+        min-width: 100%;
+    }
+}
+
+@media (max-width: 1400px) {
+    .header-widgets {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 1180px) {
+    .kpi-grid,
+    .hero-grid,
+    .workspace-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .toolbar-left,
+    .toolbar-right {
+        flex: 1 1 100%;
+        flex-wrap: wrap;
+    }
+
+    .charts-grid,
+    .charts-grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .app-container {
+        padding: 14px;
+    }
+
+    .form-grid,
+    .workspace-grid,
+    .manual-times-grid,
+    .sync-config-grid,
+    .password-grid,
+    .bulk-edit-grid,
+    .card-header,
+    .form-actions-bar {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .totvs-table {
+        min-width: 880px;
+    }
+
+    .modal-dialog {
+        width: 100%;
+        max-width: 100%;
+        max-height: 100vh;
+        border-radius: 0;
+        overflow: auto;
+    }
+
+    .header-actions .btn,
+    .filter-bar .btn,
+    .bulk-bar .btn {
+        flex: 1 1 auto;
+    }
+
+    .table-scroll {
+        max-height: 300px;
+    }
+}
+
+@media (max-width: 560px) {
+    .kpi-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .brand-meta h1 {
+        font-size: 1rem;
+    }
+
+    .hero-card .mini-stat {
+        flex: 1 1 100%;
+    }
+
+    .totvs-table th,
+    .totvs-table td {
+        padding: 10px 12px;
+        font-size: 0.82rem;
+    }
+
+    .filter-field .form-control {
+        min-width: 0;
+    }
+}
+
+/* ============================================================================
+   IMPRESSAO / PDF
+   ----------------------------------------------------------------------------
+   Antes o `@page { margin: 0 }` fazia o padding existir so na PRIMEIRA pagina:
+   da segunda em diante o conteudo encostava na borda e saia cortado. Agora a
+   margem e da propria pagina, valendo em todas as folhas, e as tabelas usam
+   `table-layout: fixed` com quebra de palavra para nunca estourar a largura.
+   ============================================================================ */
 @page {
     size: A4 portrait;
-    margin: 0;
+    margin: 12mm 10mm 14mm;
 }
 
 @media print {
@@ -1622,6 +1901,7 @@ body.totvs-theme {
         padding: 0 !important;
         background: #fff !important;
         color: #0f172a !important;
+        font-size: 11px;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
@@ -1637,67 +1917,243 @@ body.totvs-theme {
         padding: 0 !important;
         color: #0f172a !important;
         font-family: 'Inter', sans-serif;
+        font-size: 11px;
     }
 
     .print-report {
-        padding: 18mm 14mm !important;
-        page-break-inside: auto;
+        padding: 0;
     }
 
-    .print-report table {
-        page-break-inside: auto;
-    }
+    /* ------------------------------ Cabecalho ------------------------------ */
 
-    .print-report tr {
+    .print-head {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 10px 16px;
+        align-items: center;
+        border-bottom: 2px solid #0e2240;
+        padding-bottom: 10px;
+        margin-bottom: 14px;
+        break-inside: avoid;
         page-break-inside: avoid;
     }
 
-    .print-report thead {
+    .print-brand {
+        display: grid;
+        gap: 2px;
+        padding: 8px 12px;
+        border: 1px solid #0e2240;
+        border-radius: 8px;
+        background: #0e2240 !important;
+        color: #fff !important;
+        text-align: center;
+    }
+
+    .print-logo {
+        font-weight: 800;
+        letter-spacing: 0.2em;
+        font-size: 13px;
+    }
+
+    .print-logo-tag {
+        font-size: 8px;
+        letter-spacing: 0.18em;
+        color: #f2821f !important;
+    }
+
+    .print-head-text h1 {
+        font-size: 17px;
+        margin: 0 0 2px;
+        color: #0e2240 !important;
+    }
+
+    .print-sub {
+        font-size: 10px;
+        color: #475569 !important;
+        margin: 0;
+    }
+
+    .print-meta {
+        grid-column: 1 / -1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 18px;
+        font-size: 9.5px;
+        color: #475569 !important;
+        border-top: 1px solid #e2e8f0;
+        padding-top: 6px;
+    }
+
+    .print-meta strong {
+        color: #0e2240 !important;
+        margin-right: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-size: 8.5px;
+    }
+
+    /* --------------------------------- KPIs -------------------------------- */
+
+    .print-kpis {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+        margin: 12px 0 4px;
+    }
+
+    .print-kpi {
+        border: 1px solid #cbd5e1;
+        border-left: 3px solid #f2821f;
+        border-radius: 6px;
+        padding: 7px 9px;
+        display: grid;
+        gap: 2px;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .print-kpi-label {
+        font-size: 8.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #64748b !important;
+    }
+
+    .print-kpi-value {
+        font-size: 15px;
+        font-weight: 700;
+        color: #0e2240 !important;
+    }
+
+    .print-kpi-hint {
+        font-size: 8.5px;
+        color: #64748b !important;
+    }
+
+    /* ------------------------------- Secoes -------------------------------- */
+
+    .print-section {
+        font-size: 12px;
+        color: #0e2240 !important;
+        margin: 16px 0 6px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid #cbd5e1;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+
+    .print-section span {
+        font-size: 9px;
+        font-weight: 400;
+        color: #64748b !important;
+    }
+
+    /* ------------------------------- Tabelas ------------------------------- */
+
+    .print-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        margin: 0 0 10px;
+        font-size: 9.5px;
+    }
+
+    .print-table th {
+        background: #0e2240 !important;
+        color: #fff !important;
+        border: 1px solid #0e2240;
+        padding: 5px 6px;
+        text-align: left;
+        font-size: 8.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .print-table td {
+        border: 1px solid #cbd5e1;
+        padding: 5px 6px;
+        vertical-align: top;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+    }
+
+    .print-table tbody tr:nth-child(even) td {
+        background: #f4f6fa !important;
+    }
+
+    .print-table th.n,
+    .print-table td.n {
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    .print-table thead {
         display: table-header-group;
     }
 
-    .print-report h1,
-    .print-report h2,
-    .print-report h3 {
-        margin-bottom: 10px;
+    .print-table tr {
+        break-inside: avoid;
+        page-break-inside: avoid;
     }
 
-    .print-report .print-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 14px;
-        margin: 18px 0;
-    }
-
-    .print-report .print-card {
-        border: 1px solid #cbd5e1;
-        border-radius: 12px;
-        padding: 14px;
-    }
-
+    .print-table,
     .print-report table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 18px;
+        page-break-inside: auto;
     }
 
-    .print-report th,
-    .print-report td {
+    /* ------------------------------- Graficos ------------------------------ */
+
+    .print-chart-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin: 8px 0 4px;
+    }
+
+    .print-figure {
+        margin: 0;
         border: 1px solid #cbd5e1;
-        padding: 10px;
-        text-align: left;
-        font-size: 12px;
+        border-radius: 6px;
+        padding: 8px;
+        break-inside: avoid;
+        page-break-inside: avoid;
     }
 
-    /* Graficos no papel: fundo branco, borda visivel e sem quebrar no meio. */
+    .print-figure figcaption {
+        font-size: 9px;
+        font-weight: 700;
+        color: #0e2240 !important;
+        margin-bottom: 6px;
+    }
+
+    .print-figure img {
+        width: 100%;
+        max-height: 75mm;
+        object-fit: contain;
+        display: block;
+    }
+
+    .print-caption {
+        font-size: 8.5px;
+        color: #64748b !important;
+        margin: 4px 0 0;
+    }
+
+    /* Graficos em HTML/CSS puro do dashboard. */
     .print-report .charts-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        margin: 18px 0;
+        gap: 10px;
+        margin: 10px 0;
     }
 
     .print-report .chart-block {
         background: #fff !important;
         border: 1px solid #cbd5e1 !important;
+        padding: 8px;
         break-inside: avoid;
         page-break-inside: avoid;
     }
@@ -1710,5 +2166,36 @@ body.totvs-theme {
     .print-report .chart-row-label,
     .print-report .chart-row-value {
         color: #0f172a !important;
+        font-size: 9px;
+    }
+
+    .print-report .chart-title {
+        font-size: 10px;
+    }
+
+    .print-empty {
+        font-size: 10px;
+        color: #64748b !important;
+        font-style: italic;
+    }
+
+    /* -------------------------------- Rodape ------------------------------- */
+
+    .print-foot {
+        margin-top: 14px;
+        border-top: 1px solid #cbd5e1;
+        padding-top: 6px;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 8.5px;
+        color: #64748b !important;
+    }
+
+    .print-report h1,
+    .print-report h2,
+    .print-report h3 {
+        break-after: avoid;
+        page-break-after: avoid;
     }
 }

@@ -201,14 +201,15 @@
                 </div>
             </section>
 
-            <section class="card workflow-entry-card">
+            <section class="card workflow-entry-card" id="workflowEntryCard">
                 <div class="card-header">
                     <div class="card-title">
                         <span class="badge-dot"></span>
-                        <h2>Entrada de Máquinas e Controle de Etapas</h2>
+                        <h2 id="entryCardTitle">Entrada de Máquinas e Controle de Etapas</h2>
                     </div>
                     <div class="quick-status-indicators">
-                        <span class="helper-text">Cadastre uma ou várias máquinas por linha.</span>
+                        <span class="helper-text" id="entryCardHint">Cadastre uma ou várias máquinas por linha.</span>
+                        <button type="button" class="btn btn-outline btn-sm" id="btnToggleEntryCard" aria-expanded="true">Recolher</button>
                     </div>
                 </div>
 
@@ -244,8 +245,12 @@
                         </div>
 
                         <div class="form-group col-date">
-                            <label for="inputProcessDate">Data da cronometragem *</label>
+                            <label for="inputProcessDate">Data registrada (cronometragem) *</label>
                             <input type="date" id="inputProcessDate" class="form-control">
+                            <div class="date-quick date-quick-sm">
+                                <button type="button" class="chip" id="chipFormToday">Hoje</button>
+                                <button type="button" class="chip" id="chipFormYesterday">Ontem</button>
+                            </div>
                         </div>
 
                         <div class="form-group col-step">
@@ -340,26 +345,26 @@
             <section class="toolbar-section">
                 <div class="toolbar-left">
                     <div class="search-box">
-                        <input type="text" id="searchFilter" class="form-control" placeholder="Buscar por hostname, etapa, observação...">
+                        <input type="text" id="searchFilter" class="form-control" placeholder="Buscar hostname, analista, etapa, observação..." aria-label="Busca geral">
                     </div>
 
-                    <select id="filterAnalyst" class="form-control filter-select"></select>
+                    <input type="text" id="filterSpon" class="form-control filter-input filter-spon font-mono text-uppercase" placeholder="Buscar SPON" aria-label="Busca por SPON / hostname">
 
-                    <select id="filterStatus" class="form-control filter-select">
-                        <option value="ALL">Todos os status</option>
-                        <option value="PREPARADA">Preparada (aguardando troca)</option>
-                        <option value="TROCADA">Trocada</option>
-                        <option value="EM_ANDAMENTO">Em andamento</option>
-                        <option value="PAUSADO">Pausado</option>
-                        <option value="CONCLUIDO">Concluído (preparada)</option>
-                        <option value="ERRO">Erro</option>
-                    </select>
+                    <select id="filterAnalyst" class="form-control filter-select" aria-label="Filtrar por analista"></select>
 
-                    <select id="filterBrand" class="form-control filter-select">
+                    <select id="filterStatus" class="form-control filter-select" aria-label="Filtrar por status"></select>
+
+                    <select id="filterBrand" class="form-control filter-select" aria-label="Filtrar por fabricante">
                         <option value="ALL">Todas as fabricantes</option>
                         <option value="Dell">Dell</option>
                         <option value="Lenovo">Lenovo</option>
                         <option value="HP">HP</option>
+                    </select>
+
+                    <select id="filterProfile" class="form-control filter-select" aria-label="Filtrar por perfil">
+                        <option value="ALL">Todos os perfis</option>
+                        <option value="Local">Usuário Local</option>
+                        <option value="Cloud">Usuário Cloud</option>
                     </select>
                 </div>
 
@@ -373,6 +378,45 @@
                 </div>
             </section>
 
+            <section class="filter-bar">
+                <div class="filter-bar-row">
+                    <label class="filter-field">
+                        <span>Ordenar por</span>
+                        <select id="sortMachines" class="form-control filter-select"></select>
+                    </label>
+
+                    <label class="filter-field">
+                        <span>Direção</span>
+                        <select id="sortDirection" class="form-control filter-select filter-select-sm">
+                            <option value="desc">Maior / mais recente</option>
+                            <option value="asc">Menor / mais antigo</option>
+                        </select>
+                    </label>
+
+                    <label class="filter-field">
+                        <span>Registrada de</span>
+                        <input type="date" id="filterDateFrom" class="form-control">
+                    </label>
+
+                    <label class="filter-field">
+                        <span>até</span>
+                        <input type="date" id="filterDateTo" class="form-control">
+                    </label>
+
+                    <div class="date-quick" role="group" aria-label="Atalhos de data">
+                        <button type="button" class="chip" id="chipToday">Hoje</button>
+                        <button type="button" class="chip" id="chipYesterday">Ontem</button>
+                        <button type="button" class="chip" id="chipLast7">Últimos 7 dias</button>
+                        <button type="button" class="chip" id="chipThisMonth">Este mês</button>
+                    </div>
+
+                    <button type="button" class="btn btn-outline btn-sm" id="btnClearFilters">Limpar filtros</button>
+                    <button type="button" class="btn btn-secondary btn-sm" id="btnSelectAllFiltered">Selecionar todos os filtrados</button>
+                </div>
+
+                <span class="filter-summary" id="filterSummary">Nenhum filtro aplicado.</span>
+            </section>
+
             <section class="bulk-bar hidden" id="bulkSwapBar">
                 <span class="bulk-count" id="bulkCountLabel">0 máquina(s) selecionada(s)</span>
                 <label class="bulk-field">
@@ -380,6 +424,8 @@
                     <input type="date" id="inputSwapDate" class="form-control">
                 </label>
                 <button class="btn btn-primary btn-sm" id="btnMarkSwapped">Marcar como trocadas</button>
+                <button class="btn btn-secondary btn-sm" id="btnOpenBulkEdit">Editar em lote</button>
+                <button class="btn btn-outline btn-sm" id="btnBulkDelete">Excluir selecionadas</button>
                 <button class="btn btn-outline btn-sm" id="btnClearSelection">Limpar seleção</button>
             </section>
 
@@ -388,7 +434,9 @@
                     <table class="totvs-table" id="machinesTable">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th class="cell-select">
+                                    <input type="checkbox" id="selectAllMachines" aria-label="Selecionar todas as máquinas listadas">
+                                </th>
                                 <th>Data</th>
                                 <th>Hostname</th>
                                 <th>Analista</th>
@@ -638,6 +686,96 @@
         </div>
     </div>
 
+    <div class="modal-backdrop" id="modalBulkEdit">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h3>Edição em lote</h3>
+                </div>
+                <button class="btn-close" data-close-modal="modalBulkEdit">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="helper-text" id="bulkEditSummary">Nenhuma máquina selecionada.</p>
+                <p class="helper-text">
+                    Preencha apenas o que deve ser alterado: os campos vazios são ignorados.
+                </p>
+
+                <div class="bulk-edit-grid">
+                    <div class="form-group">
+                        <label for="selectBulkAnalyst">Analista responsável</label>
+                        <select id="selectBulkAnalyst" class="form-control">
+                            <option value="">(não alterar)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="selectBulkBrand">Fabricante</label>
+                        <select id="selectBulkBrand" class="form-control">
+                            <option value="">(não alterar)</option>
+                            <option value="Dell">Dell</option>
+                            <option value="Lenovo">Lenovo</option>
+                            <option value="HP">HP</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="selectBulkProfile">Perfil de imagem</label>
+                        <select id="selectBulkProfile" class="form-control">
+                            <option value="">(não alterar)</option>
+                            <option value="Local">Usuário Local</option>
+                            <option value="Cloud">Usuário Cloud</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="selectBulkStep">Etapa atual</label>
+                        <select id="selectBulkStep" class="form-control">
+                            <option value="">(não alterar)</option>
+                            <option value="1 FORMATAÇÃO E BIOS">1. FORMATAÇÃO E BIOS</option>
+                            <option value="2 WINDOWS UPDATE">2. WINDOWS UPDATE</option>
+                            <option value="3 ATIVAR ADM E SUBIR DRIVERS">3. ATIVAR ADM E SUBIR DRIVERS</option>
+                            <option value="4 DOMINIO E ARGUS">4. DOMINIO E ARGUS</option>
+                            <option value="CONCLUIDO">CONCLUIDO</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputBulkProcessDate">Data registrada</label>
+                        <input type="date" id="inputBulkProcessDate" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputBulkSwapDate">Data da troca</label>
+                        <input type="date" id="inputBulkSwapDate" class="form-control">
+                    </div>
+
+                    <div class="form-group bulk-edit-wide">
+                        <label for="inputBulkNotes">Observação</label>
+                        <input type="text" id="inputBulkNotes" class="form-control" placeholder="Ex: lote conferido na bancada 2">
+                    </div>
+
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="checkBulkClearError">
+                        <span class="checkmark"></span>
+                        <span class="checkbox-text">Encerrar incidentes das selecionadas</span>
+                    </label>
+
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="checkBulkClearSwap">
+                        <span class="checkmark"></span>
+                        <span class="checkbox-text">Desfazer a troca das selecionadas</span>
+                    </label>
+                </div>
+
+                <p class="helper-text" id="bulkEditMsg"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="btnApplyBulkEdit">Aplicar em lote</button>
+                <button class="btn btn-secondary" data-close-modal="modalBulkEdit">Fechar</button>
+            </div>
+        </div>
+    </div>
+
     <section id="printArea" class="print-area"></section>
 
     <div id="toastNotification" class="totvs-toast">
@@ -648,7 +786,9 @@
     <script src="js/storage.js"></script>
     <script src="js/importer-exporter.js"></script>
     <script src="js/rollout.js"></script>
+    <script src="js/filters.js"></script>
     <script src="js/github-sync.js"></script>
+    <script src="js/print-layout.js"></script>
     <script src="js/reports.js"></script>
     <script src="js/app.js"></script>
 </body>

@@ -5,7 +5,8 @@ const TOTVSApp = (() => {
         visibleMachines: [],
         timerViewInterval: null,
         localClockInterval: null,
-        toastTimeout: null
+        toastTimeout: null,
+        entryCardTouched: false
     };
 
     const MANUAL_STEP_INPUTS = [
@@ -163,24 +164,38 @@ const TOTVSApp = (() => {
             .join('');
     }
 
+    function ownerLabel(user) {
+        return user.role === 'manager' ? `${user.displayName} (gerente)` : user.displayName;
+    }
+
+    function keepCurrentValue(select, html) {
+        const previous = select.value;
+        select.innerHTML = html;
+        if (previous && Array.from(select.options).some((option) => option.value === previous)) {
+            select.value = previous;
+        }
+    }
+
     function populateAnalystOptions() {
         const analysts = TOTVSStorage.getAnalystUsers(runtime.state);
+        const owners = TOTVSStorage.getResponsibleUsers(runtime.state);
         const selectAnalyst = el('selectAnalyst');
         const filterAnalyst = el('filterAnalyst');
         const reportAnalyst = el('reportAnalystSelect');
         const resetTarget = el('resetTargetUser');
+        const isManager = runtime.currentUser && runtime.currentUser.role === 'manager';
 
         if (selectAnalyst) {
-            selectAnalyst.innerHTML = analysts
-                .map((analyst) => `<option value="${analyst.id}">${analyst.displayName}</option>`)
-                .join('');
+            keepCurrentValue(selectAnalyst, owners
+                .map((owner) => `<option value="${owner.id}">${ownerLabel(owner)}</option>`)
+                .join(''));
         }
 
         if (filterAnalyst) {
-            const analystOptions = runtime.currentUser.role === 'manager'
-                ? ['<option value="ALL">Todos os analistas</option>', ...analysts.map((analyst) => `<option value="${analyst.id}">${analyst.displayName}</option>`)]
+            const analystOptions = isManager
+                ? ['<option value="ALL">Todos os responsáveis</option>', ...owners.map((owner) => `<option value="${owner.id}">${ownerLabel(owner)}</option>`)]
                 : [`<option value="${runtime.currentUser.id}">${runtime.currentUser.displayName}</option>`];
-            filterAnalyst.innerHTML = analystOptions.join('');
+            keepCurrentValue(filterAnalyst, analystOptions.join(''));
         }
 
         if (reportAnalyst) {
@@ -203,6 +218,29 @@ const TOTVSApp = (() => {
                     .map((analyst) => `<option value="${analyst.id}">${analyst.displayName}</option>`)
                     .join('')
                 : '<option value="">Nenhum analista cadastrado</option>';
+        }
+
+        populateFilterOptions(owners);
+    }
+
+    // Opcoes de status/ordenacao e do analista do lote. Ficam aqui para que as
+    // duas telas usem exatamente a mesma lista (TOTVSFilters).
+    function populateFilterOptions(owners) {
+        const statusSelect = el('filterStatus');
+        if (statusSelect) {
+            keepCurrentValue(statusSelect, TOTVSFilters.statusOptionsHtml(statusSelect.value || 'ALL'));
+        }
+
+        const sortSelect = el('sortMachines');
+        if (sortSelect) {
+            keepCurrentValue(sortSelect, TOTVSFilters.sortOptionsHtml(sortSelect.value || 'updatedAt'));
+        }
+
+        const bulkAnalyst = el('selectBulkAnalyst');
+        if (bulkAnalyst) {
+            const list = Array.from(owners || TOTVSStorage.getResponsibleUsers(runtime.state));
+            keepCurrentValue(bulkAnalyst, ['<option value="">(não alterar)</option>', ...list
+                .map((owner) => `<option value="${owner.id}">${ownerLabel(owner)}</option>`)].join(''));
         }
     }
 
@@ -341,40 +379,141 @@ const TOTVSApp = (() => {
             : `Acompanhe o seu fluxo no lote ${getDatasetLabel()}, com tempos por etapa, incidentes e produtividade individual.`;
     }
 
-    function getFilteredMachines() {
-        const searchTerm = String(el('searchFilter').value || '').trim().toLowerCase();
-        const analystFilter = el('filterAnalyst').value || 'ALL';
-        const statusFilter = el('filterStatus').value || 'ALL';
-        const brandFilter = el('filterBrand').value || 'ALL';
+    function filterContext() {
+        return {
+            analystName: (machine) => TOTVSStorage.getAnalystName(runtime.state, machine.analystId)
+        };
+    }
 
-        return runtime.visibleMachines
-            .slice()
-            .sort((left, right) => new Date(right.updatedAt || right.createdAt).getTime() - new Date(left.updatedAt || left.createdAt).getTime())
-            .filter((machine) => {
-                const analystName = TOTVSStorage.getAnalystName(runtime.state, machine.analystId).toLowerCase();
-                const matchesSearch = !searchTerm || [
-                    machine.hostname,
-                    analystName,
-                    machine.currentStep,
-                    machine.notes || '',
-                    machine.processDate || ''
-                ].join(' ').toLowerCase().includes(searchTerm);
-                const matchesAnalyst = analystFilter === 'ALL' || machine.analystId === analystFilter;
-                const matchesStatus = (() => {
-                    if (statusFilter === 'ALL') {
-                        return true;
-                    }
-                    if (statusFilter === 'TROCADA') {
-                        return Boolean(machine.swappedAt);
-                    }
-                    if (statusFilter === 'PREPARADA') {
-                        return machine.status === 'CONCLUIDO' && !machine.swappedAt;
-                    }
-                    return machine.status === statusFilter;
-                })();
-                const matchesBrand = brandFilter === 'ALL' || machine.brand === brandFilter;
-                return matchesSearch && matchesAnalyst && matchesStatus && matchesBrand;
-            });
+    function valueOf(id, fallback) {
+        const node = el(id);
+        return node ? node.value : fallback;
+    }
+
+    function readFilterOptions() {
+        return {
+            search: valueOf('searchFilter', ''),
+            spon: valueOf('filterSpon', ''),
+            analystId: valueOf('filterAnalyst', 'ALL') || 'ALL',
+            status: valueOf('filterStatus', 'ALL') || 'ALL',
+            brand: valueOf('filterBrand', 'ALL') || 'ALL',
+            profile: valueOf('filterProfile', 'ALL') || 'ALL',
+            dateFrom: valueOf('filterDateFrom', ''),
+            dateTo: valueOf('filterDateTo', ''),
+            dateField: 'processDate',
+            sortKey: valueOf('sortMachines', 'updatedAt') || 'updatedAt',
+            sortDirection: valueOf('sortDirection', 'desc') || 'desc'
+        };
+    }
+
+    function getFilteredMachines() {
+        return TOTVSFilters.filterAndSort(runtime.visibleMachines, readFilterOptions(), filterContext());
+    }
+
+    function activeFilterChips() {
+        const options = readFilterOptions();
+        const chips = [];
+
+        if (String(options.search || '').trim()) {
+            chips.push(`busca "${String(options.search).trim()}"`);
+        }
+        if (String(options.spon || '').trim()) {
+            chips.push(`SPON "${String(options.spon).trim().toUpperCase()}"`);
+        }
+        if (options.analystId !== 'ALL') {
+            chips.push(`responsável: ${TOTVSStorage.getAnalystName(runtime.state, options.analystId)}`);
+        }
+        if (options.status !== 'ALL') {
+            const label = (TOTVSFilters.STATUS_OPTIONS.filter((item) => item.value === options.status)[0] || {}).label;
+            chips.push(`status: ${label || options.status}`);
+        }
+        if (options.brand !== 'ALL') {
+            chips.push(`fabricante: ${options.brand}`);
+        }
+        if (options.profile !== 'ALL') {
+            chips.push(`perfil: ${options.profile}`);
+        }
+        if (options.dateFrom || options.dateTo) {
+            chips.push(`registrada ${options.dateFrom || '...'} → ${options.dateTo || '...'}`);
+        }
+
+        return chips;
+    }
+
+    function updateFilterSummary() {
+        const label = el('filterSummary');
+        if (!label) {
+            return;
+        }
+
+        const chips = activeFilterChips();
+        const sortLabel = (TOTVSFilters.SORT_OPTIONS
+            .filter((item) => item.key === valueOf('sortMachines', 'updatedAt'))[0] || {}).label || 'última atualização';
+        const direction = valueOf('sortDirection', 'desc') === 'asc' ? 'crescente' : 'decrescente';
+
+        label.innerText = chips.length
+            ? `Filtros ativos: ${chips.join(' · ')} | ordem: ${sortLabel} (${direction})`
+            : `Sem filtros aplicados | ordem: ${sortLabel} (${direction})`;
+    }
+
+    function setDateRange(from, to) {
+        const fromNode = el('filterDateFrom');
+        const toNode = el('filterDateTo');
+        if (fromNode) fromNode.value = from || '';
+        if (toNode) toNode.value = to || '';
+        renderTable();
+    }
+
+    function quickRangeKey(date) {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    }
+
+    function applyQuickRange(kind) {
+        const today = new Date();
+
+        if (kind === 'today') {
+            setDateRange(quickRangeKey(today), quickRangeKey(today));
+        } else if (kind === 'yesterday') {
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            setDateRange(quickRangeKey(yesterday), quickRangeKey(yesterday));
+        } else if (kind === 'last7') {
+            const start = new Date(today);
+            start.setDate(start.getDate() - 6);
+            setDateRange(quickRangeKey(start), quickRangeKey(today));
+        } else if (kind === 'month') {
+            const start = new Date(today.getFullYear(), today.getMonth(), 1);
+            setDateRange(quickRangeKey(start), quickRangeKey(today));
+        } else {
+            setDateRange('', '');
+        }
+
+        showToast('Filtro de data aplicado.', 'ok');
+    }
+
+    function clearFilters() {
+        ['searchFilter', 'filterSpon', 'filterDateFrom', 'filterDateTo'].forEach((id) => {
+            const node = el(id);
+            if (node) node.value = '';
+        });
+
+        ['filterStatus', 'filterBrand', 'filterProfile'].forEach((id) => {
+            const node = el(id);
+            if (node) node.value = 'ALL';
+        });
+
+        const analyst = el('filterAnalyst');
+        if (analyst && Array.from(analyst.options).some((option) => option.value === 'ALL')) {
+            analyst.value = 'ALL';
+        }
+
+        const sort = el('sortMachines');
+        if (sort) sort.value = 'updatedAt';
+        const direction = el('sortDirection');
+        if (direction) direction.value = 'desc';
+
+        renderTable();
+        showToast('Filtros limpos.', 'ok');
     }
 
     function renderKpis() {
@@ -426,15 +565,178 @@ const TOTVSApp = (() => {
 
         const label = el('bulkCountLabel');
         if (label) {
-            label.innerText = `${selected.length} maquina(s) selecionada(s)`;
+            label.innerText = `${selected.length} máquina(s) selecionada(s)`;
         }
+    }
+
+    // Mantem o checkbox do cabecalho coerente com as linhas visiveis.
+    function syncSelectAllState() {
+        const selectAll = el('selectAllMachines');
+        if (!selectAll) {
+            return;
+        }
+
+        const nodes = bySelector('[data-select-machine-id]');
+        const checked = nodes.filter((node) => node.checked).length;
+        selectAll.checked = nodes.length > 0 && checked === nodes.length;
+        selectAll.indeterminate = checked > 0 && checked < nodes.length;
+    }
+
+    function setFilteredSelection(checked) {
+        bySelector('[data-select-machine-id]').forEach((node) => {
+            node.checked = checked;
+        });
+        syncSelectAllState();
+        updateBulkBar();
+        showToast(
+            checked ? 'Todas as máquinas filtradas foram selecionadas.' : 'Seleção dos filtrados removida.',
+            'ok'
+        );
     }
 
     function clearSelection() {
         bySelector('[data-select-machine-id]').forEach((node) => {
             node.checked = false;
         });
+        syncSelectAllState();
         updateBulkBar();
+    }
+
+    function openBulkEditModal() {
+        const ids = getSelectedMachineIds();
+        if (!ids.length) {
+            showToast('Selecione ao menos uma máquina na tabela.', '!');
+            return;
+        }
+
+        el('bulkEditSummary').innerText = `${ids.length} máquina(s) selecionada(s) nesta edição.`;
+        el('bulkEditMsg').innerText = '';
+
+        ['inputBulkProcessDate', 'inputBulkSwapDate', 'inputBulkNotes'].forEach((id) => {
+            el(id).value = '';
+        });
+        ['selectBulkAnalyst', 'selectBulkBrand', 'selectBulkProfile', 'selectBulkStep'].forEach((id) => {
+            el(id).value = '';
+        });
+        el('checkBulkClearError').checked = false;
+        el('checkBulkClearSwap').checked = false;
+
+        openModal('modalBulkEdit');
+    }
+
+    function buildBulkPatch() {
+        const patch = {};
+
+        const analystId = el('selectBulkAnalyst').value;
+        if (analystId) patch.analystId = analystId;
+        const brand = el('selectBulkBrand').value;
+        if (brand) patch.brand = brand;
+        const profile = el('selectBulkProfile').value;
+        if (profile) patch.profile = profile;
+        const step = el('selectBulkStep').value;
+        if (step) patch.step = step;
+        const processDate = el('inputBulkProcessDate').value;
+        if (processDate) patch.processDate = processDate;
+        const swapDate = el('inputBulkSwapDate').value;
+        if (swapDate) patch.swapDate = swapDate;
+        const notes = el('inputBulkNotes').value.trim();
+        if (notes) patch.notes = notes;
+        if (el('checkBulkClearError').checked) patch.clearError = true;
+        if (el('checkBulkClearSwap').checked) patch.clearSwap = true;
+
+        return patch;
+    }
+
+    function applyBulkEdit() {
+        const ids = getSelectedMachineIds();
+        if (!ids.length) {
+            showToast('Selecione ao menos uma máquina na tabela.', '!');
+            return;
+        }
+
+        const patch = buildBulkPatch();
+        if (!Object.keys(patch).length) {
+            el('bulkEditMsg').innerText = 'Informe ao menos um campo para aplicar (os vazios são ignorados).';
+            return;
+        }
+
+        try {
+            const result = TOTVSStorage.bulkUpdateMachines(ids, patch, runtime.currentUser.id);
+            closeModal('modalBulkEdit');
+            refreshApp(true);
+            scheduleSyncAfterChange();
+
+            const extra = result.skipped.length ? ` (${result.skipped.length} ignorada(s))` : '';
+            showToast(`${result.updated.length} máquina(s) atualizada(s) em lote${extra}.`, 'ok');
+        } catch (error) {
+            el('bulkEditMsg').innerText = error.message;
+            showToast(error.message, '!');
+        }
+    }
+
+    function deleteSelectedMachines() {
+        const ids = getSelectedMachineIds();
+        if (!ids.length) {
+            showToast('Selecione ao menos uma máquina na tabela.', '!');
+            return;
+        }
+
+        if (!window.confirm(`Excluir ${ids.length} máquina(s) selecionada(s)? A ação remove os registros de todos os painéis.`)) {
+            return;
+        }
+
+        try {
+            const result = TOTVSStorage.bulkDeleteMachines(ids, runtime.currentUser.id);
+            refreshApp(true);
+            scheduleSyncAfterChange();
+            showToast(`${result.deleted.length} máquina(s) excluída(s).`, 'ok');
+        } catch (error) {
+            showToast(error.message, '!');
+        }
+    }
+
+    /* --------------------- Card de entrada (perfil gerente) --------------------- */
+
+    function setEntryCardCollapsed(collapsed) {
+        const card = el('workflowEntryCard');
+        const button = el('btnToggleEntryCard');
+        if (!card || !button) {
+            return;
+        }
+
+        card.classList.toggle('is-collapsed', collapsed);
+        button.setAttribute('aria-expanded', String(!collapsed));
+        button.innerText = collapsed ? 'Abrir' : 'Recolher';
+    }
+
+    function toggleEntryCard() {
+        const card = el('workflowEntryCard');
+        if (!card) {
+            return;
+        }
+        runtime.entryCardTouched = true;
+        setEntryCardCollapsed(!card.classList.contains('is-collapsed'));
+    }
+
+    function applyEntryCardRole() {
+        const isManager = runtime.currentUser && runtime.currentUser.role === 'manager';
+        const title = el('entryCardTitle');
+        const hint = el('entryCardHint');
+
+        if (title) {
+            title.innerText = isManager
+                ? 'Entrada de máquinas (gestão)'
+                : 'Entrada de Máquinas e Controle de Etapas';
+        }
+        if (hint) {
+            hint.innerText = isManager
+                ? 'Card do analista, recolhido por padrão: abra apenas quando precisar lançar por alguém.'
+                : 'Cadastre uma ou várias máquinas por linha.';
+        }
+
+        if (isManager && !runtime.entryCardTouched) {
+            setEntryCardCollapsed(true);
+        }
     }
 
     function markSelectedAsSwapped() {
@@ -534,9 +836,11 @@ const TOTVSApp = (() => {
         tbody.innerHTML = '';
 
         el('tableCountLabel').innerText = `Exibindo ${list.length} de ${runtime.visibleMachines.length} registros`;
+        updateFilterSummary();
 
         if (!list.length) {
             tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; padding: 32px; color: var(--text-muted);">Nenhum registro encontrado para os filtros atuais.</td></tr>';
+            syncSelectAllState();
             return;
         }
 
@@ -577,6 +881,8 @@ const TOTVSApp = (() => {
 
             tbody.appendChild(tr);
         });
+
+        syncSelectAllState();
     }
 
     function renderTimerCellsOnly() {
@@ -619,6 +925,7 @@ const TOTVSApp = (() => {
         populateAnalystOptions();
         populateDatasetSelect();
         setRoleVisibility();
+        applyEntryCardRole();
         updateSessionLabels();
         updateHero();
         renderKpis();
@@ -666,16 +973,23 @@ const TOTVSApp = (() => {
         return payload;
     }
 
-    function handleLogin(event) {
+    async function handleLogin(event) {
         event.preventDefault();
         const username = el('loginUsername').value;
         const password = el('loginPassword').value;
 
         try {
-            TOTVSStorage.login(username, password);
+            await TOTVSStorage.login(username, password);
+            const upgraded = TOTVSStorage.wasCredentialsUpgraded();
             syncState();
             openAppView();
-            showToast(`Sessao iniciada para ${runtime.currentUser.displayName}.`, 'ok');
+            showToast(`Sessão iniciada para ${runtime.currentUser.displayName}.`, 'ok');
+
+            if (upgraded) {
+                // Credencial migrada do formato antigo: envia para o repositorio para
+                // que as outras maquinas recebam exatamente esta senha.
+                scheduleSyncAfterChange();
+            }
         } catch (error) {
             showToast(error.message, '!');
         }
@@ -1098,7 +1412,7 @@ const TOTVSApp = (() => {
         el('errorDetailsContainer').classList.toggle('hidden', !el('checkHasError').checked);
     }
 
-    function changeOwnPassword(event) {
+    async function changeOwnPassword(event) {
         event.preventDefault();
 
         const currentPassword = el('inputCurrentPassword').value;
@@ -1115,20 +1429,20 @@ const TOTVSApp = (() => {
         }
 
         try {
-            TOTVSStorage.changeOwnPassword(runtime.currentUser.id, currentPassword, newPassword);
+            await TOTVSStorage.changeOwnPassword(runtime.currentUser.id, currentPassword, newPassword);
             el('ownPasswordForm').reset();
             scheduleSyncAfterChange();
-            showToast('Sua senha foi atualizada.', 'ok');
+            showToast('Sua senha foi atualizada e já sincroniza com as outras máquinas.', 'ok');
         } catch (error) {
             showToast(error.message, '!');
         }
     }
 
-    function resetUserPassword(event) {
+    async function resetUserPassword(event) {
         event.preventDefault();
 
         try {
-            TOTVSStorage.resetUserPassword(
+            await TOTVSStorage.resetUserPassword(
                 runtime.currentUser.id,
                 el('resetTargetUser').value,
                 el('inputMasterSecret').value,
@@ -1372,8 +1686,22 @@ const TOTVSApp = (() => {
     }
 
     function bindFilters() {
-        ['searchFilter', 'filterAnalyst', 'filterStatus', 'filterBrand'].forEach((id) => {
+        [
+            'searchFilter',
+            'filterSpon',
+            'filterAnalyst',
+            'filterStatus',
+            'filterBrand',
+            'filterProfile',
+            'filterDateFrom',
+            'filterDateTo',
+            'sortMachines',
+            'sortDirection'
+        ].forEach((id) => {
             const node = el(id);
+            if (!node) {
+                return;
+            }
             node.addEventListener('input', renderTable);
             node.addEventListener('change', renderTable);
         });
@@ -1419,9 +1747,31 @@ const TOTVSApp = (() => {
         el('machinesTableBody').addEventListener('click', handleTableActions);
         el('machinesTableBody').addEventListener('change', (event) => {
             if (event.target.matches('[data-select-machine-id]')) {
+                syncSelectAllState();
                 updateBulkBar();
             }
         });
+        el('selectAllMachines').addEventListener('change', (event) => {
+            setFilteredSelection(event.target.checked);
+        });
+        el('btnSelectAllFiltered').addEventListener('click', () => setFilteredSelection(true));
+        el('btnClearFilters').addEventListener('click', clearFilters);
+        el('chipToday').addEventListener('click', () => applyQuickRange('today'));
+        el('chipYesterday').addEventListener('click', () => applyQuickRange('yesterday'));
+        el('chipLast7').addEventListener('click', () => applyQuickRange('last7'));
+        el('chipThisMonth').addEventListener('click', () => applyQuickRange('month'));
+        el('chipFormToday').addEventListener('click', () => {
+            el('inputProcessDate').value = TOTVSStorage.todayBrInput();
+        });
+        el('chipFormYesterday').addEventListener('click', () => {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            el('inputProcessDate').value = quickRangeKey(yesterday);
+        });
+        el('btnToggleEntryCard').addEventListener('click', toggleEntryCard);
+        el('btnOpenBulkEdit').addEventListener('click', openBulkEditModal);
+        el('btnApplyBulkEdit').addEventListener('click', applyBulkEdit);
+        el('btnBulkDelete').addEventListener('click', deleteSelectedMachines);
         el('btnMarkSwapped').addEventListener('click', markSelectedAsSwapped);
         el('btnClearSelection').addEventListener('click', clearSelection);
         el('btnOpenManagement').addEventListener('click', openManagementPanel);
@@ -1468,23 +1818,46 @@ const TOTVSApp = (() => {
         bindModalClose();
     }
 
-    function initSession() {
-        syncState(true);
-        if (runtime.currentUser) {
-            openAppView();
-        } else {
-            openLoginView();
+    // Antes de mostrar o login, tenta trazer as credenciais publicadas: assim a senha
+    // trocada em outra maquina ja vale aqui e a senha padrao deixa de voltar.
+    async function syncCredentialsBeforeLogin() {
+        try {
+            if (TOTVSGithubSync.isConfigured()) {
+                const bundle = await TOTVSGithubSync.fetchBundle();
+                TOTVSStorage.mergeRemoteBundle(bundle, null);
+                return;
+            }
+
+            const bundle = await TOTVSGithubSync.fetchPublishedBundle();
+            if (bundle) {
+                TOTVSStorage.mergeRemoteBundle(bundle, null);
+            }
+        } catch (error) {
+            // Offline ou repositorio indisponivel: segue com o estado local.
+            console.warn('Credenciais remotas indisponiveis:', error.message);
         }
     }
 
-    function init() {
+    async function initSession() {
+        syncState(true);
+        if (runtime.currentUser) {
+            openAppView();
+            return;
+        }
+
+        await syncCredentialsBeforeLogin();
+        syncState();
+        openLoginView();
+    }
+
+    async function init() {
         TOTVSGithubSync.init();
         TOTVSGithubSync.onStatus(renderGithubStatus);
         startLocalClock();
         bindEvents();
-        initSession();
-        startViewTimers();
         renderGithubStatus(TOTVSGithubSync.getStatus());
+        await initSession();
+        startViewTimers();
         console.log('TOTVS Field Refresh 2026 inicializado.');
     }
 

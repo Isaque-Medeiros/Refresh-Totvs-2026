@@ -23,9 +23,11 @@ TOTVS_Refresh_2026/
 â”‚  â””â”€ js/
 â”‚     â”œâ”€ storage.js          -> estado, usuarios, lotes, maquinas, permissoes, senhas
 â”‚     â”œâ”€ rollout.js          -> calendario util, plano de trocas, ajustes e KPIs do rollout
+â”‚     â”œâ”€ filters.js          -> filtros por SPON/status/data e ordenacao (duas telas)
 â”‚     â”œâ”€ reports.js          -> metricas, dashboard e relatorios imprimiveis
 â”‚     â”œâ”€ importer-exporter.js-> exportacoes TSV / WhatsApp / JSON
 â”‚     â”œâ”€ github-sync.js      -> sincronizacao com o GitHub (Contents API)
+â”‚     â”œâ”€ print-layout.js     -> layout A4 dos relatorios (PDF profissional)
 â”‚     â”œâ”€ app.js              -> integracao do painel operacional
 â”‚     â”œâ”€ gestao.js           -> integracao do painel de gestao
 â”‚     â””â”€ vendor/chart.umd.js -> Chart.js 4.4.1 (graficos, uso offline)
@@ -34,7 +36,7 @@ TOTVS_Refresh_2026/
 â”‚  â”œâ”€ usuarios.json          -> usuarios sem hash de senha (gerente)
 â”‚  â”œâ”€ gestao.json            -> ajustes, observacoes e frentes (gerente)
 â”‚  â””â”€ analistas/<usuario>.json
-â”œâ”€ tests/smoke.html          -> auto-teste de logica (119 verificacoes)
+â”œâ”€ tests/smoke.html          -> auto-teste de logica (146 verificacoes)
 â””â”€ tools/
    â”œâ”€ check-ids.ps1          -> confere se todo ID usado no JS existe no HTML
    â”œâ”€ serve.ps1              -> servidor local (necessario para o fetch dos JSON)
@@ -138,6 +140,33 @@ O tempo por etapa alimenta normalmente as medias e os graficos, entao o historic
 continua consistente.
 
 ---
+
+## Filtros, busca e ordenacao
+
+As duas telas usam o mesmo modulo de filtros (`app/js/filters.js`), cada uma com a
+sua barra. O comportamento e identico nos dois paineis:
+
+- **Busca livre** (hostname, analista, etapa, observacao, incidente) e **busca SPON**
+  por hostname;
+- **Filtro por analista**: o gerente filtra por qualquer responsavel; o analista so
+  enxerga o proprio nome;
+- **Status**: preparada (aguardando troca), trocada, em andamento, pausada e incidente;
+- **Fabricante** (Dell / Lenovo / HP) e **perfil** (usuario local / cloud);
+- **Intervalo de datas** de registro, com os atalhos **Hoje**, **Ontem**,
+  **Ultimos 7 dias** e **Este mes**;
+- **Ordenacao** por ultima atualizacao, data registrada, preparada em, hostname,
+  analista, etapa, status ou tempo total, em ordem crescente ou decrescente.
+
+A barra mostra em tempo real o **resumo dos filtros ativos**. O botao
+**Selecionar todos os filtrados** marca para a troca em lote exatamente o que esta na
+tela, e **Limpar filtros** volta tudo ao estado inicial.
+
+Relatorios e graficos respeitam os mesmos filtros, e o layout de impressao
+(`app/js/print-layout.js`) monta o A4 com cabecalho, KPIs, tabelas e graficos
+prontos para o PDF.
+
+---
+
 
 ## Graficos e impressao
 
@@ -276,9 +305,10 @@ consolidar: agora os dois lados leem os mesmos dados sincronizados no GitHub.
 3. Em **Dashboard & Relatorios**, use **Imprimir visao geral** ou
    **Imprimir analista selecionado**.
 
-O PDF sai direto, **sem dialogo, sem margem, sem cabecalho e sem rodape** do
-navegador: o `@page { margin: 0 }` do `styles.css` cuida do enquadramento e o
-arquivo e salvo na pasta de Downloads.
+O PDF sai direto, **sem dialogo, sem cabecalho e sem rodape** do navegador: as
+regras `@page { size: A4 portrait; margin: 12mm 10mm 14mm }` e `@media print` do
+`styles.css` enquadram o conteudo em A4 com margem de impressao, e o arquivo e
+salvo na pasta de Downloads.
 
 ---
 

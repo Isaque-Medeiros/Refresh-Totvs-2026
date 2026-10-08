@@ -315,6 +315,9 @@ const TOTVSGithubSync = (() => {
             kind: 'analyst',
             username: user.username,
             analystId: user.id,
+            // A credencial viaja junto com o dono do arquivo: e assim que a senha
+            // trocada no notebook passa a valer nas outras maquinas.
+            credentials: TOTVSStorage.getCredentialsSnapshot(user),
             deletedMachines: TOTVSStorage.getDeletionsForAnalyst(state, user.id),
             records: state.machines
                 .filter((machine) => machine.analystId === user.id)
@@ -324,9 +327,22 @@ const TOTVSGithubSync = (() => {
 
     function buildUsersPayload(state) {
         const base = TOTVSImporterExporter.buildUsersExport(state);
+        const credentialsById = {};
+
+        state.users.forEach((user) => {
+            const snapshot = TOTVSStorage.getCredentialsSnapshot(user);
+            if (snapshot) {
+                credentialsById[user.id] = snapshot;
+            }
+        });
+
         return {
             ...base,
             kind: 'users',
+            users: (base.users || []).map((user) => ({
+                ...user,
+                credentials: credentialsById[user.id] || null
+            })),
             analystFiles: buildAnalystManifest(state)
         };
     }

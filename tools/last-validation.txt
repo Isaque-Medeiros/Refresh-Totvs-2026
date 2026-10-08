@@ -1,49 +1,62 @@
 ﻿============================================================
  TOTVS FIELD REFRESH 2026 - VALIDACAO
- Data: 08/10/2026 15:47:26
+ Data: 08/10/2026 20:47:38
 ============================================================
 
 [1/3] Verificacao de IDs (JavaScript x HTML)
 ------------------------------------------------------------
 
-Pagina: gestao.html  (52 IDs, 6 script(s))
+Pagina: gestao.html  (74 IDs, 8 script(s))
    - js/vendor/chart.umd.js
    - js/storage.js
    - js/importer-exporter.js
    - js/rollout.js
+   - js/filters.js
    - js/github-sync.js
+   - js/print-layout.js
    - js/gestao.js
 
-Pagina: index.html  (128 IDs, 6 script(s))
+Pagina: index.html  (163 IDs, 8 script(s))
    - js/storage.js
    - js/importer-exporter.js
    - js/rollout.js
+   - js/filters.js
    - js/github-sync.js
+   - js/print-layout.js
    - js/reports.js
    - js/app.js
 
 === TOTVS Field Refresh 2026 :: Verificacao de IDs ===
 Paginas ..........: 2
-IDs distintos ....: 176
-Referencias no JS : 251
+IDs distintos ....: 233
+Referencias no JS : 315
 
 OK: toda referencia de JS aponta para um ID existente na pagina que carrega o script.
 
-Aviso: 18 ID(s) sem uso direto no JS (data-tab, label for, etc):
+Aviso: 27 ID(s) sem uso direto no JS (data-tab, label for, etc):
+  - filterBrand
+  - filterProfile
+  - filterSpon
   - ghStatusDot
   - ghSyncCard
+  - histFilterFrom
+  - histFilterTo
   - inputManualStep1
   - inputManualStep2
   - inputManualStep3
   - inputManualStep4
   - liveCard
   - machinesTable
+  - mgmtSearch
+  - mgmtSpon
+  - modalBulkEdit
   - modalPassword
   - modalReports
   - modalSync
   - okNew
   - pdNew
   - roMsg
+  - searchFilter
   - tabErrorReport
   - tabGeneralReport
   - tabIndividualReport
@@ -56,7 +69,7 @@ Navegador: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
 ------------------------------------------------------------
 [OK] Servidor local ativo em http://localhost:8765/
 
-Resumo do smoke test: TODOS OS TESTES PASSARAM: 125/125
+Resumo do smoke test: TODOS OS TESTES PASSARAM: 147/147
 [3/3] Carregamento da aplicacao real (app/index.html)
 ------------------------------------------------------------
   [OK  ] Pagina renderizou o titulo TOTVS
@@ -84,10 +97,45 @@ Resumo do smoke test: TODOS OS TESTES PASSARAM: 125/125
   [OK  ] Botao marcar como trocadas
   [OK  ] Botao do painel de gestao (gerente)
   [OK  ] Modulo de rollout carregado
-  [OK  ] Filtro de trocada presente
+  [OK  ] Filtro de status presente
+  [OK  ] Filtro por SPON presente
+  [OK  ] Ordenacao de maquinas presente
+  [OK  ] Atalhos de data presentes
   [OK  ] Login com seletor de usuario
 
 Resultado carregamento: OK
 
 [3.2] Painel de gestao do gerente (app/gestao.html)
 ------------------------------------------------------------
+  [OK  ] Tela de gestao renderizou
+  [OK  ] Bloqueio de acesso existe
+  [OK  ] Indicador ao vivo
+  [OK  ] Botao de pausar o ao vivo
+  [OK  ] Relogio local
+  [OK  ] KPIs do gestor presentes
+  [OK  ] Burndown plano x realizado
+  [OK  ] Grafico por analista
+  [OK  ] Grafico dos ultimos 10 dias
+  [OK  ] Lancamento do dia (ajuste)
+  [OK  ] Observacao da daily
+  [OK  ] Copiar resumo para a daily
+  [OK  ] Frentes superado
+  [OK  ] Frentes pendente
+  [OK  ] Historico diario
+  [OK  ] Operacao: em andamento
+  [OK  ] Operacao: aguardando troca
+  [OK  ] Operacao: incidentes
+  [OK  ] Operacao: tempo por etapa
+  [OK  ] Operacao: atingimento por analista
+  [OK  ] Botao de imprimir painel
+  [OK  ] Botao de exportar backup
+  [OK  ] Importar apontamentos
+  [OK  ] Chart.js vendorizado carregado
+  [OK  ] Modulo de rollout carregado
+  [OK  ] Script de gestao carregado
+
+Resultado painel de gestao: OK
+
+============================================================
+ RESULTADO FINAL: TUDO OK
+============================================================

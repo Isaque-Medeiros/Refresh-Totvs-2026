@@ -66,6 +66,39 @@ const TOTVSRollout = (() => {
         return toDateKey(new Date());
     }
 
+    /* --------------------------- Datas oficiais ---------------------------
+     * A data que vale no relatorio e a **data registrada** pelo analista
+     * ("Data da cronometragem"), e nao o instante em que o registro foi salvo
+     * no sistema. Sem isso, uma maquina trabalhada no dia 5 e lancada hoje
+     * aparecia com a data de hoje no painel de gestao.
+     * -------------------------------------------------------------------- */
+
+    function isPrepared(machine) {
+        return Boolean(machine) && (machine.status === 'CONCLUIDO' || Boolean(machine.preparedAt));
+    }
+
+    function officialPrepDateKey(machine) {
+        if (!isPrepared(machine)) {
+            return null;
+        }
+        return toDateKey(machine.processDate) || toDateKey(machine.preparedAt) || toDateKey(machine.completedAt);
+    }
+
+    function officialSwapDateKey(machine) {
+        if (!machine || !machine.swappedAt) {
+            return null;
+        }
+        return toDateKey(machine.swappedAt);
+    }
+
+    // Verdadeiro quando a data registrada difere da data em que o sistema salvou
+    // o registro: o painel mostra as duas e marca a divergencia.
+    function hasDateDivergence(machine) {
+        const registered = toDateKey(machine && machine.processDate);
+        const saved = toDateKey(machine && (machine.preparedAt || machine.completedAt));
+        return Boolean(registered && saved && registered !== saved);
+    }
+
     function addDays(dateKey, amount) {
         const date = new Date(`${dateKey}T12:00:00`);
         date.setDate(date.getDate() + amount);
@@ -191,8 +224,8 @@ const TOTVSRollout = (() => {
         (machines || []).forEach((machine) => {
             const analystId = machine.analystId;
             const analystName = TOTVSStorage.getAnalystName(state, analystId);
-            const preparedKey = toDateKey(machine.preparedAt);
-            const swappedKey = toDateKey(machine.swappedAt);
+            const preparedKey = officialPrepDateKey(machine);
+            const swappedKey = officialSwapDateKey(machine);
 
             if (preparedKey) {
                 if (!days[preparedKey]) { days[preparedKey] = emptyBucket(preparedKey); }
@@ -294,10 +327,11 @@ const TOTVSRollout = (() => {
     }
 
     // Totais por analista (inclui ajustes) e tambem os numeros vivos do operacional.
+    // O gerente entra como responsavel quando assume registros no proprio nome.
     function buildAnalystRows(state, machines, management) {
         const rows = buildDayRows(state, machines, management);
 
-        return TOTVSStorage.getAnalystUsers(state).map((analyst) => {
+        return TOTVSStorage.getResponsibleUsers(state).map((analyst) => {
             let prep = 0;
             let swap = 0;
 
@@ -314,12 +348,13 @@ const TOTVSRollout = (() => {
             return {
                 id: analyst.id,
                 name: analyst.displayName,
+                isManager: analyst.role === 'manager',
                 prep,
                 swap,
                 total: owned.length,
                 concluded: owned.filter((machine) => machine.status === 'CONCLUIDO').length,
                 inProgress: owned.filter((machine) => machine.status === 'EM_ANDAMENTO').length,
-                waitingSwap: owned.filter((machine) => machine.status === 'CONCLUIDO' && !machine.swappedAt).length,
+                waitingSwap: owned.filter((machine) => isPrepared(machine) && !machine.swappedAt).length,
                 errors: owned.filter((machine) => machine.hasError || machine.status === 'ERRO').length
             };
         });
@@ -441,8 +476,12 @@ const TOTVSRollout = (() => {
         businessDaysBetween,
         dayStatus,
         EMPTY_MANAGEMENT,
+        hasDateDivergence,
         isBusinessDay,
+        isPrepared,
         listBusinessDays,
+        officialPrepDateKey,
+        officialSwapDateKey,
         planForDay,
         sumRollup,
         toDateKey,
