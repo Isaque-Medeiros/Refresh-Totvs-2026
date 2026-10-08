@@ -1,0 +1,33 @@
+﻿            } catch (error) {
+                const message = String(error && error.message ? error.message : error);
+                record(name, message.toLowerCase().includes(String(expectedFragment).toLowerCase()),
+                    `mensagem="${message}" nao contem "${expectedFragment}"`);
+            }
+        }
+
+        function reset() {
+            [
+                'TOTVS_REFRESH_2026_STATE_V3',
+                'TOTVS_REFRESH_2026_SESSION_V3',
+                'TOTVS_REFRESH_2026_GITHUB_SYNC_V1',
+                'TOTVS_REFRESH_2026_GITHUB_STATUS_V1',
+                'TOTVS_REFRESH_2026_GESTAO_V1',
+                'TOTVS_REFRESH_2026_DEVICE_V1'
+            ].forEach((key) => localStorage.removeItem(key));
+
+            try {
+                sessionStorage.clear();
+            } catch (error) {
+                /* sessionStorage indisponivel */
+            }
+        }
+
+        function finish() {
+            const failed = failCount > 0;
+            summaryEl.className = failed ? 'fail' : 'pass';
+            summaryEl.textContent = failed
+                ? `FALHOU: ${failCount} teste(s) com erro de ${passCount + failCount}`
+                : `TODOS OS TESTES PASSARAM: ${passCount}/${passCount}`;
+            document.title = failed ? 'SMOKE-FAIL' : 'SMOKE-PASS';
+        }
+

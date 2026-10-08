@@ -1,0 +1,34 @@
+﻿        el('bSaveDay').addEventListener('click', saveAdjustDay);
+        el('bDeleteDay').addEventListener('click', deleteAdjustDay);
+        el('bCopyDaily').addEventListener('click', copyDailySummary);
+
+        el('fDate').addEventListener('change', (event) => fillAdjustForm(event.target.value));
+        el('adjustRows').addEventListener('input', updateRowTotals);
+
+        el('okAdd').addEventListener('click', () => addFrente('ok'));
+        el('pdAdd').addEventListener('click', () => addFrente('pd'));
+        el('okList').addEventListener('click', handleFrenteClick);
+        el('pdList').addEventListener('click', handleFrenteClick);
+
+        el('bSaveUser').addEventListener('click', saveUser);
+        el('bCancelUser').addEventListener('click', resetUserForm);
+        el('usersTableBody').addEventListener('click', handleUsersTableClick);
+
+        el('historyTableBody').addEventListener('click', (event) => {
+            const button = event.target.closest('[data-edit-day]');
+            if (!button) {
+                return;
+            }
+
+            fillAdjustForm(button.getAttribute('data-edit-day'));
+            el('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    }
+
+    function init() {
+        loadSession();
+        updateClock();
+        runtime.clockInterval = setInterval(updateClock, 1000);
+
+        if (!renderAccess()) {
+            return;

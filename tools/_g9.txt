@@ -1,0 +1,9 @@
+﻿        runtime.liveInterval = setInterval(stepLive, 1000);
+        renderLiveIndicator();
+    }
+
+    /* ------------------------------ Usuarios ------------------------------- */
+
+    function renderUsers() {
+        const body = el('usersTableBody');
+        if (!body) {

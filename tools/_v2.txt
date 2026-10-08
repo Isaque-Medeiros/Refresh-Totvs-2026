@@ -1,0 +1,12 @@
+﻿106: "--user-data-dir=$profileDir",
+149: @{ Name = 'login.js executou (datalist de e-mails cheio)'; Pattern = '<option value="gerente@db4serv.com.br">' },
+150: @{ Name = 'Analista carregado no datalist de login';  Pattern = '<option value="isaque@db4serv.com.br">' },
+151: @{ Name = 'View de login visivel por padrao';         Pattern = 'id="loginView"' },
+174: @{ Name = 'Login por e-mail';                         Pattern = 'id="loginEmail"' },
+176: @{ Name = 'Bloco de dispositivo lembrado';            Pattern = 'id="loginDeviceBox"' },
+177: @{ Name = 'Botao de entrar pelo dispositivo';         Pattern = 'id="btnLoginDevice"' },
+225: @{ Name = 'Tabela de usuarios';                 Pattern = 'id="usersTableBody"' },
+226: @{ Name = 'Formulario de usuario (nome)';       Pattern = 'id="userName"' },
+227: @{ Name = 'Formulario de usuario (e-mail)';     Pattern = 'id="userEmail"' },
+228: @{ Name = 'Botao de adicionar usuario';         Pattern = 'id="bSaveUser"' },
+229: @{ Name = 'Botao de cancelar edicao';           Pattern = 'id="bCancelUser"' }

@@ -1,0 +1,135 @@
+﻿gestao.js:16: currentUser: null,
+gestao.js:82: runtime.currentUser = TOTVSStorage.getCurrentUser(runtime.state);
+gestao.js:84: return runtime.currentUser;
+gestao.js:88: return Boolean(runtime.currentUser && runtime.currentUser.role === 'manager');
+gestao.js:97: el('managementUser').innerText = runtime.currentUser.displayName;
+gestao.js:105: el('deniedMessage').innerText = runtime.currentUser
+gestao.js:391: host.innerHTML = TOTVSStorage.getAnalystUsers(runtime.state).map((analyst) => `
+gestao.js:435: TOTVSStorage.getAnalystUsers(runtime.state).forEach((analyst) => {
+gestao.js:495: runtime.currentUser.id
+gestao.js:499: runtime.management = TOTVSStorage.setDailyNote(day.date, day.note, runtime.currentUser.id);
+gestao.js:523: TOTVSStorage.getAnalystUsers(runtime.state).forEach((analyst) => {
+gestao.js:529: runtime.currentUser.id
+gestao.js:533: runtime.management = TOTVSStorage.setDailyNote(date, '', runtime.currentUser.id);
+gestao.js:633: runtime.management = TOTVSStorage.setFrentes(frentes, runtime.currentUser.id);
+gestao.js:651: runtime.management = TOTVSStorage.setFrentes(frentes, runtime.currentUser.id);
+gestao.js:944: const found = TOTVSStorage.getAnalystUsers(runtime.state).filter(
+gestao.js:945: (user) => user.displayName.toLowerCase() === target || user.username.toLowerCase() === target
+gestao.js:970: runtime.currentUser.id
+gestao.js:980: runtime.management = TOTVSStorage.setDailyNote(day.date, parts.join(' | '), runtime.currentUser.id);
+gestao.js:1022: runtime.currentUser.id
+gestao.js:1028: runtime.management = TOTVSStorage.setDailyNote(day.date, day.obs, runtime.currentUser.id);
+gestao.js:1035: runtime.currentUser.id
+gestao.js:1052: }, runtime.currentUser.id);
+gestao.js:1057: runtime.management = TOTVSStorage.replaceManagement(payload.management, runtime.currentUser.id);
+gestao.js:1141: const user = TOTVSStorage.getCurrentUser(freshState);
+gestao.js:1142: if (!user) {
+gestao.js:1146: await TOTVSGithubSync.syncNow(freshState, user);
+gestao.js:1162: await TOTVSGithubSync.syncNow(runtime.state, runtime.currentUser);
+gestao.js:1186: const result = TOTVSStorage.mergeRemoteBundle(bundle, runtime.currentUser);
+app.js:4: currentUser: null,
+app.js:43: runtime.currentUser = TOTVSStorage.getCurrentUser(runtime.state);
+app.js:44: runtime.visibleMachines = runtime.currentUser
+app.js:45: ? TOTVSStorage.getVisibleMachines(runtime.state, runtime.currentUser)
+app.js:130: if (!runtime.currentUser) {
+app.js:134: if (runtime.currentUser.role === 'manager') {
+app.js:138: return `Analista com acesso restrito aos registros do usuario ${runtime.currentUser.displayName}.`;
+app.js:142: const isManager = runtime.currentUser && runtime.currentUser.role === 'manager';
+app.js:153: function populateLoginUsers() {
+app.js:155: const select = el('loginUsername');
+app.js:160: const users = runtime.state.users.filter((user) => user.active);
+app.js:161: select.innerHTML = users
+app.js:162: .map((user) => `<option value="${user.username}">${user.displayName} (${user.username})</option>`)
+app.js:167: const analysts = TOTVSStorage.getAnalystUsers(runtime.state);
+app.js:171: const resetTarget = el('resetTargetUser');
+app.js:180: const analystOptions = runtime.currentUser.role === 'manager'
+app.js:182: : [`<option value="${runtime.currentUser.id}">${runtime.currentUser.displayName}</option>`];
+app.js:187: const reportOptions = runtime.currentUser.role === 'manager'
+app.js:189: : [`<option value="${runtime.currentUser.id}">${runtime.currentUser.displayName}</option>`];
+app.js:221: function applyUserDefaultsToForm() {
+app.js:223: if (!selectAnalyst || !runtime.currentUser) {
+app.js:227: if (runtime.currentUser.role === 'manager') {
+app.js:230: selectAnalyst.value = runtime.currentUser.id;
+app.js:259: applyUserDefaultsToForm();
+app.js:304: populateLoginUsers();
+app.js:321: el('sessionRoleLabel').innerText = runtime.currentUser.role === 'manager' ? 'Gerente' : 'Analista';
+app.js:322: el('sessionUserLabel').innerText = runtime.currentUser.displayName;
+app.js:325: el('userScopeSummary').innerText = getScopeSummary();
+app.js:326: el('tableScopeHint').innerText = runtime.currentUser.role === 'manager'
+app.js:336: el('heroGreeting').innerText = runtime.currentUser.role === 'manager'
+app.js:337: ? `Ola, ${runtime.currentUser.displayName}`
+app.js:338: : `Operacao individual de ${runtime.currentUser.displayName}`;
+app.js:339: el('heroDescription').innerText = runtime.currentUser.role === 'manager'
+app.js:393: el('kpiTotalSub').innerText = `${runtime.currentUser.role === 'manager' ? 'Registros do lote atual' : 'Seus registros no lote atual'}`;
+app.js:450: const result = TOTVSStorage.markMachinesSwapped(ids, swapDate, runtime.currentUser.id);
+app.js:468: runtime.currentUser.id
+app.js:480: const machine = TOTVSStorage.unmarkMachineSwapped(machineId, runtime.currentUser.id);
+app.js:506: const canEdit = runtime.currentUser.role === 'manager' || machine.analystId === runtime.currentUser.id;
+app.js:573: if (runtime.currentUser.role === 'manager' || liveMachine.analystId === runtime.currentUser.id) {
+app.js:605: if (!runtime.currentUser) {
+app.js:614: if (!runtime.currentUser) {
+app.js:635: const analystId = runtime.currentUser.role === 'manager'
+app.js:637: : runtime.currentUser.id;
+app.js:671: const username = el('loginUsername').value;
+app.js:675: TOTVSStorage.login(username, password);
+app.js:678: showToast(`Sessao iniciada para ${runtime.currentUser.displayName}.`, 'ok');
+app.js:698: TOTVSStorage.updateMachine(editMachineId, payload, runtime.currentUser.id);
+app.js:701: const result = TOTVSStorage.createMachines(payload, runtime.currentUser.id);
+app.js:762: TOTVSStorage.deleteMachine(machineId, runtime.currentUser.id);
+app.js:773: TOTVSStorage.startMachine(machineId, runtime.currentUser.id);
+app.js:784: TOTVSStorage.pauseMachine(machineId, runtime.currentUser.id);
+app.js:795: TOTVSStorage.nextMachineStep(machineId, runtime.currentUser.id);
+app.js:845: TOTVSStorage.createDataset(name, runtime.currentUser.id);
+app.js:861: TOTVSStorage.deleteDataset(runtime.state.activeDatasetId, runtime.currentUser.id);
+app.js:894: runtime.currentUser,
+app.js:898: TOTVSReports.renderAnalystCharts(runtime.state, runtime.visibleMachines, runtime.currentUser, select.value);
+app.js:918: TOTVSReports.renderReportsModal(runtime.state, runtime.visibleMachines, runtime.currentUser);
+app.js:945: if (runtime.currentUser.role !== 'manager') {
+app.js:959: if (runtime.currentUser.role === 'manager' && selectedAnalystId === 'ALL') {
+app.js:963: const analystId = selectedAnalystId === 'ALL' ? runtime.currentUser.id : selectedAnalystId;
+app.js:969: if (runtime.currentUser.role !== 'manager') {
+app.js:981: if (runtime.currentUser.role !== 'manager') {
+app.js:998: if (runtime.currentUser.role !== 'manager') {
+app.js:1010: const filename = `analista-${slugify(runtime.currentUser.username)}.json`;
+app.js:1011: TOTVSImporterExporter.downloadJson(filename, TOTVSGithubSync.buildUserPayload(runtime.state, runtime.currentUser));
+app.js:1015: function downloadUsersJson() {
+app.js:1016: if (runtime.currentUser.role !== 'manager') {
+app.js:1022: TOTVSImporterExporter.downloadJson('usuarios.json', TOTVSGithubSync.buildUsersPayload(runtime.state));
+app.js:1027: if (runtime.currentUser.role !== 'manager') {
+app.js:1045: TOTVSStorage.restoreFullBackup(event.target.result, runtime.currentUser ? runtime.currentUser.id : null);
+app.js:1072: runtime.currentUser,
+app.js:1118: TOTVSStorage.changeOwnPassword(runtime.currentUser.id, currentPassword, newPassword);
+app.js:1127: function resetUserPassword(event) {
+app.js:1131: TOTVSStorage.resetUserPassword(
+app.js:1132: runtime.currentUser.id,
+app.js:1133: el('resetTargetUser').value,
+app.js:1239: const user = TOTVSStorage.getCurrentUser(freshState);
+app.js:1240: if (!user) {
+app.js:1243: await TOTVSGithubSync.syncNow(freshState, user);
+app.js:1244: TOTVSGithubSync.markSuccess(`Dados enviados para o GitHub como ${user.username}.`);
+app.js:1259: await TOTVSGithubSync.syncNow(runtime.state, runtime.currentUser);
+app.js:1260: TOTVSGithubSync.markSuccess(`Envio concluido por ${runtime.currentUser.displayName}.`);
+app.js:1284: const result = TOTVSStorage.mergeRemoteBundle(bundle, runtime.currentUser);
+app.js:1309: const result = TOTVSStorage.mergeRemoteBundle(bundle, runtime.currentUser);
+app.js:1321: if (runtime.currentUser.role !== 'manager') {
+app.js:1327: const analyst = TOTVSStorage.getUserById(runtime.state, el('selectExportAnalyst').value);
+app.js:1333: const filename = `analista-${slugify(analyst.username)}.json`;
+app.js:1334: const payload = TOTVSGithubSync.buildUserPayload(runtime.state, analyst);
+app.js:1340: if (runtime.currentUser.role !== 'manager') {
+app.js:1346: const analysts = TOTVSStorage.getAnalystUsers(runtime.state);
+app.js:1356: `analista-${slugify(analyst.username)}.json`,
+app.js:1357: TOTVSGithubSync.buildUserPayload(runtime.state, analyst)
+app.js:1366: if (runtime.currentUser.role !== 'manager') {
+app.js:1440: el('btnDownloadUsersJson').addEventListener('click', downloadUsersJson);
+app.js:1448: el('resetPasswordForm').addEventListener('submit', resetUserPassword);
+app.js:1473: if (runtime.currentUser) {
+gestao.html:5: <meta name="viewport" content="width=device-width, initial-scale=1.0">
+gestao.html:57: <strong id="managementUser">--</strong>
+index.html:5: <meta name="viewport" content="width=device-width, initial-scale=1.0">
+index.html:33: <label for="loginUsername">Usuário</label>
+index.html:34: <select id="loginUsername" class="form-control"></select>
+index.html:72: <strong id="sessionUserLabel">Usuário</strong>
+index.html:195: <div class="read-only-box" id="userScopeSummary">Carregando escopo...</div>
+index.html:561: <button class="btn btn-secondary manager-only" id="btnDownloadUsersJson">Baixar usuarios.json</button>
+index.html:620: <label for="resetTargetUser">Usuário</label>
+index.html:621: <select id="resetTargetUser" class="form-control"></select>

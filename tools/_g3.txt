@@ -1,0 +1,61 @@
+﻿        if (!window.confirm(`Excluir ${user.displayName}?`)) {
+            return;
+        }
+
+        try {
+            TOTVSStorage.deleteUser(userId, runtime.currentUser.id);
+            showToast(`${user.displayName} excluÃ­do.`, 'ok');
+            resetUserForm();
+            refresh();
+            queueSync();
+        } catch (error) {
+            showToast(error.message, '!');
+        }
+    }
+
+    function handleUsersTableClick(event) {
+        const button = event.target.closest('[data-user-action]');
+        if (!button) {
+            return;
+        }
+
+        const userId = button.getAttribute('data-user-id');
+        const action = button.getAttribute('data-user-action');
+
+        if (action === 'edit') {
+            startUserEdit(userId);
+        } else if (action === 'toggle') {
+            toggleUserActive(userId);
+        } else if (action === 'reset') {
+            resetManagedPassword(userId);
+        } else if (action === 'delete') {
+            deleteManagedUser(userId);
+        }
+    }
+
+    /* -------------------------------- Estado -------------------------------- */
+
+    function refresh() {
+        runtime.state = TOTVSStorage.loadState();
+        runtime.management = TOTVSStorage.loadManagement();
+        runtime.stats = TOTVSRollout.buildStats(runtime.state, runtime.state.machines, runtime.management);
+
+        renderKpis(runtime.stats);
+        renderCharts(runtime.stats);
+        renderHistory(runtime.stats);
+        renderOperational(runtime.stats);
+        renderUsers();
+        renderFrentes();
+        renderSyncLabel();
+    }
+
+    /* ------------------------------- Acoes --------------------------------- */
+
+    function handleFrenteClick(event) {
+        const button = event.target.closest('[data-frente]');
+        if (!button) {
+            return;
+        }
+
+        const key = button.getAttribute('data-frente');
+        const index = Number(button.getAttribute('data-index'));

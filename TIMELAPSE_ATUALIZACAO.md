@@ -16,7 +16,7 @@ Registrar, em formato resumido, a evolucao da atualizacao da interface e da logi
 6. Adequacao do cadastro em lote de hostnames com suporte a reaproveitamento de registros por hostname.
 7. Inclusao de data de cronometragem, incidentes tecnicos e observacoes por maquina.
 8. Implementacao dos cronometros por etapa e do tempo total por registro.
-9. Criacao dos relatórios geral e individual com modo de impressao para PDF.
+9. Criacao dos relatÃ³rios geral e individual com modo de impressao para PDF.
 10. Inclusao das exportacoes `dados-gerais.json`, arquivo individual do usuario, `usuarios.json` e snapshot completo.
 11. Inclusao da troca de senha criptografada por hash e reset de senha com chave mestra.
 12. Reescrita do `app.js` para integrar layout, storage, relatorios, exportacao e permissoes reais.
@@ -45,7 +45,7 @@ Registrar, em formato resumido, a evolucao da atualizacao da interface e da logi
     clonar `stepDurations` e `history`.
 22. **Novo modulo `app/js/github-sync.js`**: sincronizacao automatica com o GitHub via
     Contents API, com leitura do `sha` antes do `PUT`, retry automatico em 409/422,
-    base64 UTF-8 correto (preserva acentos como *FORMATAÇÃO*) e fila serializada com
+    base64 UTF-8 correto (preserva acentos como *FORMATAÃ‡ÃƒO*) e fila serializada com
     *debounce* de 1,5 s.
 23. **Regra anti-conflito**: cada analista grava somente
     `data/analistas/<usuario>.json`; o gerente grava `data/dados-gerais.json` e
@@ -94,7 +94,7 @@ Registrar, em formato resumido, a evolucao da atualizacao da interface e da logi
     analista, expondo a base inteira com todos os usuarios. Agora e `manager-only`,
     junto com a aba *Visao geral*, os graficos gerais e o *Imprimir visao geral*.
 38. **Guarda nas funcoes**: `downloadSnapshot`, `printGeneralReport`, `printGeneralCharts`
-    e `printAnalystCharts` recusam perfil de analista — esconder o botao sozinho nao bastava.
+    e `printAnalystCharts` recusam perfil de analista â€” esconder o botao sozinho nao bastava.
 39. **Graficos em HTML/CSS puro** (zero dependencia, imprime com qualidade):
     progresso da meta global, distribuicao por status, tempo medio por etapa e
     comparativo de atingimento por analista; mais o conjunto individual (meta 250).
@@ -123,7 +123,7 @@ Registrar, em formato resumido, a evolucao da atualizacao da interface e da logi
 47. **Identificados os HTML originais do cliente** na raiz do projeto
     (`ImplementarAuto.html` = formulario do analista; `status-report-rollout-totvs-local.html`
     = painel do gestor). A analise revelou que o processo real conta
-    **preparadas e trocadas por dia**, como eventos independentes — diferente das
+    **preparadas e trocadas por dia**, como eventos independentes â€” diferente das
     4 etapas cronometradas que vieram do `GuiaDev.md`.
     Decisao: manter as duas visoes, com preparada/trocada **derivadas** das etapas.
 48. **Modelo de troca**: `preparedAt` gravado automaticamente ao concluir as 4 etapas
@@ -132,10 +132,10 @@ Registrar, em formato resumido, a evolucao da atualizacao da interface e da logi
 49. **Marcacao em lote**: `markMachinesSwapped` marca varias maquinas de uma vez,
     valida elegibilidade (so concluidas, nao trocadas, respeitando permissao) e devolve
     quantas foram ignoradas e o motivo. `unmarkMachineSwapped` desfaz a troca.
-50. **Novo modulo `rollout.js`**: calendario útil com feriados, metas mensais,
+50. **Novo modulo `rollout.js`**: calendario Ãºtil com feriados, metas mensais,
     plano de trocas acumulado, consolidacao por dia e por analista, KPIs
-    (ritmo medio dos últimos 5 dias úteis, projecao de termino, desvio vs plano,
-    dias úteis restantes) e serie de burndown. Conversao de data imune a fuso horario.
+    (ritmo medio dos Ãºltimos 5 dias Ãºteis, projecao de termino, desvio vs plano,
+    dias Ãºteis restantes) e serie de burndown. Conversao de data imune a fuso horario.
 51. **Tela nova `app/gestao.html` + `gestao.js`**: painel do gerente nas cores deste
     projeto, com burndown em **SVG** e demais graficos em **CSS puro** (nenhuma
     biblioteca ou CDN), historico diario, impressao e backup. Acesso bloqueado para analista.
@@ -150,7 +150,7 @@ Registrar, em formato resumido, a evolucao da atualizacao da interface e da logi
     E o `validate.ps1` passou a gravar o relatorio **incrementalmente**, para que uma
     execucao interrompida nao perca o resultado.
 55. **Testes**: o smoke test subiu de **74 para 105** verificacoes, cobrindo troca em lote,
-    elegibilidade, desfazer troca, calendario útil, plano acumulado, consolidacao por
+    elegibilidade, desfazer troca, calendario Ãºtil, plano acumulado, consolidacao por
     analista, KPIs de gestao e serie de burndown.
 56. **README**: novas secoes de rollout (preparadas x trocadas), painel de gestao e as
     regras do plano, alem da matriz de permissoes atualizada.
@@ -160,7 +160,7 @@ Registrar, em formato resumido, a evolucao da atualizacao da interface e da logi
 ### Sessao 5 - Painel de gestao completo, com o layout do status-report e ao vivo
 
 57. **Modelo definido**: os numeros de preparadas/trocadas continuam **derivados das
-    maquinas** e o lancamento manual do gestor entra como **ajuste somado** — permite
+    maquinas** e o lancamento manual do gestor entra como **ajuste somado** â€” permite
     corrigir divergencia sem risco de contagem dobrada.
 58. **`rollout.js` alinhado a referencia**: ritmo medio passa a ser a media dos ultimos
     5 dias lancados **que tiveram troca**, projecao vira `DD/MM` ou
@@ -195,36 +195,6 @@ Registrar, em formato resumido, a evolucao da atualizacao da interface e da logi
 
 ---
 
-### Sessao 6 - Login por e-mail, dispositivo lembrado e gestao de usuarios
-
-67. **Login por e-mail**: o `<select>` de usuarios virou campo de e-mail com
-    `datalist` (autocompleta, mas deixa digitar). O `login()` passou a aceitar
-    **e-mail OU usuario**, entao nada quebrou para quem ja usava.
-68. **`email` no usuario** com **migracao automatica** dos estados ja salvos no
-    navegador (quem nao tinha e-mail recebe o padrao `@db4serv.com.br`).
-69. **Dispositivo lembrado**: `rememberDevice` (validade de 30 dias), `getRememberedDevice`,
-    `forgetDevice` e `loginFromDevice` — entrada sem senha a partir do segundo acesso.
-70. **Fluxo de entrada rapida**: abre o sistema e **entra sozinho**; depois de clicar em
-    *Sair*, mostra **"Entrar como Fulano"** em 1 clique; ha ainda *Entrar com outra conta*
-    e *Esquecer este dispositivo*. Uma marca em `sessionStorage` impede o auto-login
-    imediatamente apos a saida, sem atrapalhar a proxima abertura.
-71. **CRUD de usuarios** no `storage.js`: `createUser`, `updateUser`, `setUserActive` e
-    `deleteUser`, com as regras de **sempre existir um gerente ativo**, nao excluir o
-    proprio usuario e nao excluir quem tem registros (orienta desativar).
-72. **Card "Usuarios" no painel de gestao**: tabela com nome, usuario, e-mail, perfil e
-    situacao, mais acoes de editar, ativar/desativar, redefinir senha e excluir —
-    acabando com a necessidade de mexer no codigo para cadastrar alguem.
-73. **`usuarios.json` passa a carregar o e-mail** e o merge atualiza o endereco quando
-    a versao remota e mais recente.
-74. **Validador corrigido**: duas verificacoes ainda procuravam o `<select>` antigo de
-    usuarios; foram apontadas para o `datalist` de e-mails, que e o novo comportamento.
-75. **Testes**: o smoke test subiu de **119 para 144** verificacoes, cobrindo login por
-    e-mail (com maiusculas e espacos), e-mail nao vinculado, retrocompatibilidade por
-    usuario, dispositivo lembrado e esquecido, marca de saida, CRUD completo de usuario
-    e o e-mail no `usuarios.json`.
-
----
-
 ## Resultado da validacao
 
 Executado por `tools/validate.ps1` (Edge headless sobre servidor local):
@@ -241,8 +211,8 @@ Executado por `tools/validate.ps1` (Edge headless sobre servidor local):
 ## Pendente / observacoes
 
 **Painel de gestao entregue** com o layout do status report do gestor, nas cores deste
-projeto e alimentado automaticamente pelos mesmos dados. O fluxo antigo — cada analista
-preenchia o formulario e enviava o JSON para o gestor consolidar — deixa de ser
+projeto e alimentado automaticamente pelos mesmos dados. O fluxo antigo â€” cada analista
+preenchia o formulario e enviava o JSON para o gestor consolidar â€” deixa de ser
 necessario, mas os arquivos originais ficaram na raiz como referencia.
 
 Ponto de atencao aberto: **as 4 etapas de bancada nao existem no processo atual do

@@ -8,7 +8,7 @@ tudo apareca versionado no GitHub e seja lido por todos que abrirem o site publi
 | Arquivo | Quem grava | Conteudo |
 |---|---|---|
 | `dados-gerais.json` | Gerente | Indice geral: lotes, organizacao, manifest dos analistas e todos os registros |
-| `usuarios.json` | Gerente | Usuarios do sistema **sem hash de senha** (id, usuario, nome, **e-mail**, perfil, ativo) |
+| `usuarios.json` | Gerente | Usuarios do sistema **sem hash de senha** (id, usuario, nome, perfil, ativo) |
 | `gestao.json` | Gerente | Ajustes do lancamento diario, observacoes da daily e frentes (superado/pendente) |
 | `analistas/<usuario>.json` | Cada analista | Arquivo individual com os registros daquele analista |
 

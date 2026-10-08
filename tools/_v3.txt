@@ -1,0 +1,19 @@
+﻿}
+
+Say '[3/3] Carregamento da aplicacao real (app/index.html)'
+Say '------------------------------------------------------------'
+
+$appDom = Test-Page -Url "http://localhost:$port/app/index.html" -Budget 25000
+
+$checks = @(
+    @{ Name = 'Pagina renderizou o titulo TOTVS';         Pattern = 'TOTVS Field Refresh 2026' },
+    @{ Name = 'login.js executou (datalist de e-mails cheio)'; Pattern = '<option value="gerente@db4serv.com.br">' },
+    @{ Name = 'Analista carregado no datalist de login';  Pattern = '<option value="isaque@db4serv.com.br">' },
+    @{ Name = 'View de login visivel por padrao';         Pattern = 'id="loginView"' },
+    @{ Name = 'View do app comeca oculta';                Pattern = 'id="appView" class="app-shell hidden"' },
+    @{ Name = 'UI de sincronizacao GitHub presente';      Pattern = 'id="ghOwner"' },
+    @{ Name = 'Campo de token presente';                  Pattern = 'id="ghToken"' },
+    @{ Name = 'Botao de leitura publica presente';        Pattern = 'id="btnGhPublished"' },
+    @{ Name = 'Download por analista presente';           Pattern = 'id="selectExportAnalyst"' },
+    @{ Name = 'Botao de restaurar snapshot marcado gerente-only'; Pattern = 'file-trigger manager-only' },
+    @{ Name = 'Script github-sync.js carregado';          Pattern = 'js/github-sync.js' },

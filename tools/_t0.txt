@@ -1,0 +1,40 @@
+﻿53: function equal(name, actual, expected) {
+68: function reset() {
+75: 'TOTVS_REFRESH_2026_DEVICE_V1'
+79: sessionStorage.clear();
+81: /* sessionStorage indisponivel */
+116: equal('base64 round-trip preserva acentos',
+120: reset();
+122: equal('estado inicial tem 5 usuarios', state.users.length, 5);
+123: equal('estado inicial tem 1 lote', state.datasets.length, 1);
+128: equal('login do gerente devolve o perfil manager', manager.role, 'manager');
+147: equal('cadastro em lote cria 3 registros', result.createdItems.length, 3);
+154: equal('salvar novas maquinas depois do primeiro lote funciona', second.createdItems.length, 1);
+155: equal('total apos o segundo lote', TOTVSStorage.loadState().machines.length, 4);
+161: equal('reenvio do mesmo hostname nao duplica', TOTVSStorage.loadState().machines.length, 4);
+162: equal('reenvio conta como atualizacao', third.updatedItems.length, 1);
+166: equal('cronometro inicia junto com o salvamento', target.timerRunning, true);
+170: equal('pausar desliga o cronometro',
+174: equal('reiniciar religa o cronometro',
+181: equal('apos 4 avancos a maquina fica CONCLUIDO', concluded.status, 'CONCLUIDO');
+182: equal('ao concluir o cronometro para', concluded.timerRunning, false);
+201: equal('login funciona com a senha nova', TOTVSStorage.login('isaque', 'NovaSenha123').id, 'user_isaque');
+207: equal('reset devolve a senha padrao', TOTVSStorage.login('isaque', 'FieldTotvs2026').id, 'user_isaque');
+212: equal('merge mantem a versao mais recente', TOTVSStorage.mergeById([older], [newer])[0].notes, 'novo');
+213: equal('merge nao rebaixa registro local mais novo', TOTVSStorage.mergeById([newer], [older])[0].notes, 'novo');
+214: equal('merge adiciona registro inexistente', TOTVSStorage.mergeById([], [newer]).length, 1);
+264: equal('merge remoto nao sobrescreve o hash de senha',
+266: equal('merge remoto aplica o nome quando e mais recente',
+285: equal('payload geral tem kind=general', generalPayload.kind, 'general');
+286: equal('payload geral lista os 4 analistas',
+290: equal('payload geral inclui todos os registros',
+295: equal('payload individual tem kind=analyst', userPayload.kind, 'analyst');
+298: equal('caminho do arquivo individual',
+343: equal('gravacao com conflito 409 e repetida automaticamente', putAttempts, 2);
+359: equal('metricas contam o total de registros', metrics.total, reportState.machines.length);
+398: equal('lancamento manual cria o registro', manualResult.createdItems.length, 1);
+399: equal('lancamento manual nao inicia cronometro', manualMachine.timerRunning, false);
+400: equal('lancamento manual soma o total das etapas', manualMachine.totalElapsedSeconds, 105 * 60);
+401: equal('lancamento manual grava o tempo da etapa 1', manualMachine.stepDurations['1 FORMATAÇÃO E BIOS'], 30 * 60);
+402: equal('lancamento manual guarda a data informada', manualMachine.processDate, '2026-03-10');
+403: equal('lancamento manual marca o registro', manualMachine.manualEntry, true);

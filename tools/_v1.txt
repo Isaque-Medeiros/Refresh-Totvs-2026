@@ -1,0 +1,41 @@
+﻿    @{ Name = 'Campos de tempo manual presentes';         Pattern = 'id="manualTimesContainer"' },
+    @{ Name = 'Total manual calculado ao vivo';           Pattern = 'id="manualTotalLabel"' },
+    @{ Name = 'Graficos gerais renderizados';             Pattern = 'id="generalChartsContainer"' },
+    @{ Name = 'Graficos por analista renderizados';       Pattern = 'id="analystChartsContainer"' },
+    @{ Name = 'Botao de imprimir grafico geral';          Pattern = 'id="btnPrintGeneralCharts"' },
+    @{ Name = 'Botao de imprimir grafico do analista';    Pattern = 'id="btnPrintAnalystCharts"' },
+    @{ Name = 'Aba Visao geral restrita ao gerente';      Pattern = 'tab-content active manager-only' },
+    @{ Name = 'Snapshot restrito ao gerente';             Pattern = 'btn-outline manager-only" id="btnDownloadSnapshot"' },
+    @{ Name = 'Barra de troca em lote presente';          Pattern = 'id="bulkSwapBar"' },
+    @{ Name = 'Botao marcar como trocadas';               Pattern = 'id="btnMarkSwapped"' },
+    @{ Name = 'Botao do painel de gestao (gerente)';      Pattern = 'manager-only" id="btnOpenManagement"' },
+    @{ Name = 'Modulo de rollout carregado';              Pattern = 'js/rollout.js' },
+    @{ Name = 'Filtro de trocada presente';               Pattern = 'value="TROCADA"' },
+    @{ Name = 'Login por e-mail';                         Pattern = 'id="loginEmail"' },
+    @{ Name = 'Lembrar neste dispositivo';                Pattern = 'id="checkRememberDevice"' },
+    @{ Name = 'Bloco de dispositivo lembrado';            Pattern = 'id="loginDeviceBox"' },
+    @{ Name = 'Botao de entrar pelo dispositivo';         Pattern = 'id="btnLoginDevice"' },
+    @{ Name = 'Opcao de esquecer o dispositivo';          Pattern = 'id="btnForgetDevice"' }
+)
+
+$appFailures = 0
+foreach ($check in $checks) {
+    $found = $appDom -match [regex]::Escape($check.Pattern)
+    if (-not $found) { $appFailures += 1 }
+    Say ("  [{0}] {1}" -f ($(if ($found) { 'OK  ' } else { 'FALHA' })), $check.Name)
+}
+
+Say ''
+Say ("Resultado carregamento: {0}" -f ($(if ($appFailures -eq 0) { 'OK' } else { "FALHA ($appFailures verificacao(oes))" })))
+Say ''
+
+# --------------------------------------------------- 3.2 Painel de gestao
+Say '[3.2] Painel de gestao do gerente (app/gestao.html)'
+Say '------------------------------------------------------------'
+
+$mgmtDom = Test-Page -Url "http://localhost:$port/app/gestao.html" -Budget 25000
+
+$mgmtChecks = @(
+    @{ Name = 'Tela de gestao renderizou';          Pattern = 'id="managementView" class="app-shell hidden"' },
+    @{ Name = 'Bloqueio de acesso existe';          Pattern = 'id="deniedView"' },
+    @{ Name = 'Indicador ao vivo';                  Pattern = 'id="liveLabel"' },

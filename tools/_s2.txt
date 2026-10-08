@@ -1,0 +1,162 @@
+﻿        }
+
+        const base = slugify(email.split('@')[0]) || uid('user');
+        const username = getUserByUsername(state, base)
+            ? `${base}-${Math.random().toString(36).slice(2, 6)}`
+            : base;
+
+        const user = {
+            id: uid('user'),
+            username,
+            displayName,
+            email,
+            role: payload && payload.role === 'manager' ? 'manager' : 'analyst',
+            passwordHash: sha256(MASTER_RESET_SECRET),
+            active: true,
+            createdAt: nowIso(),
+            updatedAt: nowIso()
+        };
+
+        state.users.push(user);
+        audit(state, 'create_user', actorId, { userId: user.id, email });
+        saveState(state);
+        return user;
+    }
+
+    function updateUser(userId, payload, actorId) {
+        const state = loadState();
+        requireManager(state, actorId);
+
+        const user = getUserById(state, userId);
+        if (!user) {
+            throw new Error('UsuÃ¡rio nÃ£o encontrado.');
+        }
+
+        if (payload && payload.email !== undefined) {
+            const email = normalizeEmail(payload.email);
+            if (!isValidEmail(email)) {
+                throw new Error('Informe um e-mail vÃ¡lido.');
+            }
+
+            const other = getUserByEmail(state, email);
+            if (other && other.id !== userId) {
+                throw new Error('JÃ¡ existe outro usuÃ¡rio com esse e-mail.');
+            }
+            user.email = email;
+        }
+
+        if (payload && payload.displayName !== undefined) {
+            const displayName = String(payload.displayName || '').trim();
+            if (!displayName) {
+                throw new Error('Informe o nome do usuÃ¡rio.');
+            }
+            user.displayName = displayName;
+        }
+
+        if (payload && payload.role !== undefined) {
+            const nextRole = payload.role === 'manager' ? 'manager' : 'analyst';
+            if (user.role === 'manager' && nextRole !== 'manager' && countActiveManagers(state) <= 1) {
+                throw new Error('O sistema precisa de pelo menos um gerente ativo.');
+            }
+            user.role = nextRole;
+        }
+
+        user.updatedAt = nowIso();
+        audit(state, 'update_user', actorId, { userId, email: user.email });
+        saveState(state);
+        return user;
+    }
+
+    function setUserActive(userId, active, actorId) {
+        const state = loadState();
+        requireManager(state, actorId);
+
+        const user = getUserById(state, userId);
+        if (!user) {
+            throw new Error('UsuÃ¡rio nÃ£o encontrado.');
+        }
+        if (!active && user.role === 'manager' && countActiveManagers(state) <= 1) {
+            throw new Error('O sistema precisa de pelo menos um gerente ativo.');
+        }
+
+        user.active = Boolean(active);
+        user.updatedAt = nowIso();
+        audit(state, active ? 'activate_user' : 'deactivate_user', actorId, { userId });
+        saveState(state);
+        return user;
+    }
+
+    function deleteUser(userId, actorId) {
+        const state = loadState();
+        requireManager(state, actorId);
+
+        const user = getUserById(state, userId);
+        if (!user) {
+            throw new Error('UsuÃ¡rio nÃ£o encontrado.');
+        }
+        if (user.id === actorId) {
+            throw new Error('VocÃª nÃ£o pode excluir o prÃ³prio usuÃ¡rio.');
+        }
+        if (user.role === 'manager' && countActiveManagers(state) <= 1) {
+            throw new Error('O sistema precisa de pelo menos um gerente ativo.');
+        }
+
+        const linked = state.machines.filter((machine) => machine.analystId === userId).length;
+        if (linked) {
+            throw new Error(`Este usuÃ¡rio tem ${linked} registro(s). Desative em vez de excluir.`);
+        }
+
+        state.users = state.users.filter((item) => item.id !== userId);
+        audit(state, 'delete_user', actorId, { userId, email: user.email });
+        saveState(state);
+        return user;
+    }
+
+    function login(identifier, password) {
+        const state = loadState();
+        const user = getUserByEmail(state, identifier) || getUserByUsername(state, identifier);
+
+        if (!user) {
+            throw new Error('E-mail nÃ£o vinculado a nenhum usuÃ¡rio.');
+        }
+        if (!user.active) {
+            throw new Error('UsuÃ¡rio inativo. Procure o gerente de projeto.');
+        }
+        if (user.passwordHash !== sha256(password)) {
+            throw new Error('Senha incorreta.');
+        }
+
+        setSession({
+            userId: user.id,
+            loginAt: nowIso()
+        });
+        clearLoggedOut();
+
+        audit(state, 'login', user.id, { username: user.username, email: user.email });
+        saveState(state);
+        return user;
+    }
+
+    function logout() {
+        clearSession();
+        markLoggedOut();
+    }
+
+    function changeOwnPassword(userId, currentPassword, newPassword) {
+        const state = loadState();
+        const user = getUserById(state, userId);
+        if (!user) {
+            throw new Error('UsuÃ¡rio nÃ£o encontrado.');
+        }
+        if (user.passwordHash !== sha256(currentPassword)) {
+            throw new Error('Senha atual incorreta.');
+        }
+        user.passwordHash = sha256(newPassword);
+        user.updatedAt = nowIso();
+        audit(state, 'change_password', userId, { scope: 'own' });
+        saveState(state);
+        return true;
+    }
+
+    function resetUserPassword(managerUserId, targetUserId, masterSecret, newPassword) {
+        const state = loadState();

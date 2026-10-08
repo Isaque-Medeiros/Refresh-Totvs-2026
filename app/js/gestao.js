@@ -23,8 +23,7 @@
         lastLiveAt: null,
         secondsLeft: 0,
         toastTimeout: null,
-        busy: false,
-        editingUserId: null
+        busy: false
     };
 
     function el(id) {
@@ -1284,195 +1283,6 @@
         renderLiveIndicator();
     }
 
-    /* ------------------------------ Usuarios ------------------------------- */
-
-    function renderUsers() {
-        const body = el('usersTableBody');
-        if (!body) {
-            return;
-        }
-
-        const users = runtime.state.users.slice().sort((left, right) => {
-            if (left.role !== right.role) {
-                return left.role === 'manager' ? -1 : 1;
-            }
-            return String(left.displayName).localeCompare(String(right.displayName));
-        });
-
-        const label = el('usersCountLabel');
-        if (label) {
-            label.innerText = `${users.length} usuário(s)`;
-        }
-
-        body.innerHTML = users.map((user) => {
-            const isSelf = runtime.currentUser && user.id === runtime.currentUser.id;
-
-            return `
-                <tr>
-                    <td>${user.displayName}${isSelf ? ' <span class="helper-text">(você)</span>' : ''}</td>
-                    <td class="font-mono">${user.username}</td>
-                    <td class="font-mono">${user.email || '--'}</td>
-                    <td>${user.role === 'manager' ? 'Gerente' : 'Analista'}</td>
-                    <td><span class="pill pill-${user.active ? 'ok' : 'bad'}">${user.active ? 'ativo' : 'inativo'}</span></td>
-                    <td>
-                        <div class="inline-actions">
-                            <button class="btn btn-xs btn-outline" data-user-action="edit" data-user-id="${user.id}">editar</button>
-                            <button class="btn btn-xs btn-outline" data-user-action="toggle" data-user-id="${user.id}">${user.active ? 'desativar' : 'ativar'}</button>
-                            <button class="btn btn-xs btn-outline" data-user-action="reset" data-user-id="${user.id}">senha</button>
-                            <button class="btn btn-xs btn-outline" data-user-action="delete" data-user-id="${user.id}">excluir</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        }).join('');
-    }
-
-    function setUserFormMessage(message, isError) {
-        const node = el('userFormMsg');
-        if (!node) {
-            return;
-        }
-
-        node.innerText = message;
-        node.classList.toggle('text-red', Boolean(isError));
-    }
-
-    function resetUserForm() {
-        runtime.editingUserId = null;
-        el('userName').value = '';
-        el('userEmail').value = '';
-        el('userRole').value = 'analyst';
-        el('bSaveUser').innerText = 'Adicionar usuário';
-        el('bCancelUser').classList.add('hidden');
-        setUserFormMessage(
-            'Usuário novo entra com a senha padrão FieldTotvs2026 e pode trocá-la depois no painel operacional, no botão Senhas.',
-            false
-        );
-    }
-
-    function saveUser() {
-        const payload = {
-            displayName: el('userName').value.trim(),
-            email: el('userEmail').value.trim(),
-            role: el('userRole').value
-        };
-
-        try {
-            if (runtime.editingUserId) {
-                TOTVSStorage.updateUser(runtime.editingUserId, payload, runtime.currentUser.id);
-                showToast('Usuário atualizado.', 'ok');
-            } else {
-                TOTVSStorage.createUser(payload, runtime.currentUser.id);
-                showToast('Usuário adicionado.', 'ok');
-            }
-
-            resetUserForm();
-            refresh();
-            queueSync();
-        } catch (error) {
-            setUserFormMessage(error.message, true);
-            showToast(error.message, '!');
-        }
-    }
-
-    function startUserEdit(userId) {
-        const user = TOTVSStorage.getUserById(runtime.state, userId);
-        if (!user) {
-            return;
-        }
-
-        runtime.editingUserId = userId;
-        el('userName').value = user.displayName;
-        el('userEmail').value = user.email || '';
-        el('userRole').value = user.role;
-        el('bSaveUser').innerText = 'Salvar alterações';
-        el('bCancelUser').classList.remove('hidden');
-        setUserFormMessage(`Editando ${user.displayName}.`, false);
-        el('usersCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    function toggleUserActive(userId) {
-        const user = TOTVSStorage.getUserById(runtime.state, userId);
-        if (!user) {
-            return;
-        }
-
-        try {
-            const wasActive = user.active;
-            TOTVSStorage.setUserActive(userId, !wasActive, runtime.currentUser.id);
-            showToast(`${user.displayName} ${wasActive ? 'desativado' : 'ativado'}.`, 'ok');
-            refresh();
-            queueSync();
-        } catch (error) {
-            showToast(error.message, '!');
-        }
-    }
-
-    function resetManagedPassword(userId) {
-        const user = TOTVSStorage.getUserById(runtime.state, userId);
-        if (!user) {
-            return;
-        }
-
-        if (!window.confirm(`Redefinir a senha de ${user.displayName} para a senha padrão?`)) {
-            return;
-        }
-
-        try {
-            TOTVSStorage.resetUserPassword(
-                runtime.currentUser.id,
-                userId,
-                TOTVSStorage.MASTER_RESET_SECRET,
-                TOTVSStorage.MASTER_RESET_SECRET
-            );
-            showToast(`Senha de ${user.displayName} redefinida para o padrão.`, 'ok');
-            queueSync();
-        } catch (error) {
-            showToast(error.message, '!');
-        }
-    }
-
-    function deleteManagedUser(userId) {
-        const user = TOTVSStorage.getUserById(runtime.state, userId);
-        if (!user) {
-            return;
-        }
-
-        if (!window.confirm(`Excluir ${user.displayName}?`)) {
-            return;
-        }
-
-        try {
-            TOTVSStorage.deleteUser(userId, runtime.currentUser.id);
-            showToast(`${user.displayName} excluído.`, 'ok');
-            resetUserForm();
-            refresh();
-            queueSync();
-        } catch (error) {
-            showToast(error.message, '!');
-        }
-    }
-
-    function handleUsersTableClick(event) {
-        const button = event.target.closest('[data-user-action]');
-        if (!button) {
-            return;
-        }
-
-        const userId = button.getAttribute('data-user-id');
-        const action = button.getAttribute('data-user-action');
-
-        if (action === 'edit') {
-            startUserEdit(userId);
-        } else if (action === 'toggle') {
-            toggleUserActive(userId);
-        } else if (action === 'reset') {
-            resetManagedPassword(userId);
-        } else if (action === 'delete') {
-            deleteManagedUser(userId);
-        }
-    }
-
     /* -------------------------------- Estado -------------------------------- */
 
     function refresh() {
@@ -1484,8 +1294,7 @@
         renderCharts(runtime.stats);
         renderHistory(runtime.stats);
         renderOperational(runtime.stats);
-        renderUsers();
-        renderFrentes();
+        renderFrentes(runtime.stats);
         renderSyncLabel();
     }
 
@@ -1522,10 +1331,6 @@
         el('okList').addEventListener('click', handleFrenteClick);
         el('pdList').addEventListener('click', handleFrenteClick);
 
-        el('bSaveUser').addEventListener('click', saveUser);
-        el('bCancelUser').addEventListener('click', resetUserForm);
-        el('usersTableBody').addEventListener('click', handleUsersTableClick);
-
         el('historyTableBody').addEventListener('click', (event) => {
             const button = event.target.closest('[data-edit-day]');
             if (!button) {
@@ -1548,7 +1353,6 @@
 
         buildAdjustRows();
         bindActions();
-        resetUserForm();
         refresh();
         fillAdjustForm(TOTVSRollout.todayKey());
         startLive();

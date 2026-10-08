@@ -11,7 +11,6 @@
     {
       "id": "user_manager",
       "username": "gerente",
-      "email": "gerente@db4serv.com.br",
       "displayName": "Gerente de Projeto",
       "role": "manager",
       "active": true,
@@ -20,7 +19,6 @@
     {
       "id": "user_isaque",
       "username": "isaque",
-      "email": "isaque@db4serv.com.br",
       "displayName": "Isaque",
       "role": "analyst",
       "active": true,
@@ -29,7 +27,6 @@
     {
       "id": "user_vinicius",
       "username": "vinicius",
-      "email": "vinicius@db4serv.com.br",
       "displayName": "Vinicius",
       "role": "analyst",
       "active": true,
@@ -38,7 +35,6 @@
     {
       "id": "user_guilherme",
       "username": "guilherme",
-      "email": "guilherme@db4serv.com.br",
       "displayName": "Guilherme",
       "role": "analyst",
       "active": true,
@@ -47,7 +43,6 @@
     {
       "id": "user_davi",
       "username": "davi",
-      "email": "davi@db4serv.com.br",
       "displayName": "Davi",
       "role": "analyst",
       "active": true,

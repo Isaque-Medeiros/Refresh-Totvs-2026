@@ -1,4 +1,4 @@
-            ok: (frentes && frentes.ok) || [],
+﻿            ok: (frentes && frentes.ok) || [],
             pd: (frentes && frentes.pd) || []
         };
         saveManagement(management);
@@ -130,11 +130,11 @@
         const displayName = String((payload && payload.displayName) || '').trim();
 
         if (!displayName) {
-            throw new Error('Informe o nome do usuário.');
+            throw new Error('Informe o nome do usuÃ¡rio.');
         }
         if (!isValidEmail(email)) {
-            throw new Error('Informe um e-mail válido.');
+            throw new Error('Informe um e-mail vÃ¡lido.');
         }
         if (getUserByEmail(state, email)) {
-            throw new Error('Já existe um usuário com esse e-mail.');
+            throw new Error('JÃ¡ existe um usuÃ¡rio com esse e-mail.');
         }

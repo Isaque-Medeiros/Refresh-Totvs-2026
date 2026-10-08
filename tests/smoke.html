@@ -71,15 +71,8 @@
                 'TOTVS_REFRESH_2026_SESSION_V3',
                 'TOTVS_REFRESH_2026_GITHUB_SYNC_V1',
                 'TOTVS_REFRESH_2026_GITHUB_STATUS_V1',
-                'TOTVS_REFRESH_2026_GESTAO_V1',
-                'TOTVS_REFRESH_2026_DEVICE_V1'
+                'TOTVS_REFRESH_2026_GESTAO_V1'
             ].forEach((key) => localStorage.removeItem(key));
-
-            try {
-                sessionStorage.clear();
-            } catch (error) {
-                /* sessionStorage indisponivel */
-            }
         }
 
         function finish() {
@@ -601,96 +594,6 @@
                 managementPayload.frentes.ok.length === 1 && managementPayload.frentes.pd.length === 1);
             equal('caminho do arquivo de gestao',
                 TOTVSGithubSync.PATH_MANAGEMENT, 'data/gestao.json');
-
-            /* ---------------- Login por e-mail ---------------- */
-            TOTVSStorage.logout();
-
-            const byEmail = TOTVSStorage.login('  ISaque@DB4SERV.com.BR  ', 'FieldTotvs2026');
-            equal('login por e-mail ignora maiusculas e espacos', byEmail.id, 'user_isaque');
-
-            throws('e-mail nao vinculado e recusado',
-                () => TOTVSStorage.login('ninguem@db4serv.com.br', 'FieldTotvs2026'),
-                'vinculado');
-
-            throws('senha errada com e-mail valido e recusada',
-                () => TOTVSStorage.login('isaque@db4serv.com.br', 'errada'),
-                'senha incorreta');
-
-            equal('login por usuario continua funcionando',
-                TOTVSStorage.login('gerente', 'FieldTotvs2026').id, 'user_manager');
-
-            /* ---------------- Dispositivo lembrado ---------------- */
-            TOTVSStorage.forgetDevice();
-            equal('sem lembrete, nenhum dispositivo', TOTVSStorage.getRememberedDevice(), null);
-
-            const deviceUser = TOTVSStorage.login('gerente@db4serv.com.br', 'FieldTotvs2026');
-            const device = TOTVSStorage.rememberDevice(deviceUser);
-            equal('dispositivo lembra o usuario', device.userId, 'user_manager');
-            equal('dispositivo guarda o e-mail', device.email, 'gerente@db4serv.com.br');
-            ok('lembrete tem validade futura', new Date(device.expiresAt).getTime() > Date.now());
-
-            TOTVSStorage.logout();
-            equal('sair marca a aba como desconectada', TOTVSStorage.wasLoggedOut(), true);
-
-            const viaDevice = TOTVSStorage.loginFromDevice();
-            equal('entrada pelo dispositivo funciona sem senha', viaDevice.id, 'user_manager');
-            equal('entrar limpa a marca de saida', TOTVSStorage.wasLoggedOut(), false);
-
-            TOTVSStorage.forgetDevice();
-            equal('esquecer o dispositivo apaga o lembrete', TOTVSStorage.getRememberedDevice(), null);
-
-            /* ---------------- Gestao de usuarios ---------------- */
-            const created = TOTVSStorage.createUser(
-                { displayName: 'Teste Silva', email: 'teste.silva@db4serv.com.br', role: 'analyst' },
-                'user_manager'
-            );
-            equal('usuario criado entra como analista', created.role, 'analyst');
-            equal('usuario criado usa o e-mail informado', created.email, 'teste.silva@db4serv.com.br');
-            equal('usuario criado entra com a senha padrao',
-                TOTVSStorage.login('teste.silva@db4serv.com.br', 'FieldTotvs2026').id, created.id);
-
-            throws('nao permite e-mail repetido',
-                () => TOTVSStorage.createUser(
-                    { displayName: 'Outro', email: 'teste.silva@db4serv.com.br', role: 'analyst' },
-                    'user_manager'
-                ), 'existe');
-
-            throws('nao permite e-mail invalido',
-                () => TOTVSStorage.createUser(
-                    { displayName: 'Sem Email', email: 'sem-arroba', role: 'analyst' },
-                    'user_manager'
-                ), 'Informe um e-mail');
-
-            throws('analista nao pode criar usuario',
-                () => TOTVSStorage.createUser(
-                    { displayName: 'X', email: 'x@db4serv.com.br', role: 'analyst' },
-                    'user_isaque'
-                ), 'apenas o gerente');
-
-            const updated = TOTVSStorage.updateUser(created.id, { email: 'teste.novo@db4serv.com.br' }, 'user_manager');
-            equal('e-mail do usuario pode ser editado', updated.email, 'teste.novo@db4serv.com.br');
-            equal('login passa a aceitar o novo e-mail',
-                TOTVSStorage.login('teste.novo@db4serv.com.br', 'FieldTotvs2026').id, created.id);
-
-            TOTVSStorage.setUserActive(created.id, false, 'user_manager');
-            throws('usuario desativado nao entra',
-                () => TOTVSStorage.login('teste.novo@db4serv.com.br', 'FieldTotvs2026'),
-                'inativo');
-
-            TOTVSStorage.setUserActive(created.id, true, 'user_manager');
-
-            throws('nao permite excluir o proprio usuario',
-                () => TOTVSStorage.deleteUser('user_manager', 'user_manager'), 'excluir o pr');
-
-            throws('nao permite excluir usuario com registros',
-                () => TOTVSStorage.deleteUser('user_isaque', 'user_manager'), 'registro');
-
-            const removed = TOTVSStorage.deleteUser(created.id, 'user_manager');
-            equal('usuario sem registros pode ser excluido', removed.id, created.id);
-
-            ok('usuarios.json passa a incluir o e-mail',
-                TOTVSStorage.getSanitizedUsers(TOTVSStorage.loadState())
-                    .every((user) => typeof user.email === 'string'));
 
             finish();
         })();

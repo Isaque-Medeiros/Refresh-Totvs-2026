@@ -1,0 +1,72 @@
+﻿        }
+
+        runtime.secondsLeft = liveIntervalSeconds();
+        runtime.liveInterval = setInterval(stepLive, 1000);
+        renderLiveIndicator();
+    }
+
+    /* ------------------------------ Usuarios ------------------------------- */
+
+    function renderUsers() {
+        const body = el('usersTableBody');
+        if (!body) {
+            return;
+        }
+
+        const users = runtime.state.users.slice().sort((left, right) => {
+            if (left.role !== right.role) {
+                return left.role === 'manager' ? -1 : 1;
+            }
+            return String(left.displayName).localeCompare(String(right.displayName));
+        });
+
+        const label = el('usersCountLabel');
+        if (label) {
+            label.innerText = `${users.length} usuÃ¡rio(s)`;
+        }
+
+        body.innerHTML = users.map((user) => {
+            const isSelf = runtime.currentUser && user.id === runtime.currentUser.id;
+
+            return `
+                <tr>
+                    <td>${user.displayName}${isSelf ? ' <span class="helper-text">(vocÃª)</span>' : ''}</td>
+                    <td class="font-mono">${user.username}</td>
+                    <td class="font-mono">${user.email || '--'}</td>
+                    <td>${user.role === 'manager' ? 'Gerente' : 'Analista'}</td>
+                    <td><span class="pill pill-${user.active ? 'ok' : 'bad'}">${user.active ? 'ativo' : 'inativo'}</span></td>
+                    <td>
+                        <div class="inline-actions">
+                            <button class="btn btn-xs btn-outline" data-user-action="edit" data-user-id="${user.id}">editar</button>
+                            <button class="btn btn-xs btn-outline" data-user-action="toggle" data-user-id="${user.id}">${user.active ? 'desativar' : 'ativar'}</button>
+                            <button class="btn btn-xs btn-outline" data-user-action="reset" data-user-id="${user.id}">senha</button>
+                            <button class="btn btn-xs btn-outline" data-user-action="delete" data-user-id="${user.id}">excluir</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    function setUserFormMessage(message, isError) {
+        const node = el('userFormMsg');
+        if (!node) {
+            return;
+        }
+
+        node.innerText = message;
+        node.classList.toggle('text-red', Boolean(isError));
+    }
+
+    function resetUserForm() {
+        runtime.editingUserId = null;
+        el('userName').value = '';
+        el('userEmail').value = '';
+        el('userRole').value = 'analyst';
+        el('bSaveUser').innerText = 'Adicionar usuÃ¡rio';
+        el('bCancelUser').classList.add('hidden');
+        setUserFormMessage(
+            'UsuÃ¡rio novo entra com a senha padrÃ£o FieldTotvs2026 e pode trocÃ¡-la depois no painel operacional, no botÃ£o Senhas.',
+            false
+        );
+    }

@@ -1,0 +1,2 @@
+﻿606: TOTVSStorage.logout();
+632: TOTVSStorage.logout();

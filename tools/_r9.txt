@@ -1,0 +1,24 @@
+﻿61 :: # abra http://localhost:8765/app/index.html
+62 :: ```
+63 :: 
+64 :: ---
+65 :: 
+66 :: ## Usuarios e senha
+67 :: 
+68 :: | Usuario | Nome | Perfil | Acesso |
+69 :: |---|---|---|---|
+70 :: | `gerente` | Gerente de Projeto | Gerente de projeto | Todos os lotes, todos os registros, arquivos individuais de todos os analistas, criacao/exclusao de lote, `usuarios.json`, `dados-gerais.json`, `gestao.json`, restaurar snapshot |
+71 :: | `isaque` | Isaque | Analista | Somente os proprios registros |
+72 :: | `vinicius` | Vinicius | Analista | Somente os proprios registros |
+73 :: | `guilherme` | Guilherme | Analista | Somente os proprios registros |
+74 :: | `davi` | Davi | Analista | Somente os proprios registros |
+75 :: 
+76 :: - **Senha inicial de todos os perfis: `FieldTotvs2026`**
+77 :: - **Chave mestra para resetar a senha de um usuario: `FieldTotvs2026`**
+78 :: 
+79 :: As senhas sao gravadas como **hash SHA-256** (nunca em texto puro) e o hash
+80 :: **nunca** e exportado para o repositorio.
+81 :: 
+82 :: Cada usuario troca a propria senha no botao **Senhas** do painel operacional; o gerente
+83 :: reseta a de qualquer analista.
+84 :: 

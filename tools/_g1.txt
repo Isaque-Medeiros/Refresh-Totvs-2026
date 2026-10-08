@@ -1,0 +1,20 @@
+﻿27: editingUserId: null
+1289: function renderUsers() {
+1290: const body = el('usersTableBody');
+1302: const label = el('usersCountLabel');
+1331: const node = el('userFormMsg');
+1341: runtime.editingUserId = null;
+1345: el('bSaveUser').innerText = 'Adicionar usuário';
+1346: el('bCancelUser').classList.add('hidden');
+1361: if (runtime.editingUserId) {
+1362: TOTVSStorage.updateUser(runtime.editingUserId, payload, runtime.currentUser.id);
+1365: TOTVSStorage.createUser(payload, runtime.currentUser.id);
+1384: runtime.editingUserId = userId;
+1388: el('bSaveUser').innerText = 'Salvar alterações';
+1389: el('bCancelUser').classList.remove('hidden');
+1402: TOTVSStorage.setUserActive(userId, !wasActive, runtime.currentUser.id);
+1446: TOTVSStorage.deleteUser(userId, runtime.currentUser.id);
+1487: renderUsers();
+1525: el('bSaveUser').addEventListener('click', saveUser);
+1526: el('bCancelUser').addEventListener('click', resetUserForm);
+1527: el('usersTableBody').addEventListener('click', handleUsersTableClick);

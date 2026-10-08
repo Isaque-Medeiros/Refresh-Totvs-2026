@@ -1,0 +1,45 @@
+﻿    etapa passou a ser calculada dentro do proprio painel e o modulo saiu da pagina.
+66. **Testes**: o smoke test subiu de **105 para 119** verificacoes, cobrindo ajustes
+    somando ao derivado, limite em zero, remocao de ajuste zerado, observacao da daily,
+    frentes, payload de gestao e a serie do burndown cortando o futuro.
+
+---
+
+### Sessao 6 - Login por e-mail, dispositivo lembrado e gestao de usuarios
+
+67. **Login por e-mail**: o `<select>` de usuarios virou campo de e-mail com
+    `datalist` (autocompleta, mas deixa digitar). O `login()` passou a aceitar
+    **e-mail OU usuario**, entao nada quebrou para quem ja usava.
+68. **`email` no usuario** com **migracao automatica** dos estados ja salvos no
+    navegador (quem nao tinha e-mail recebe o padrao `@db4serv.com.br`).
+69. **Dispositivo lembrado**: `rememberDevice` (validade de 30 dias), `getRememberedDevice`,
+    `forgetDevice` e `loginFromDevice` â€” entrada sem senha a partir do segundo acesso.
+70. **Fluxo de entrada rapida**: abre o sistema e **entra sozinho**; depois de clicar em
+    *Sair*, mostra **"Entrar como Fulano"** em 1 clique; ha ainda *Entrar com outra conta*
+    e *Esquecer este dispositivo*. Uma marca em `sessionStorage` impede o auto-login
+    imediatamente apos a saida, sem atrapalhar a proxima abertura.
+71. **CRUD de usuarios** no `storage.js`: `createUser`, `updateUser`, `setUserActive` e
+    `deleteUser`, com as regras de **sempre existir um gerente ativo**, nao excluir o
+    proprio usuario e nao excluir quem tem registros (orienta desativar).
+72. **Card "Usuarios" no painel de gestao**: tabela com nome, usuario, e-mail, perfil e
+    situacao, mais acoes de editar, ativar/desativar, redefinir senha e excluir â€”
+    acabando com a necessidade de mexer no codigo para cadastrar alguem.
+73. **`usuarios.json` passa a carregar o e-mail** e o merge atualiza o endereco quando
+    a versao remota e mais recente.
+74. **Validador corrigido**: duas verificacoes ainda procuravam o `<select>` antigo de
+    usuarios; foram apontadas para o `datalist` de e-mails, que e o novo comportamento.
+75. **Testes**: o smoke test subiu de **119 para 144** verificacoes, cobrindo login por
+    e-mail (com maiusculas e espacos), e-mail nao vinculado, retrocompatibilidade por
+    usuario, dispositivo lembrado e esquecido, marca de saida, CRUD completo de usuario
+    e o e-mail no `usuarios.json`.
+
+---
+
+## Resultado da validacao
+
+Executado por `tools/validate.ps1` (Edge headless sobre servidor local):
+
+| Etapa | Resultado |
+|---|---|
+| Verificacao de IDs (por pagina) | 2 paginas, 287 referencias no JS, todas validas |
+| Smoke test de logica | **144/144 testes aprovados** |

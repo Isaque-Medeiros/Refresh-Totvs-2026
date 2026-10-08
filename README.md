@@ -13,33 +13,33 @@ GitHub, com sincronizacao automatica.
 
 ```
 TOTVS_Refresh_2026/
-├─ start.bat                 -> abre o sistema no navegador (modo aplicacao + PDF silencioso)
-├─ README.md
-├─ TIMELAPSE_ATUALIZACAO.md  -> registro do processo de atualizacao
-├─ app/
-│  ├─ index.html             -> painel operacional (analistas + gerente)
-│  ├─ gestao.html            -> painel de gestao (status report do gerente)
-│  ├─ css/styles.css         -> tema TOTVS azul escuro soft
-│  └─ js/
-│     ├─ storage.js          -> estado, usuarios, lotes, maquinas, permissoes, senhas
-│     ├─ rollout.js          -> calendario util, plano de trocas, ajustes e KPIs do rollout
-│     ├─ reports.js          -> metricas, dashboard e relatorios imprimiveis
-│     ├─ importer-exporter.js-> exportacoes TSV / WhatsApp / JSON
-│     ├─ github-sync.js      -> sincronizacao com o GitHub (Contents API)
-│     ├─ app.js              -> integracao do painel operacional
-│     ├─ gestao.js           -> integracao do painel de gestao
-│     └─ vendor/chart.umd.js -> Chart.js 4.4.1 (graficos, uso offline)
-├─ data/                     -> banco de dados versionado no repositorio
-│  ├─ dados-gerais.json      -> indice geral (gerente)
-│  ├─ usuarios.json          -> usuarios sem hash de senha (gerente)
-│  ├─ gestao.json            -> ajustes, observacoes e frentes (gerente)
-│  └─ analistas/<usuario>.json
-├─ tests/smoke.html          -> auto-teste de logica (144 verificacoes)
-└─ tools/
-   ├─ check-ids.ps1          -> confere se todo ID usado no JS existe no HTML
-   ├─ serve.ps1              -> servidor local (necessario para o fetch dos JSON)
-   ├─ timelapse.ps1          -> gravacao de tela / timelapse do processo
-   └─ validate.ps1           -> roda toda a validacao e gera last-validation.txt
+â”œâ”€ start.bat                 -> abre o sistema no navegador (modo aplicacao + PDF silencioso)
+â”œâ”€ README.md
+â”œâ”€ TIMELAPSE_ATUALIZACAO.md  -> registro do processo de atualizacao
+â”œâ”€ app/
+â”‚  â”œâ”€ index.html             -> painel operacional (analistas + gerente)
+â”‚  â”œâ”€ gestao.html            -> painel de gestao (status report do gerente)
+â”‚  â”œâ”€ css/styles.css         -> tema TOTVS azul escuro soft
+â”‚  â””â”€ js/
+â”‚     â”œâ”€ storage.js          -> estado, usuarios, lotes, maquinas, permissoes, senhas
+â”‚     â”œâ”€ rollout.js          -> calendario util, plano de trocas, ajustes e KPIs do rollout
+â”‚     â”œâ”€ reports.js          -> metricas, dashboard e relatorios imprimiveis
+â”‚     â”œâ”€ importer-exporter.js-> exportacoes TSV / WhatsApp / JSON
+â”‚     â”œâ”€ github-sync.js      -> sincronizacao com o GitHub (Contents API)
+â”‚     â”œâ”€ app.js              -> integracao do painel operacional
+â”‚     â”œâ”€ gestao.js           -> integracao do painel de gestao
+â”‚     â””â”€ vendor/chart.umd.js -> Chart.js 4.4.1 (graficos, uso offline)
+â”œâ”€ data/                     -> banco de dados versionado no repositorio
+â”‚  â”œâ”€ dados-gerais.json      -> indice geral (gerente)
+â”‚  â”œâ”€ usuarios.json          -> usuarios sem hash de senha (gerente)
+â”‚  â”œâ”€ gestao.json            -> ajustes, observacoes e frentes (gerente)
+â”‚  â””â”€ analistas/<usuario>.json
+â”œâ”€ tests/smoke.html          -> auto-teste de logica (119 verificacoes)
+â””â”€ tools/
+   â”œâ”€ check-ids.ps1          -> confere se todo ID usado no JS existe no HTML
+   â”œâ”€ serve.ps1              -> servidor local (necessario para o fetch dos JSON)
+   â”œâ”€ timelapse.ps1          -> gravacao de tela / timelapse do processo
+   â””â”€ validate.ps1           -> roda toda a validacao e gera last-validation.txt
 ```
 
 ---
@@ -63,52 +63,18 @@ powershell -ExecutionPolicy Bypass -File tools\serve.ps1
 
 ---
 
-## Usuarios, e-mail e senha
+## Usuarios e senha
 
-O login e por **e-mail**: digite o endereco, o sistema confere se ele esta vinculado
-a um usuario cadastrado e entra.
-
-| E-mail | Usuario | Perfil | Acesso |
+| Usuario | Nome | Perfil | Acesso |
 |---|---|---|---|
-| `gerente@db4serv.com.br` | `gerente` | Gerente de projeto | Todos os lotes, todos os registros, arquivos individuais de todos os analistas, criacao/exclusao de lote, `usuarios.json`, `dados-gerais.json`, `gestao.json`, restaurar snapshot |
-| `isaque@db4serv.com.br` | `isaque` | Analista | Somente os proprios registros |
-| `vinicius@db4serv.com.br` | `vinicius` | Analista | Somente os proprios registros |
-| `guilherme@db4serv.com.br` | `guilherme` | Analista | Somente os proprios registros |
-| `davi@db4serv.com.br` | `davi` | Analista | Somente os proprios registros |
+| `gerente` | Gerente de Projeto | Gerente de projeto | Todos os lotes, todos os registros, arquivos individuais de todos os analistas, criacao/exclusao de lote, `usuarios.json`, `dados-gerais.json`, `gestao.json`, restaurar snapshot |
+| `isaque` | Isaque | Analista | Somente os proprios registros |
+| `vinicius` | Vinicius | Analista | Somente os proprios registros |
+| `guilherme` | Guilherme | Analista | Somente os proprios registros |
+| `davi` | Davi | Analista | Somente os proprios registros |
 
 - **Senha inicial de todos os perfis: `FieldTotvs2026`**
 - **Chave mestra para resetar a senha de um usuario: `FieldTotvs2026`**
-
-Os e-mails acima sao apenas o padrao inicial — o gerente troca na tela **Usuarios**
-do painel de gestao. O login tambem aceita o **usuario** (ex.: `gerente`), entao quem
-ja usava o sistema continua entrando do mesmo jeito.
-
-### Login rapido: "lembrar neste dispositivo"
-
-Na primeira vez, digite **e-mail + senha** com a opcao *Lembrar neste dispositivo*
-marcada. A partir dai:
-
-| Situacao | O que acontece |
-|---|---|
-| Abrir o sistema de novo naquele navegador | **Entra sozinho**, sem tela de login |
-| Clicar em *Sair* e voltar | Tela com o botao **"Entrar como Fulano"** — **1 clique** |
-| Clicar em *Entrar com outra conta* | Revela os campos para trocar de usuario |
-| Clicar em *Esquecer este dispositivo* | Apaga o lembrete e volta a pedir a senha |
-
-O lembrete vale por **30 dias**, fica gravado apenas naquele navegador e e descartado
-automaticamente se o usuario for **desativado**.
-
-### Gestao de usuarios (gerente)
-
-No painel de gestao, o card **Usuarios** resolve o cadastro sem tocar no codigo:
-
-- **Adicionar** usuario (nome + e-mail + perfil) — o `username` sai do e-mail;
-- **Editar** nome, e-mail e perfil;
-- **Ativar / desativar** — desativado nao loga;
-- **Redefinir senha** para o padrao;
-- **Excluir** — apenas quem **nao tem registros**; com registros, orienta a desativar.
-
-O sistema impede ficar sem nenhum gerente ativo e impede excluir o proprio usuario.
 
 As senhas sao gravadas como **hash SHA-256** (nunca em texto puro) e o hash
 **nunca** e exportado para o repositorio.
@@ -148,7 +114,7 @@ reseta a de qualquer analista.
 | Resetar a senha de outro usuario | Senhas |
 | **Painel de Gestao** (`gestao.html`), a barra de troca em lote e o `gestao.json` | Topo do sistema |
 
-> As travas existem **na interface e dentro das funcoes** — esconder o botao
+> As travas existem **na interface e dentro das funcoes** â€” esconder o botao
 > sozinho nao seria suficiente.
 
 ---
@@ -175,7 +141,7 @@ continua consistente.
 
 ## Graficos e impressao
 
-O dashboard traz graficos em **HTML/CSS puro** — sem biblioteca externa, sem CDN,
+O dashboard traz graficos em **HTML/CSS puro** â€” sem biblioteca externa, sem CDN,
 funcionando offline e imprimindo com qualidade:
 
 - **Gerais:** progresso da meta global (1.000), distribuicao por status, tempo medio
@@ -214,53 +180,53 @@ Filtros uteis adicionados: **Preparada (aguardando troca)** e **Trocada**.
 
 ## Painel de Gestao (tela do gerente)
 
-Tela separada em `app/gestao.html`, aberta pelo botao **Painel de Gestão** no topo
+Tela separada em `app/gestao.html`, aberta pelo botao **Painel de GestÃ£o** no topo
 (exclusivo do gerente; um analista que abrir o endereco direto ve o bloqueio).
 
 Ela reproduz o status report que o gestor ja usava, nas cores deste projeto, com
-**Chart.js 4.4.1 vendorizado** em `app/js/vendor/` — os mesmos gráficos da referência,
+**Chart.js 4.4.1 vendorizado** em `app/js/vendor/` â€” os mesmos grÃ¡ficos da referÃªncia,
 funcionando offline e imprimindo.
 
 ### Blocos da tela
 
-| Bloco | Conteúdo |
+| Bloco | ConteÃºdo |
 |---|---|
-| **8 KPIs** | trocadas acumulado · % de 1.000 · preparadas acumulado · previsto no plano até hoje · **desvio vs plano** · ritmo médio · projeção de término · dias úteis restantes |
-| **Evolução acumulada** | linha do plano (tracejada) + trocadas (preenchida) + preparadas, com o futuro cortado |
-| **Por analista** | barras agrupadas preparadas × trocadas |
-| **Últimos 10 dias** | barras agrupadas trocas × preparadas |
-| **Lançamento do dia** | ajuste manual por analista + observação da daily + copiar resumo |
+| **8 KPIs** | trocadas acumulado Â· % de 1.000 Â· preparadas acumulado Â· previsto no plano atÃ© hoje Â· **desvio vs plano** Â· ritmo mÃ©dio Â· projeÃ§Ã£o de tÃ©rmino Â· dias Ãºteis restantes |
+| **EvoluÃ§Ã£o acumulada** | linha do plano (tracejada) + trocadas (preenchida) + preparadas, com o futuro cortado |
+| **Por analista** | barras agrupadas preparadas Ã— trocadas |
+| **Ãšltimos 10 dias** | barras agrupadas trocas Ã— preparadas |
+| **LanÃ§amento do dia** | ajuste manual por analista + observaÃ§Ã£o da daily + copiar resumo |
 | **Frentes** | superado e pendente, com adicionar / remover / concluir |
-| **Histórico diário** | data · prep · trocas · acumulado · plano · desvio · status · observação · editar |
-| **Operação ao vivo** | em andamento agora · aguardando troca · incidentes · tempo médio por etapa · atingimento por analista |
+| **HistÃ³rico diÃ¡rio** | data Â· prep Â· trocas Â· acumulado Â· plano Â· desvio Â· status Â· observaÃ§Ã£o Â· editar |
+| **OperaÃ§Ã£o ao vivo** | em andamento agora Â· aguardando troca Â· incidentes Â· tempo mÃ©dio por etapa Â· atingimento por analista |
 
 ### O card do desvio muda de cor
 
-O card inteiro acompanha o desvio, como na referência do gestor:
+O card inteiro acompanha o desvio, como na referÃªncia do gestor:
 
 | Desvio | Leitura |
 |---|---|
-| ≥ 0 | verde — no ritmo ou adiantado |
-| entre −1 e −20 | laranja — atenção |
-| ≤ −20 | vermelho — atrasado |
+| â‰¥ 0 | verde â€” no ritmo ou adiantado |
+| entre âˆ’1 e âˆ’20 | laranja â€” atenÃ§Ã£o |
+| â‰¤ âˆ’20 | vermelho â€” atrasado |
 
-### Lançamento do dia = ajuste somado
+### LanÃ§amento do dia = ajuste somado
 
-**Preparadas** e **trocadas** entram sozinhas, derivadas das máquinas. O formulário serve
-para **corrigir divergência**:
+**Preparadas** e **trocadas** entram sozinhas, derivadas das mÃ¡quinas. O formulÃ¡rio serve
+para **corrigir divergÃªncia**:
 
-- cada linha mostra o número das máquinas, o campo de ajuste e o total resultante;
-- o ajuste **pode ser negativo** (ex.: `-1` para tirar uma máquina contada duas vezes);
-- o total nunca fica abaixo de zero e um ajuste zerado é removido automaticamente;
-- a observação da daily é gravada junto com o dia.
+- cada linha mostra o nÃºmero das mÃ¡quinas, o campo de ajuste e o total resultante;
+- o ajuste **pode ser negativo** (ex.: `-1` para tirar uma mÃ¡quina contada duas vezes);
+- o total nunca fica abaixo de zero e um ajuste zerado Ã© removido automaticamente;
+- a observaÃ§Ã£o da daily Ã© gravada junto com o dia.
 
 ### Ao vivo
 
-O indicador no topo mostra a hora da última atualização e quanto falta para o próximo
-ciclo. O botão alterna entre **15s · 30s · 60s · pausado**.
+O indicador no topo mostra a hora da Ãºltima atualizaÃ§Ã£o e quanto falta para o prÃ³ximo
+ciclo. O botÃ£o alterna entre **15s Â· 30s Â· 60s Â· pausado**.
 
 - **Com token:** cada ciclo puxa do GitHub e mescla o que os analistas enviaram;
-- **Sem token:** relê apenas os dados locais, em **modo local**.
+- **Sem token:** relÃª apenas os dados locais, em **modo local**.
 
 ### Regras do plano (portadas do painel do gestor)
 
@@ -269,29 +235,29 @@ ciclo. O botão alterna entre **15s · 30s · 60s · pausado**.
 | Total de maquinas | 1.000 |
 | Periodo | 05/10/2026 a 29/01/2027 |
 | Inicio das trocas | 19/10/2026 (antes disso e so preparacao) |
-| Meta mensal | out 160 · nov 300 · dez 280 · jan 260 |
+| Meta mensal | out 160 Â· nov 300 Â· dez 280 Â· jan 260 |
 | Feriados considerados | 12/10, 02/11, 20/11, 24/12, 25/12, 31/12, 01/01 |
 
-O plano distribui a meta do mês nos dias úteis a partir do início das trocas, formando a
-linha de "previsto" do burndown. Datas fora do calendário útil usam o plano do último dia
-útil anterior.
+O plano distribui a meta do mÃªs nos dias Ãºteis a partir do inÃ­cio das trocas, formando a
+linha de "previsto" do burndown. Datas fora do calendÃ¡rio Ãºtil usam o plano do Ãºltimo dia
+Ãºtil anterior.
 
-Regras de cálculo, idênticas às do painel original:
+Regras de cÃ¡lculo, idÃªnticas Ã s do painel original:
 
-- **Ritmo médio** = média dos últimos 5 dias lançados **que tiveram troca**;
-- **Projeção** = data prevista, ou `após 29/01 (+N d.u.)` se estourar o prazo, ou `Concluído`;
-- **Status por dia** no histórico = `no plano` (desvio ≥ 0), `atenção` (até −20) ou `atrasado`.
+- **Ritmo mÃ©dio** = mÃ©dia dos Ãºltimos 5 dias lanÃ§ados **que tiveram troca**;
+- **ProjeÃ§Ã£o** = data prevista, ou `apÃ³s 29/01 (+N d.u.)` se estourar o prazo, ou `ConcluÃ­do`;
+- **Status por dia** no histÃ³rico = `no plano` (desvio â‰¥ 0), `atenÃ§Ã£o` (atÃ© âˆ’20) ou `atrasado`.
 
-### Importar o histórico antigo
+### Importar o histÃ³rico antigo
 
-O botão **Importar apontamentos** aceita vários arquivos de uma vez e reconhece:
+O botÃ£o **Importar apontamentos** aceita vÃ¡rios arquivos de uma vez e reconhece:
 
-- `tipo: "apontamento-analista"` — os arquivos do antigo **ImplementarAuto**, convertidos
+- `tipo: "apontamento-analista"` â€” os arquivos do antigo **ImplementarAuto**, convertidos
   em ajustes por dia e analista;
-- backup do painel antigo (`{days, config, analistas}`) — ajustes + frentes + observações;
-- backup deste painel e o próprio `data/gestao.json`.
+- backup do painel antigo (`{days, config, analistas}`) â€” ajustes + frentes + observaÃ§Ãµes;
+- backup deste painel e o prÃ³prio `data/gestao.json`.
 
-O analista é casado pelo nome ou pelo usuário. Lançamentos de analista não encontrado
+O analista Ã© casado pelo nome ou pelo usuÃ¡rio. LanÃ§amentos de analista nÃ£o encontrado
 aparecem na contagem de ignorados do aviso.
 
 ### Arquivos de referencia do cliente
@@ -431,16 +397,6 @@ Veja tambem `TIMELAPSE_ATUALIZACAO.md`.
 4. Nao existe servidor: a sincronizacao depende de configurar o token uma vez por
    maquina. O botao **Carregar dados publicados** permite que qualquer pessoa veja
    os dados publicados sem credencial.
-5. **Os e-mails ficam publicos** no `data/usuarios.json` (decisao consciente, para o
-   login funcionar igual em qualquer maquina). Se preferir escondê-los, da para
-   omitir o campo do arquivo sincronizado.
-6. **"Lembrar neste dispositivo" nao e uma segunda senha**: quem tiver acesso fisico
-   ao navegador entra sem digitar nada. E o comportamento normal de "lembrar
-   dispositivo" sem backend. O lembrete expira em 30 dias e ha o botao *Esquecer
-   este dispositivo*.
-7. Sem backend **nao existe como provar que a pessoa e dona do e-mail** (isso exigiria
-   enviar um codigo ou link, ou seja, um servico externo). O que o sistema faz e
-   conferir se o e-mail esta **vinculado a um usuario cadastrado**.
 
 ---
 
@@ -451,7 +407,7 @@ Veja tambem `TIMELAPSE_ATUALIZACAO.md`.
 
 ## Etapas do processo
 
-1. `1 FORMATAÇÃO E BIOS`
+1. `1 FORMATAÃ‡ÃƒO E BIOS`
 2. `2 WINDOWS UPDATE`
 3. `3 ATIVAR ADM E SUBIR DRIVERS`
 4. `4 DOMINIO E ARGUS`

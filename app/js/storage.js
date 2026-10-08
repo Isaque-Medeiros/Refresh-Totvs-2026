@@ -3,10 +3,6 @@ const TOTVSStorage = (() => {
     const SESSION_KEY = 'TOTVS_REFRESH_2026_SESSION_V3';
     const LEGACY_PREFIX = 'TOTVS_REFRESH_2026_';
     const MANAGEMENT_KEY = 'TOTVS_REFRESH_2026_GESTAO_V1';
-    const DEVICE_KEY = 'TOTVS_REFRESH_2026_DEVICE_V1';
-    const LOGOUT_FLAG_KEY = 'TOTVS_REFRESH_2026_LOGOUT_V1';
-    const DEFAULT_EMAIL_DOMAIN = 'db4serv.com.br';
-    const DEVICE_TTL_DAYS = 30;
     const MASTER_RESET_SECRET = 'FieldTotvs2026';
     const TOTAL_PROJECT_GOAL = 1000;
     const ANALYST_GOAL = 250;
@@ -131,10 +127,6 @@ const TOTVSStorage = (() => {
             .replace(/^-+|-+$/g, '');
     }
 
-    function normalizeEmail(value) {
-        return String(value || '').trim().toLowerCase();
-    }
-
     function uid(prefix) {
         return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
     }
@@ -162,7 +154,6 @@ const TOTVSStorage = (() => {
                 id: 'user_manager',
                 username: 'gerente',
                 displayName: 'Gerente de Projeto',
-                email: `gerente@${DEFAULT_EMAIL_DOMAIN}`,
                 role: 'manager',
                 passwordHash,
                 active: true,
@@ -173,7 +164,6 @@ const TOTVSStorage = (() => {
                 id: 'user_isaque',
                 username: 'isaque',
                 displayName: 'Isaque',
-                email: `isaque@${DEFAULT_EMAIL_DOMAIN}`,
                 role: 'analyst',
                 passwordHash,
                 active: true,
@@ -184,7 +174,6 @@ const TOTVSStorage = (() => {
                 id: 'user_vinicius',
                 username: 'vinicius',
                 displayName: 'Vinicius',
-                email: `vinicius@${DEFAULT_EMAIL_DOMAIN}`,
                 role: 'analyst',
                 passwordHash,
                 active: true,
@@ -195,7 +184,6 @@ const TOTVSStorage = (() => {
                 id: 'user_guilherme',
                 username: 'guilherme',
                 displayName: 'Guilherme',
-                email: `guilherme@${DEFAULT_EMAIL_DOMAIN}`,
                 role: 'analyst',
                 passwordHash,
                 active: true,
@@ -206,7 +194,6 @@ const TOTVSStorage = (() => {
                 id: 'user_davi',
                 username: 'davi',
                 displayName: 'Davi',
-                email: `davi@${DEFAULT_EMAIL_DOMAIN}`,
                 role: 'analyst',
                 passwordHash,
                 active: true,
@@ -250,26 +237,6 @@ const TOTVSStorage = (() => {
 
     function getUserByUsername(state, username) {
         return state.users.find((user) => user.username === username) || null;
-    }
-
-    function getUserByEmail(state, email) {
-        const target = normalizeEmail(email);
-        if (!target) {
-            return null;
-        }
-        return state.users.find((user) => normalizeEmail(user.email) === target) || null;
-    }
-
-    function countActiveManagers(state) {
-        return state.users.filter((user) => user.role === 'manager' && user.active).length;
-    }
-
-    function requireManager(state, actorId) {
-        const actor = getUserById(state, actorId);
-        if (!actor || actor.role !== 'manager') {
-            throw new Error('Apenas o gerente pode gerenciar usuários.');
-        }
-        return actor;
     }
 
     function getAnalystUsers(state) {
@@ -326,17 +293,6 @@ const TOTVSStorage = (() => {
             createdAt: nowIso(),
             updatedAt: nowIso(),
             ...user
-        }));
-
-        // Migracao: usuarios salvos antes do login por e-mail nao tinham o campo.
-        const defaultEmails = {};
-        createDefaultUsers().forEach((user) => {
-            defaultEmails[user.username] = user.email;
-        });
-
-        state.users = state.users.map((user) => ({
-            ...user,
-            email: normalizeEmail(user.email || defaultEmails[user.username] || `${user.username}@${DEFAULT_EMAIL_DOMAIN}`)
         }));
 
         state.machines = state.machines.map((machine) => normalizeMachine(state, machine));
@@ -545,7 +501,6 @@ const TOTVSStorage = (() => {
                     id: remote.id,
                     username: remote.username || remote.id,
                     displayName: remote.displayName || remote.username || 'Usuario',
-                    email: normalizeEmail(remote.email || ''),
                     role: remote.role === 'manager' ? 'manager' : 'analyst',
                     passwordHash: sha256(MASTER_RESET_SECRET),
                     active: remote.active !== false,
@@ -560,9 +515,6 @@ const TOTVSStorage = (() => {
             const localTime = new Date(local.updatedAt || 0).getTime();
             if (remoteTime > localTime) {
                 local.displayName = remote.displayName || local.displayName;
-                if (remote.email) {
-                    local.email = normalizeEmail(remote.email);
-                }
                 local.active = remote.active !== false;
                 local.updatedAt = remote.updatedAt;
             }
@@ -781,242 +733,12 @@ const TOTVSStorage = (() => {
         return saved;
     }
 
-    /* --------------------- Dispositivo lembrado (login rapido) --------------------- */
-
-    function rememberDevice(user) {
-        const expires = new Date();
-        expires.setDate(expires.getDate() + DEVICE_TTL_DAYS);
-
-        const device = {
-            userId: user.id,
-            username: user.username,
-            email: normalizeEmail(user.email),
-            displayName: user.displayName,
-            role: user.role,
-            rememberedAt: nowIso(),
-            expiresAt: expires.toISOString()
-        };
-
-        localStorage.setItem(DEVICE_KEY, JSON.stringify(device));
-        return device;
-    }
-
-    function getRememberedDevice() {
-        try {
-            const raw = localStorage.getItem(DEVICE_KEY);
-            if (!raw) {
-                return null;
-            }
-
-            const device = JSON.parse(raw);
-            if (!device || !device.userId) {
-                return null;
-            }
-
-            if (device.expiresAt && new Date(device.expiresAt).getTime() < Date.now()) {
-                localStorage.removeItem(DEVICE_KEY);
-                return null;
-            }
-
-            return device;
-        } catch (error) {
-            console.error('Falha ao ler o dispositivo lembrado:', error);
-            return null;
-        }
-    }
-
-    function forgetDevice() {
-        localStorage.removeItem(DEVICE_KEY);
-    }
-
-    // Marca, apenas nesta aba, que o usuario saiu de proposito. Assim recarregar
-    // a pagina nao entra sozinho, mas abrir de novo depois entra.
-    function markLoggedOut() {
-        try {
-            sessionStorage.setItem(LOGOUT_FLAG_KEY, '1');
-        } catch (error) {
-            /* sessionStorage indisponivel */
-        }
-    }
-
-    function wasLoggedOut() {
-        try {
-            return sessionStorage.getItem(LOGOUT_FLAG_KEY) === '1';
-        } catch (error) {
-            return false;
-        }
-    }
-
-    function clearLoggedOut() {
-        try {
-            sessionStorage.removeItem(LOGOUT_FLAG_KEY);
-        } catch (error) {
-            /* sessionStorage indisponivel */
-        }
-    }
-
-    // Entra direto pelo dispositivo lembrado, sem pedir senha.
-    function loginFromDevice() {
-        const device = getRememberedDevice();
-        if (!device) {
-            return null;
-        }
-
+    function login(username, password) {
         const state = loadState();
-        const user = getUserById(state, device.userId);
-        if (!user || !user.active) {
-            forgetDevice();
-            return null;
-        }
+        const user = getUserByUsername(state, username);
 
-        setSession({ userId: user.id, loginAt: nowIso(), viaDevice: true });
-        clearLoggedOut();
-        audit(state, 'login_device', user.id, { email: user.email });
-        saveState(state);
-        return user;
-    }
-
-    /* ------------------------- Gestao de usuarios -------------------------- */
-
-    function isValidEmail(email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || ''));
-    }
-
-    function createUser(payload, actorId) {
-        const state = loadState();
-        requireManager(state, actorId);
-
-        const email = normalizeEmail(payload && payload.email);
-        const displayName = String((payload && payload.displayName) || '').trim();
-
-        if (!displayName) {
-            throw new Error('Informe o nome do usuário.');
-        }
-        if (!isValidEmail(email)) {
-            throw new Error('Informe um e-mail válido.');
-        }
-        if (getUserByEmail(state, email)) {
-            throw new Error('Já existe um usuário com esse e-mail.');
-        }
-
-        const base = slugify(email.split('@')[0]) || uid('user');
-        const username = getUserByUsername(state, base)
-            ? `${base}-${Math.random().toString(36).slice(2, 6)}`
-            : base;
-
-        const user = {
-            id: uid('user'),
-            username,
-            displayName,
-            email,
-            role: payload && payload.role === 'manager' ? 'manager' : 'analyst',
-            passwordHash: sha256(MASTER_RESET_SECRET),
-            active: true,
-            createdAt: nowIso(),
-            updatedAt: nowIso()
-        };
-
-        state.users.push(user);
-        audit(state, 'create_user', actorId, { userId: user.id, email });
-        saveState(state);
-        return user;
-    }
-
-    function updateUser(userId, payload, actorId) {
-        const state = loadState();
-        requireManager(state, actorId);
-
-        const user = getUserById(state, userId);
         if (!user) {
             throw new Error('Usuário não encontrado.');
-        }
-
-        if (payload && payload.email !== undefined) {
-            const email = normalizeEmail(payload.email);
-            if (!isValidEmail(email)) {
-                throw new Error('Informe um e-mail válido.');
-            }
-
-            const other = getUserByEmail(state, email);
-            if (other && other.id !== userId) {
-                throw new Error('Já existe outro usuário com esse e-mail.');
-            }
-            user.email = email;
-        }
-
-        if (payload && payload.displayName !== undefined) {
-            const displayName = String(payload.displayName || '').trim();
-            if (!displayName) {
-                throw new Error('Informe o nome do usuário.');
-            }
-            user.displayName = displayName;
-        }
-
-        if (payload && payload.role !== undefined) {
-            const nextRole = payload.role === 'manager' ? 'manager' : 'analyst';
-            if (user.role === 'manager' && nextRole !== 'manager' && countActiveManagers(state) <= 1) {
-                throw new Error('O sistema precisa de pelo menos um gerente ativo.');
-            }
-            user.role = nextRole;
-        }
-
-        user.updatedAt = nowIso();
-        audit(state, 'update_user', actorId, { userId, email: user.email });
-        saveState(state);
-        return user;
-    }
-
-    function setUserActive(userId, active, actorId) {
-        const state = loadState();
-        requireManager(state, actorId);
-
-        const user = getUserById(state, userId);
-        if (!user) {
-            throw new Error('Usuário não encontrado.');
-        }
-        if (!active && user.role === 'manager' && countActiveManagers(state) <= 1) {
-            throw new Error('O sistema precisa de pelo menos um gerente ativo.');
-        }
-
-        user.active = Boolean(active);
-        user.updatedAt = nowIso();
-        audit(state, active ? 'activate_user' : 'deactivate_user', actorId, { userId });
-        saveState(state);
-        return user;
-    }
-
-    function deleteUser(userId, actorId) {
-        const state = loadState();
-        requireManager(state, actorId);
-
-        const user = getUserById(state, userId);
-        if (!user) {
-            throw new Error('Usuário não encontrado.');
-        }
-        if (user.id === actorId) {
-            throw new Error('Você não pode excluir o próprio usuário.');
-        }
-        if (user.role === 'manager' && countActiveManagers(state) <= 1) {
-            throw new Error('O sistema precisa de pelo menos um gerente ativo.');
-        }
-
-        const linked = state.machines.filter((machine) => machine.analystId === userId).length;
-        if (linked) {
-            throw new Error(`Este usuário tem ${linked} registro(s). Desative em vez de excluir.`);
-        }
-
-        state.users = state.users.filter((item) => item.id !== userId);
-        audit(state, 'delete_user', actorId, { userId, email: user.email });
-        saveState(state);
-        return user;
-    }
-
-    function login(identifier, password) {
-        const state = loadState();
-        const user = getUserByEmail(state, identifier) || getUserByUsername(state, identifier);
-
-        if (!user) {
-            throw new Error('E-mail não vinculado a nenhum usuário.');
         }
         if (!user.active) {
             throw new Error('Usuário inativo. Procure o gerente de projeto.');
@@ -1029,16 +751,14 @@ const TOTVSStorage = (() => {
             userId: user.id,
             loginAt: nowIso()
         });
-        clearLoggedOut();
 
-        audit(state, 'login', user.id, { username: user.username, email: user.email });
+        audit(state, 'login', user.id, { username: user.username });
         saveState(state);
         return user;
     }
 
     function logout() {
         clearSession();
-        markLoggedOut();
     }
 
     function changeOwnPassword(userId, currentPassword, newPassword) {
@@ -1566,7 +1286,6 @@ const TOTVSStorage = (() => {
             id: user.id,
             username: user.username,
             displayName: user.displayName,
-            email: user.email || '',
             role: user.role,
             active: user.active,
             updatedAt: user.updatedAt
@@ -1589,25 +1308,17 @@ const TOTVSStorage = (() => {
 
     return {
         ANALYST_GOAL,
-        DEFAULT_EMAIL_DOMAIN,
-        DEVICE_TTL_DAYS,
         MASTER_RESET_SECRET,
         PROCESS_STEPS,
         TOTAL_PROJECT_GOAL,
         changeOwnPassword,
-        clearLoggedOut,
-        countActiveManagers,
         createDataset,
-        createUser,
         createMachines,
         deleteDataset,
         deleteMachine,
-        deleteUser,
-        forgetDevice,
         formatDateTime,
         getAllMachinesByDataset,
         getAnalystName,
-        getRememberedDevice,
         getAnalystUsers,
         getCurrentUser,
         getDatasetById,
@@ -1615,24 +1326,18 @@ const TOTVSStorage = (() => {
         getSession,
         getStateSummary,
         getUserById,
-        getUserByEmail,
-        isValidEmail,
         loadState,
         login,
-        loginFromDevice,
         logout,
         loadManagement,
-        markLoggedOut,
         markMachinesSwapped,
         mergeById,
         mergeManagement,
         mergeRemoteBundle,
-        normalizeEmail,
         nextMachineStep,
         pauseMachine,
         processRunningTimers,
         resetUserPassword,
-        rememberDevice,
         replaceManagement,
         restoreFullBackup,
         saveState,
@@ -1640,13 +1345,10 @@ const TOTVSStorage = (() => {
         setDailyNote,
         setDayAdjustment,
         setFrentes,
-        setUserActive,
         startMachine,
         todayBrInput,
         unmarkMachineSwapped,
         updateMachine,
-        updateUser,
-        wasLoggedOut,
         getVisibleMachines,
         sha256
     };
