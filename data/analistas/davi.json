@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-08T18:00:10.933Z",
+  "exportedAt": "2026-10-08T18:05:52.948Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -14,13 +14,13 @@
   },
   "summary": {
     "total": 2,
-    "doneCount": 0,
+    "doneCount": 1,
     "wipCount": 0,
-    "pausedCount": 2,
+    "pausedCount": 1,
     "errorCount": 0,
     "successRate": "100",
-    "globalPercent": "0.0",
-    "avgTimeString": "00m 00s",
+    "globalPercent": "0.1",
+    "avgTimeString": "59m 43s",
     "manualCount": 0,
     "stepAvgTimes": {
       "1 FORMATAÇÃO E BIOS": "00m 00s",
@@ -69,11 +69,11 @@
         "analystId": "user_davi",
         "name": "Davi",
         "total": 2,
-        "done": 0,
+        "done": 1,
         "wip": 0,
-        "paused": 2,
+        "paused": 1,
         "errors": 0,
-        "goalPercent": "0.0"
+        "goalPercent": "0.4"
       }
     ],
     "errorList": []
@@ -135,9 +135,9 @@
       "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-08",
-      "currentStep": "4 DOMINIO E ARGUS",
-      "currentStepIndex": 3,
-      "status": "PAUSADO",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 0,
@@ -153,6 +153,12 @@
       "manualEntryBy": null,
       "manualEntryAt": null,
       "history": [
+        {
+          "action": "next_step",
+          "actorId": "user_davi",
+          "note": "CONCLUIDO",
+          "createdAt": "2026-10-08T18:05:51.441Z"
+        },
         {
           "action": "pause_timer",
           "actorId": "user_davi",
@@ -181,9 +187,9 @@
       "currentStepStartedAt": "2026-10-08T17:24:52.214Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T16:15:22.859Z",
-      "updatedAt": "2026-10-08T18:00:09.426Z",
-      "completedAt": null,
-      "preparedAt": null,
+      "updatedAt": "2026-10-08T18:05:51.441Z",
+      "completedAt": "2026-10-08T18:05:51.441Z",
+      "preparedAt": "2026-10-08T18:05:51.441Z",
       "swappedAt": null,
       "swappedBy": null
     }
