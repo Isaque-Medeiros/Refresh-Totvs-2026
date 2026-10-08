@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-08T19:00:59.825Z",
+  "exportedAt": "2026-10-08T19:02:10.043Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -55,8 +55,8 @@
       "username": "isaque",
       "displayName": "Isaque",
       "file": "data/analistas/isaque.json",
-      "records": 2,
-      "updatedAt": "2026-10-08T17:29:44.249Z"
+      "records": 0,
+      "updatedAt": null
     },
     {
       "id": "user_vinicius",
@@ -79,8 +79,8 @@
       "username": "davi",
       "displayName": "Davi",
       "file": "data/analistas/davi.json",
-      "records": 2,
-      "updatedAt": "2026-10-08T19:00:55.825Z"
+      "records": 13,
+      "updatedAt": "2026-10-08T19:02:04.943Z"
     }
   ]
 }
