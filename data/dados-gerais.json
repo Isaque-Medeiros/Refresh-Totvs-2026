@@ -1,6 +1,6 @@
 {
   "version": "3.0.0",
-  "exportedAt": "2026-10-08T19:02:08.242Z",
+  "exportedAt": "2026-10-08T19:09:26.322Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -270,9 +270,9 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132301",
       "analystId": "user_davi",
-      "brand": "Dell",
+      "brand": "HP",
       "profile": "Local",
-      "processDate": "2026-10-07",
+      "processDate": "2026-10-06",
       "currentStep": "CONCLUIDO",
       "currentStepIndex": 4,
       "status": "CONCLUIDO",
@@ -293,6 +293,18 @@
       "history": [
         {
           "action": "machine_edited",
+          "actorId": "user_manager",
+          "note": "Edicao do registro",
+          "createdAt": "2026-10-08T19:09:22.927Z"
+        },
+        {
+          "action": "machine_edited",
+          "actorId": "user_manager",
+          "note": "Edicao do registro",
+          "createdAt": "2026-10-08T19:02:42.029Z"
+        },
+        {
+          "action": "machine_edited",
           "actorId": "user_davi",
           "note": "Edicao do registro",
           "createdAt": "2026-10-08T19:00:31.491Z"
@@ -307,7 +319,7 @@
       "currentStepStartedAt": "2026-10-08T18:58:54.296Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:58:54.296Z",
-      "updatedAt": "2026-10-08T19:00:31.491Z",
+      "updatedAt": "2026-10-08T19:09:22.927Z",
       "completedAt": "2026-10-08T18:58:54.296Z",
       "preparedAt": "2026-10-08T18:58:54.296Z",
       "swappedAt": null,
@@ -498,7 +510,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132241",
       "analystId": "user_davi",
-      "brand": "Dell",
+      "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -520,6 +532,12 @@
       "manualEntryAt": null,
       "history": [
         {
+          "action": "machine_edited",
+          "actorId": "user_manager",
+          "note": "Edicao do registro",
+          "createdAt": "2026-10-08T19:02:15.211Z"
+        },
+        {
           "action": "next_step",
           "actorId": "user_davi",
           "note": "CONCLUIDO",
@@ -535,7 +553,7 @@
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T18:58:00.904Z",
+      "updatedAt": "2026-10-08T19:02:15.211Z",
       "completedAt": "2026-10-08T18:58:00.904Z",
       "preparedAt": "2026-10-08T18:58:00.904Z",
       "swappedAt": null,
@@ -766,7 +784,7 @@
       "displayName": "Davi",
       "file": "data/analistas/davi.json",
       "records": 13,
-      "updatedAt": "2026-10-08T19:02:04.943Z"
+      "updatedAt": "2026-10-08T19:09:22.927Z"
     }
   ]
 }
