@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-08T18:40:07.328Z",
+  "exportedAt": "2026-10-08T18:42:51.466Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -13,7 +13,7 @@
       "displayName": "Gerente de Projeto",
       "role": "manager",
       "active": true,
-      "updatedAt": "2026-10-08T18:40:03.110Z"
+      "updatedAt": "2026-10-08T18:42:47.021Z"
     },
     {
       "id": "user_isaque",
@@ -37,7 +37,7 @@
       "displayName": "Guilherme",
       "role": "analyst",
       "active": true,
-      "updatedAt": "2026-10-08T18:37:37.107Z"
+      "updatedAt": "2026-10-08T18:40:56.196Z"
     },
     {
       "id": "user_davi",
@@ -56,7 +56,7 @@
       "displayName": "Isaque",
       "file": "data/analistas/isaque.json",
       "records": 3,
-      "updatedAt": "2026-10-08T18:40:04.624Z"
+      "updatedAt": "2026-10-08T18:42:48.533Z"
     },
     {
       "id": "user_vinicius",
