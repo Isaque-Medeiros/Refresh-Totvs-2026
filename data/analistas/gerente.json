@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-08T18:42:48.533Z",
+  "exportedAt": "2026-10-08T19:00:55.826Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -81,5 +81,6 @@
   "records": [],
   "kind": "analyst",
   "username": "gerente",
-  "analystId": "user_manager"
+  "analystId": "user_manager",
+  "deletedMachines": {}
 }
