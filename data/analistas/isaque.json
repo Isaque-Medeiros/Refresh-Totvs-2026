@@ -8,13 +8,13 @@
     "analystGoal": 250
   },
   "user": {
-    "id": "user_davi",
-    "username": "davi",
-    "displayName": "Davi",
+    "id": "user_isaque",
+    "username": "isaque",
+    "displayName": "Isaque",
     "role": "analyst"
   },
-  "username": "davi",
-  "analystId": "user_davi",
+  "username": "isaque",
+  "analystId": "user_isaque",
   "summary": {
     "total": 0,
     "doneCount": 0,
