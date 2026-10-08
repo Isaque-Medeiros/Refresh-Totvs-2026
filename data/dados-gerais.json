@@ -1,6 +1,6 @@
 {
   "version": "3.0.0",
-  "exportedAt": "2026-10-08T17:24:55.411Z",
+  "exportedAt": "2026-10-08T18:40:05.871Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -10,29 +10,29 @@
   "dataset": {
     "id": "dataset_principal",
     "name": "Operação Principal",
-    "createdAt": "2026-10-08T14:32:22.706Z"
+    "createdAt": "2026-10-08T18:37:37.107Z"
   },
   "summary": {
     "total": 5,
-    "doneCount": 2,
-    "wipCount": 2,
+    "doneCount": 3,
+    "wipCount": 1,
     "pausedCount": 1,
     "errorCount": 0,
     "successRate": "100",
-    "globalPercent": "0.2",
-    "avgTimeString": "00m 07s",
+    "globalPercent": "0.3",
+    "avgTimeString": "19m 59s",
     "manualCount": 0,
     "stepAvgTimes": {
       "1 FORMATAÇÃO E BIOS": "00m 05s",
       "2 WINDOWS UPDATE": "00m 04s",
-      "3 ATIVAR ADM E SUBIR DRIVERS": "13m 03s",
-      "4 DOMINIO E ARGUS": "00m 01s"
+      "3 ATIVAR ADM E SUBIR DRIVERS": "28m 03s",
+      "4 DOMINIO E ARGUS": "11m 46s"
     },
     "stepAvgSeconds": {
       "1 FORMATAÇÃO E BIOS": 5,
       "2 WINDOWS UPDATE": 4,
-      "3 ATIVAR ADM E SUBIR DRIVERS": 783,
-      "4 DOMINIO E ARGUS": 1
+      "3 ATIVAR ADM E SUBIR DRIVERS": 1683,
+      "4 DOMINIO E ARGUS": 706
     },
     "analystStats": [
       {
@@ -69,11 +69,11 @@
         "analystId": "user_davi",
         "name": "Davi",
         "total": 2,
-        "done": 0,
-        "wip": 1,
+        "done": 1,
+        "wip": 0,
         "paused": 1,
         "errors": 0,
-        "goalPercent": "0.0"
+        "goalPercent": "0.4"
       }
     ],
     "errorList": []
@@ -160,10 +160,10 @@
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 6,
         "2 WINDOWS UPDATE": 4,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 981,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 5480,
         "4 DOMINIO E ARGUS": 0
       },
-      "totalElapsedSeconds": 991,
+      "totalElapsedSeconds": 5490,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -191,9 +191,9 @@
         }
       ],
       "currentStepStartedAt": "2026-10-08T17:08:29.075Z",
-      "lastTickAt": "2026-10-08T17:24:53.723Z",
+      "lastTickAt": "2026-10-08T18:40:04.624Z",
       "createdAt": "2026-10-08T17:08:16.842Z",
-      "updatedAt": "2026-10-08T17:24:53.723Z",
+      "updatedAt": "2026-10-08T18:40:04.624Z",
       "completedAt": null,
       "preparedAt": null,
       "swappedAt": null,
@@ -327,17 +327,17 @@
       "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-08",
-      "currentStep": "4 DOMINIO E ARGUS",
-      "currentStepIndex": 3,
-      "status": "EM_ANDAMENTO",
-      "timerRunning": true,
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 0,
         "2 WINDOWS UPDATE": 0,
         "3 ATIVAR ADM E SUBIR DRIVERS": 1467,
-        "4 DOMINIO E ARGUS": 1
+        "4 DOMINIO E ARGUS": 2116
       },
-      "totalElapsedSeconds": 1468,
+      "totalElapsedSeconds": 3583,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -345,6 +345,18 @@
       "manualEntryBy": null,
       "manualEntryAt": null,
       "history": [
+        {
+          "action": "next_step",
+          "actorId": "user_davi",
+          "note": "CONCLUIDO",
+          "createdAt": "2026-10-08T18:05:51.441Z"
+        },
+        {
+          "action": "pause_timer",
+          "actorId": "user_davi",
+          "note": "4 DOMINIO E ARGUS",
+          "createdAt": "2026-10-08T18:00:09.426Z"
+        },
         {
           "action": "next_step",
           "actorId": "user_manager",
@@ -365,11 +377,11 @@
         }
       ],
       "currentStepStartedAt": "2026-10-08T17:24:52.214Z",
-      "lastTickAt": "2026-10-08T17:24:53.723Z",
+      "lastTickAt": null,
       "createdAt": "2026-10-08T16:15:22.859Z",
-      "updatedAt": "2026-10-08T17:24:53.723Z",
-      "completedAt": null,
-      "preparedAt": null,
+      "updatedAt": "2026-10-08T18:05:51.441Z",
+      "completedAt": "2026-10-08T18:05:51.441Z",
+      "preparedAt": "2026-10-08T18:05:51.441Z",
       "swappedAt": null,
       "swappedBy": null
     }
@@ -382,7 +394,7 @@
       "displayName": "Isaque",
       "file": "data/analistas/isaque.json",
       "records": 3,
-      "updatedAt": "2026-10-08T17:24:53.723Z"
+      "updatedAt": "2026-10-08T18:40:04.624Z"
     },
     {
       "id": "user_vinicius",
@@ -406,7 +418,7 @@
       "displayName": "Davi",
       "file": "data/analistas/davi.json",
       "records": 2,
-      "updatedAt": "2026-10-08T17:24:53.723Z"
+      "updatedAt": "2026-10-08T18:05:51.441Z"
     }
   ]
 }
