@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-08T19:03:02.050Z",
+  "exportedAt": "2026-10-08T19:04:06.530Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -396,7 +396,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132263",
       "analystId": "user_davi",
-      "brand": "Dell",
+      "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -418,6 +418,12 @@
       "manualEntryAt": null,
       "history": [
         {
+          "action": "machine_edited",
+          "actorId": "user_davi",
+          "note": "Edicao do registro",
+          "createdAt": "2026-10-08T19:04:05.019Z"
+        },
+        {
           "action": "next_step",
           "actorId": "user_davi",
           "note": "CONCLUIDO",
@@ -433,7 +439,7 @@
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T18:57:59.863Z",
+      "updatedAt": "2026-10-08T19:04:05.019Z",
       "completedAt": "2026-10-08T18:57:59.863Z",
       "preparedAt": "2026-10-08T18:57:59.863Z",
       "swappedAt": null,
@@ -444,7 +450,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132241",
       "analystId": "user_davi",
-      "brand": "Dell",
+      "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -466,6 +472,12 @@
       "manualEntryAt": null,
       "history": [
         {
+          "action": "machine_edited",
+          "actorId": "user_davi",
+          "note": "Edicao do registro",
+          "createdAt": "2026-10-08T19:03:55.097Z"
+        },
+        {
           "action": "next_step",
           "actorId": "user_davi",
           "note": "CONCLUIDO",
@@ -481,7 +493,7 @@
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T18:58:00.904Z",
+      "updatedAt": "2026-10-08T19:03:55.097Z",
       "completedAt": "2026-10-08T18:58:00.904Z",
       "preparedAt": "2026-10-08T18:58:00.904Z",
       "swappedAt": null,
@@ -492,7 +504,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132238",
       "analystId": "user_davi",
-      "brand": "Dell",
+      "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -514,6 +526,12 @@
       "manualEntryAt": null,
       "history": [
         {
+          "action": "machine_edited",
+          "actorId": "user_davi",
+          "note": "Edicao do registro",
+          "createdAt": "2026-10-08T19:03:46.574Z"
+        },
+        {
           "action": "next_step",
           "actorId": "user_davi",
           "note": "CONCLUIDO",
@@ -529,7 +547,7 @@
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T18:58:02.304Z",
+      "updatedAt": "2026-10-08T19:03:46.574Z",
       "completedAt": "2026-10-08T18:58:02.304Z",
       "preparedAt": "2026-10-08T18:58:02.304Z",
       "swappedAt": null,
@@ -540,7 +558,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132242",
       "analystId": "user_davi",
-      "brand": "Dell",
+      "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -561,6 +579,12 @@
       "manualEntryBy": null,
       "manualEntryAt": null,
       "history": [
+        {
+          "action": "machine_edited",
+          "actorId": "user_davi",
+          "note": "Edicao do registro",
+          "createdAt": "2026-10-08T19:03:30.743Z"
+        },
         {
           "action": "next_step",
           "actorId": "user_davi",
@@ -577,7 +601,7 @@
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T18:58:03.416Z",
+      "updatedAt": "2026-10-08T19:03:30.743Z",
       "completedAt": "2026-10-08T18:58:03.416Z",
       "preparedAt": "2026-10-08T18:58:03.416Z",
       "swappedAt": null,
@@ -588,7 +612,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132279",
       "analystId": "user_davi",
-      "brand": "Dell",
+      "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -610,6 +634,12 @@
       "manualEntryAt": null,
       "history": [
         {
+          "action": "machine_edited",
+          "actorId": "user_davi",
+          "note": "Edicao do registro",
+          "createdAt": "2026-10-08T19:03:19.024Z"
+        },
+        {
           "action": "next_step",
           "actorId": "user_davi",
           "note": "CONCLUIDO",
@@ -625,7 +655,7 @@
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T18:58:04.015Z",
+      "updatedAt": "2026-10-08T19:03:19.024Z",
       "completedAt": "2026-10-08T18:58:04.015Z",
       "preparedAt": "2026-10-08T18:58:04.015Z",
       "swappedAt": null,
@@ -636,7 +666,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132254",
       "analystId": "user_davi",
-      "brand": "Dell",
+      "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -658,6 +688,12 @@
       "manualEntryAt": null,
       "history": [
         {
+          "action": "machine_edited",
+          "actorId": "user_davi",
+          "note": "Edicao do registro",
+          "createdAt": "2026-10-08T19:03:09.120Z"
+        },
+        {
           "action": "next_step",
           "actorId": "user_davi",
           "note": "CONCLUIDO",
@@ -673,7 +709,7 @@
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T18:58:06.600Z",
+      "updatedAt": "2026-10-08T19:03:09.120Z",
       "completedAt": "2026-10-08T18:58:06.600Z",
       "preparedAt": "2026-10-08T18:58:06.600Z",
       "swappedAt": null,
