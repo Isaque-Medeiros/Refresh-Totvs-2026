@@ -1,6 +1,7 @@
 {
   "version": "3.0.0",
-  "exportedAt": "2026-10-08T16:39:54.849Z",
+  "kind": "general",
+  "exportedAt": null,
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -10,167 +11,23 @@
   "dataset": {
     "id": "dataset_principal",
     "name": "Operação Principal",
-    "createdAt": "2026-10-08T14:32:22.706Z"
+    "createdAt": "2026-01-01T00:00:00.000Z"
   },
-  "summary": {
-    "total": 2,
-    "doneCount": 0,
-    "wipCount": 1,
-    "pausedCount": 1,
-    "errorCount": 0,
-    "successRate": "100",
-    "globalPercent": "0.0",
-    "avgTimeString": "00m 00s",
-    "manualCount": 0,
-    "stepAvgTimes": {
-      "1 FORMATAÇÃO E BIOS": "00m 00s",
-      "2 WINDOWS UPDATE": "00m 00s",
-      "3 ATIVAR ADM E SUBIR DRIVERS": "24m 27s",
-      "4 DOMINIO E ARGUS": "00m 00s"
-    },
-    "stepAvgSeconds": {
-      "1 FORMATAÇÃO E BIOS": 0,
-      "2 WINDOWS UPDATE": 0,
-      "3 ATIVAR ADM E SUBIR DRIVERS": 1467,
-      "4 DOMINIO E ARGUS": 0
-    },
-    "analystStats": [
-      {
-        "analystId": "user_isaque",
-        "name": "Isaque",
-        "total": 0,
-        "done": 0,
-        "wip": 0,
-        "paused": 0,
-        "errors": 0,
-        "goalPercent": "0.0"
-      },
-      {
-        "analystId": "user_vinicius",
-        "name": "Vinicius",
-        "total": 0,
-        "done": 0,
-        "wip": 0,
-        "paused": 0,
-        "errors": 0,
-        "goalPercent": "0.0"
-      },
-      {
-        "analystId": "user_guilherme",
-        "name": "Guilherme",
-        "total": 0,
-        "done": 0,
-        "wip": 0,
-        "paused": 0,
-        "errors": 0,
-        "goalPercent": "0.0"
-      },
-      {
-        "analystId": "user_davi",
-        "name": "Davi",
-        "total": 2,
-        "done": 0,
-        "wip": 1,
-        "paused": 1,
-        "errors": 0,
-        "goalPercent": "0.0"
-      }
-    ],
-    "errorList": []
-  },
-  "records": [
+  "datasets": [
     {
-      "id": "nb_1791476122859_9jid6i",
-      "datasetId": "dataset_principal",
-      "hostname": "SPON010132247",
-      "analystId": "user_davi",
-      "brand": "HP",
-      "profile": "Local",
-      "processDate": "2026-10-08",
-      "currentStep": "3 ATIVAR ADM E SUBIR DRIVERS",
-      "currentStepIndex": 2,
-      "status": "PAUSADO",
-      "timerRunning": false,
-      "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1466,
-        "4 DOMINIO E ARGUS": 0
-      },
-      "totalElapsedSeconds": 1466,
-      "hasError": false,
-      "errorDetails": null,
-      "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
-      "history": [
-        {
-          "action": "pause_timer",
-          "actorId": "user_manager",
-          "note": "3 ATIVAR ADM E SUBIR DRIVERS",
-          "createdAt": "2026-10-08T16:39:51.509Z"
-        },
-        {
-          "action": "machine_created",
-          "actorId": "user_davi",
-          "note": "Cadastro inicial",
-          "createdAt": "2026-10-08T16:15:22.859Z"
-        }
-      ],
-      "currentStepStartedAt": "2026-10-08T16:15:22.859Z",
-      "lastTickAt": null,
-      "createdAt": "2026-10-08T16:15:22.859Z",
-      "updatedAt": "2026-10-08T16:39:51.509Z",
-      "completedAt": null,
-      "preparedAt": null,
-      "swappedAt": null,
-      "swappedBy": null
-    },
-    {
-      "id": "nb_1791476122859_z63mz8",
-      "datasetId": "dataset_principal",
-      "hostname": "SPON010132243",
-      "analystId": "user_davi",
-      "brand": "HP",
-      "profile": "Local",
-      "processDate": "2026-10-08",
-      "currentStep": "3 ATIVAR ADM E SUBIR DRIVERS",
-      "currentStepIndex": 2,
-      "status": "EM_ANDAMENTO",
-      "timerRunning": true,
-      "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1467,
-        "4 DOMINIO E ARGUS": 0
-      },
-      "totalElapsedSeconds": 1467,
-      "hasError": false,
-      "errorDetails": null,
-      "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
-      "history": [
-        {
-          "action": "machine_created",
-          "actorId": "user_davi",
-          "note": "Cadastro inicial",
-          "createdAt": "2026-10-08T16:15:22.859Z"
-        }
-      ],
-      "currentStepStartedAt": "2026-10-08T16:15:22.859Z",
-      "lastTickAt": "2026-10-08T16:39:53.019Z",
-      "createdAt": "2026-10-08T16:15:22.859Z",
-      "updatedAt": "2026-10-08T16:39:53.019Z",
-      "completedAt": null,
-      "preparedAt": null,
-      "swappedAt": null,
-      "swappedBy": null
+      "id": "dataset_principal",
+      "name": "Operação Principal",
+      "createdAt": "2026-01-01T00:00:00.000Z"
     }
   ],
-  "kind": "general",
+  "activeDatasetId": "dataset_principal",
+  "summary": {
+    "total": 0,
+    "doneCount": 0,
+    "wipCount": 0,
+    "pausedCount": 0,
+    "errorCount": 0
+  },
   "analystFiles": [
     {
       "id": "user_isaque",
@@ -201,8 +58,9 @@
       "username": "davi",
       "displayName": "Davi",
       "file": "data/analistas/davi.json",
-      "records": 2,
-      "updatedAt": "2026-10-08T16:39:53.019Z"
+      "records": 0,
+      "updatedAt": null
     }
-  ]
+  ],
+  "records": []
 }

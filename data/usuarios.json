@@ -1,5 +1,6 @@
 {
-  "exportedAt": "2026-10-08T16:39:56.467Z",
+  "kind": "users",
+  "exportedAt": null,
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -14,7 +15,7 @@
       "displayName": "Gerente de Projeto",
       "role": "manager",
       "active": true,
-      "updatedAt": "2026-10-08T14:32:22.707Z"
+      "updatedAt": null
     },
     {
       "id": "user_isaque",
@@ -23,7 +24,7 @@
       "displayName": "Isaque",
       "role": "analyst",
       "active": true,
-      "updatedAt": "2026-10-08T14:33:09.002Z"
+      "updatedAt": null
     },
     {
       "id": "user_vinicius",
@@ -32,7 +33,7 @@
       "displayName": "Vinicius",
       "role": "analyst",
       "active": true,
-      "updatedAt": "2026-10-08T14:32:22.707Z"
+      "updatedAt": null
     },
     {
       "id": "user_guilherme",
@@ -41,7 +42,7 @@
       "displayName": "Guilherme",
       "role": "analyst",
       "active": true,
-      "updatedAt": "2026-10-08T14:32:22.707Z"
+      "updatedAt": null
     },
     {
       "id": "user_davi",
@@ -50,42 +51,8 @@
       "displayName": "Davi",
       "role": "analyst",
       "active": true,
-      "updatedAt": "2026-10-08T14:32:22.707Z"
+      "updatedAt": null
     }
   ],
-  "kind": "users",
-  "analystFiles": [
-    {
-      "id": "user_isaque",
-      "username": "isaque",
-      "displayName": "Isaque",
-      "file": "data/analistas/isaque.json",
-      "records": 0,
-      "updatedAt": null
-    },
-    {
-      "id": "user_vinicius",
-      "username": "vinicius",
-      "displayName": "Vinicius",
-      "file": "data/analistas/vinicius.json",
-      "records": 0,
-      "updatedAt": null
-    },
-    {
-      "id": "user_guilherme",
-      "username": "guilherme",
-      "displayName": "Guilherme",
-      "file": "data/analistas/guilherme.json",
-      "records": 0,
-      "updatedAt": null
-    },
-    {
-      "id": "user_davi",
-      "username": "davi",
-      "displayName": "Davi",
-      "file": "data/analistas/davi.json",
-      "records": 2,
-      "updatedAt": "2026-10-08T16:39:53.019Z"
-    }
-  ]
+  "analystFiles": []
 }
