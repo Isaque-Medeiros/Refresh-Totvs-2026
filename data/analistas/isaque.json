@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-08T17:29:45.754Z",
+  "exportedAt": "2026-10-08T17:30:45.784Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -13,37 +13,37 @@
     "role": "analyst"
   },
   "summary": {
-    "total": 3,
-    "doneCount": 0,
-    "wipCount": 0,
-    "pausedCount": 3,
+    "total": 2,
+    "doneCount": 1,
+    "wipCount": 1,
+    "pausedCount": 0,
     "errorCount": 0,
     "successRate": "100",
-    "globalPercent": "0.0",
-    "avgTimeString": "00m 00s",
+    "globalPercent": "0.1",
+    "avgTimeString": "00m 04s",
     "manualCount": 0,
     "stepAvgTimes": {
-      "1 FORMATAÇÃO E BIOS": "00m 06s",
+      "1 FORMATAÇÃO E BIOS": "00m 04s",
       "2 WINDOWS UPDATE": "00m 04s",
-      "3 ATIVAR ADM E SUBIR DRIVERS": "06m 57s",
+      "3 ATIVAR ADM E SUBIR DRIVERS": "11m 02s",
       "4 DOMINIO E ARGUS": "00m 01s"
     },
     "stepAvgSeconds": {
-      "1 FORMATAÇÃO E BIOS": 6,
+      "1 FORMATAÇÃO E BIOS": 4,
       "2 WINDOWS UPDATE": 4,
-      "3 ATIVAR ADM E SUBIR DRIVERS": 417,
+      "3 ATIVAR ADM E SUBIR DRIVERS": 662,
       "4 DOMINIO E ARGUS": 1
     },
     "analystStats": [
       {
         "analystId": "user_isaque",
         "name": "Isaque",
-        "total": 3,
-        "done": 0,
-        "wip": 0,
-        "paused": 3,
+        "total": 2,
+        "done": 1,
+        "wip": 1,
+        "paused": 0,
         "errors": 0,
-        "goalPercent": "0.0"
+        "goalPercent": "0.4"
       },
       {
         "analystId": "user_vinicius",
@@ -80,6 +80,60 @@
   },
   "records": [
     {
+      "id": "nb_1791479296842_apl9i7",
+      "datasetId": "dataset_principal",
+      "hostname": "12312324",
+      "analystId": "user_isaque",
+      "brand": "HP",
+      "profile": "Local",
+      "processDate": "2026-10-08",
+      "currentStep": "3 ATIVAR ADM E SUBIR DRIVERS",
+      "currentStepIndex": 2,
+      "status": "EM_ANDAMENTO",
+      "timerRunning": true,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 6,
+        "2 WINDOWS UPDATE": 4,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1322,
+        "4 DOMINIO E ARGUS": 0
+      },
+      "totalElapsedSeconds": 1332,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": false,
+      "manualEntryBy": null,
+      "manualEntryAt": null,
+      "history": [
+        {
+          "action": "next_step",
+          "actorId": "user_isaque",
+          "note": "3 ATIVAR ADM E SUBIR DRIVERS",
+          "createdAt": "2026-10-08T17:08:29.075Z"
+        },
+        {
+          "action": "next_step",
+          "actorId": "user_isaque",
+          "note": "2 WINDOWS UPDATE",
+          "createdAt": "2026-10-08T17:08:24.658Z"
+        },
+        {
+          "action": "machine_created",
+          "actorId": "user_isaque",
+          "note": "Cadastro inicial",
+          "createdAt": "2026-10-08T17:08:16.842Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-08T17:08:29.075Z",
+      "lastTickAt": "2026-10-08T17:30:45.784Z",
+      "createdAt": "2026-10-08T17:08:16.842Z",
+      "updatedAt": "2026-10-08T17:30:45.784Z",
+      "completedAt": null,
+      "preparedAt": null,
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
       "id": "nb_1791479296842_5mdjp0",
       "datasetId": "dataset_principal",
       "hostname": "12332123",
@@ -87,9 +141,9 @@
       "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-08",
-      "currentStep": "1 FORMATAÇÃO E BIOS",
-      "currentStepIndex": 0,
-      "status": "PAUSADO",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 2,
@@ -105,12 +159,6 @@
       "manualEntryBy": null,
       "manualEntryAt": null,
       "history": [
-        {
-          "action": "machine_edited",
-          "actorId": "user_isaque",
-          "note": "Edicao do registro",
-          "createdAt": "2026-10-08T17:29:44.249Z"
-        },
         {
           "action": "next_step",
           "actorId": "user_isaque",
@@ -142,168 +190,12 @@
           "createdAt": "2026-10-08T17:08:16.842Z"
         }
       ],
-      "currentStepStartedAt": "2026-10-08T17:29:44.249Z",
+      "currentStepStartedAt": "2026-10-08T17:08:22.076Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T17:08:16.842Z",
-      "updatedAt": "2026-10-08T17:29:44.249Z",
-      "completedAt": null,
-      "preparedAt": null,
-      "swappedAt": null,
-      "swappedBy": null
-    },
-    {
-      "id": "nb_1791479296842_w6epfe",
-      "datasetId": "dataset_principal",
-      "hostname": "12312312",
-      "analystId": "user_isaque",
-      "brand": "HP",
-      "profile": "Local",
-      "processDate": "2026-10-08",
-      "currentStep": "1 FORMATAÇÃO E BIOS",
-      "currentStepIndex": 0,
-      "status": "PAUSADO",
-      "timerRunning": false,
-      "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 9,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1,
-        "4 DOMINIO E ARGUS": 1
-      },
-      "totalElapsedSeconds": 11,
-      "hasError": false,
-      "errorDetails": null,
-      "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
-      "history": [
-        {
-          "action": "pause_timer",
-          "actorId": "user_isaque",
-          "note": "1 FORMATAÇÃO E BIOS",
-          "createdAt": "2026-10-08T17:29:25.293Z"
-        },
-        {
-          "action": "start_timer",
-          "actorId": "user_isaque",
-          "note": "1 FORMATAÇÃO E BIOS",
-          "createdAt": "2026-10-08T17:29:24.082Z"
-        },
-        {
-          "action": "machine_swap_undone",
-          "actorId": "user_isaque",
-          "note": "Troca desfeita",
-          "createdAt": "2026-10-08T17:29:17.452Z"
-        },
-        {
-          "action": "machine_edited",
-          "actorId": "user_isaque",
-          "note": "Edicao do registro",
-          "createdAt": "2026-10-08T17:29:09.104Z"
-        },
-        {
-          "action": "machine_swapped",
-          "actorId": "user_isaque",
-          "note": "Trocada em 2026-10-08",
-          "createdAt": "2026-10-08T17:08:32.439Z"
-        },
-        {
-          "action": "next_step",
-          "actorId": "user_isaque",
-          "note": "CONCLUIDO",
-          "createdAt": "2026-10-08T17:08:31.322Z"
-        },
-        {
-          "action": "next_step",
-          "actorId": "user_isaque",
-          "note": "4 DOMINIO E ARGUS",
-          "createdAt": "2026-10-08T17:08:29.654Z"
-        },
-        {
-          "action": "next_step",
-          "actorId": "user_isaque",
-          "note": "3 ATIVAR ADM E SUBIR DRIVERS",
-          "createdAt": "2026-10-08T17:08:27.551Z"
-        },
-        {
-          "action": "next_step",
-          "actorId": "user_isaque",
-          "note": "2 WINDOWS UPDATE",
-          "createdAt": "2026-10-08T17:08:27.021Z"
-        },
-        {
-          "action": "machine_created",
-          "actorId": "user_isaque",
-          "note": "Cadastro inicial",
-          "createdAt": "2026-10-08T17:08:16.842Z"
-        }
-      ],
-      "currentStepStartedAt": "2026-10-08T17:29:09.104Z",
-      "lastTickAt": null,
-      "createdAt": "2026-10-08T17:08:16.842Z",
-      "updatedAt": "2026-10-08T17:29:25.293Z",
-      "completedAt": null,
-      "preparedAt": null,
-      "swappedAt": null,
-      "swappedBy": null
-    },
-    {
-      "id": "nb_1791479296842_apl9i7",
-      "datasetId": "dataset_principal",
-      "hostname": "12312324",
-      "analystId": "user_isaque",
-      "brand": "HP",
-      "profile": "Local",
-      "processDate": "2026-10-08",
-      "currentStep": "3 ATIVAR ADM E SUBIR DRIVERS",
-      "currentStepIndex": 2,
-      "status": "PAUSADO",
-      "timerRunning": false,
-      "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 6,
-        "2 WINDOWS UPDATE": 4,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1248,
-        "4 DOMINIO E ARGUS": 0
-      },
-      "totalElapsedSeconds": 1258,
-      "hasError": false,
-      "errorDetails": null,
-      "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
-      "history": [
-        {
-          "action": "pause_timer",
-          "actorId": "user_isaque",
-          "note": "3 ATIVAR ADM E SUBIR DRIVERS",
-          "createdAt": "2026-10-08T17:29:26.351Z"
-        },
-        {
-          "action": "next_step",
-          "actorId": "user_isaque",
-          "note": "3 ATIVAR ADM E SUBIR DRIVERS",
-          "createdAt": "2026-10-08T17:08:29.075Z"
-        },
-        {
-          "action": "next_step",
-          "actorId": "user_isaque",
-          "note": "2 WINDOWS UPDATE",
-          "createdAt": "2026-10-08T17:08:24.658Z"
-        },
-        {
-          "action": "machine_created",
-          "actorId": "user_isaque",
-          "note": "Cadastro inicial",
-          "createdAt": "2026-10-08T17:08:16.842Z"
-        }
-      ],
-      "currentStepStartedAt": "2026-10-08T17:08:29.075Z",
-      "lastTickAt": null,
-      "createdAt": "2026-10-08T17:08:16.842Z",
-      "updatedAt": "2026-10-08T17:29:26.351Z",
-      "completedAt": null,
-      "preparedAt": null,
+      "updatedAt": "2026-10-08T17:08:23.606Z",
+      "completedAt": "2026-10-08T17:08:23.606Z",
+      "preparedAt": "2026-10-08T17:08:23.606Z",
       "swappedAt": null,
       "swappedBy": null
     }
