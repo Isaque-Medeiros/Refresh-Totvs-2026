@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-08T19:00:33.001Z",
+  "exportedAt": "2026-10-08T19:01:58.855Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -180,7 +180,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132301",
       "analystId": "user_davi",
-      "brand": "Dell",
+      "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -205,6 +205,12 @@
           "action": "machine_edited",
           "actorId": "user_davi",
           "note": "Edicao do registro",
+          "createdAt": "2026-10-08T19:01:57.345Z"
+        },
+        {
+          "action": "machine_edited",
+          "actorId": "user_davi",
+          "note": "Edicao do registro",
           "createdAt": "2026-10-08T19:00:31.491Z"
         },
         {
@@ -217,7 +223,7 @@
       "currentStepStartedAt": "2026-10-08T18:58:54.296Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:58:54.296Z",
-      "updatedAt": "2026-10-08T19:00:31.491Z",
+      "updatedAt": "2026-10-08T19:01:57.345Z",
       "completedAt": "2026-10-08T18:58:54.296Z",
       "preparedAt": "2026-10-08T18:58:54.296Z",
       "swappedAt": null,
@@ -270,9 +276,9 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132339",
       "analystId": "user_davi",
-      "brand": "Dell",
+      "brand": "HP",
       "profile": "Local",
-      "processDate": "2026-10-08",
+      "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
       "currentStepIndex": 4,
       "status": "CONCLUIDO",
@@ -292,6 +298,12 @@
       "manualEntryAt": null,
       "history": [
         {
+          "action": "machine_edited",
+          "actorId": "user_davi",
+          "note": "Edicao do registro",
+          "createdAt": "2026-10-08T19:01:17.239Z"
+        },
+        {
           "action": "machine_created",
           "actorId": "user_davi",
           "note": "Cadastro inicial",
@@ -301,7 +313,7 @@
       "currentStepStartedAt": "2026-10-08T18:58:54.295Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:58:54.295Z",
-      "updatedAt": "2026-10-08T18:58:54.295Z",
+      "updatedAt": "2026-10-08T19:01:17.239Z",
       "completedAt": "2026-10-08T18:58:54.295Z",
       "preparedAt": "2026-10-08T18:58:54.295Z",
       "swappedAt": null,
@@ -314,7 +326,7 @@
       "analystId": "user_davi",
       "brand": "Dell",
       "profile": "Local",
-      "processDate": "2026-10-08",
+      "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
       "currentStepIndex": 4,
       "status": "CONCLUIDO",
@@ -334,6 +346,12 @@
       "manualEntryAt": null,
       "history": [
         {
+          "action": "machine_edited",
+          "actorId": "user_davi",
+          "note": "Edicao do registro",
+          "createdAt": "2026-10-08T19:01:05.047Z"
+        },
+        {
           "action": "machine_created",
           "actorId": "user_davi",
           "note": "Cadastro inicial",
@@ -343,7 +361,7 @@
       "currentStepStartedAt": "2026-10-08T18:58:54.295Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:58:54.295Z",
-      "updatedAt": "2026-10-08T18:58:54.295Z",
+      "updatedAt": "2026-10-08T19:01:05.047Z",
       "completedAt": "2026-10-08T18:58:54.295Z",
       "preparedAt": "2026-10-08T18:58:54.295Z",
       "swappedAt": null,
