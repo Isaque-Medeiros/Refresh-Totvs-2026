@@ -1,6 +1,6 @@
 {
   "kind": "management",
-  "exportedAt": null,
+  "exportedAt": "2026-10-08T16:39:57.874Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -10,17 +10,8 @@
   "adjustments": {},
   "notes": {},
   "frentes": {
-    "ok": [
-      "Imagem nova disponibilizada na rede",
-      "Treinamento da equipe realizado",
-      "Acesso ao SGTC validado"
-    ],
-    "pd": [
-      "Usuário de rede para colocar as máquinas na rede e no ARTS",
-      "Validação de quais usuários utilizam BT, Office e WA",
-      "Definição do limite diário X com a Segurança",
-      "Tratamento das máquinas do time Cloud"
-    ]
+    "ok": [],
+    "pd": []
   },
   "updatedAt": null
 }
