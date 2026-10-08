@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-08T18:57:58.515Z",
+  "exportedAt": "2026-10-08T18:59:24.856Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -13,26 +13,26 @@
     "role": "analyst"
   },
   "summary": {
-    "total": 8,
-    "doneCount": 2,
-    "wipCount": 6,
+    "total": 14,
+    "doneCount": 14,
+    "wipCount": 0,
     "pausedCount": 0,
     "errorCount": 0,
     "successRate": "100",
-    "globalPercent": "0.2",
-    "avgTimeString": "42m 05s",
+    "globalPercent": "1.4",
+    "avgTimeString": "06m 03s",
     "manualCount": 0,
     "stepAvgTimes": {
       "1 FORMATAÇÃO E BIOS": "00m 00s",
       "2 WINDOWS UPDATE": "00m 00s",
       "3 ATIVAR ADM E SUBIR DRIVERS": "24m 27s",
-      "4 DOMINIO E ARGUS": "04m 25s"
+      "4 DOMINIO E ARGUS": "04m 28s"
     },
     "stepAvgSeconds": {
       "1 FORMATAÇÃO E BIOS": 0,
       "2 WINDOWS UPDATE": 0,
       "3 ATIVAR ADM E SUBIR DRIVERS": 1467,
-      "4 DOMINIO E ARGUS": 265
+      "4 DOMINIO E ARGUS": 268
     },
     "analystStats": [
       {
@@ -68,36 +68,84 @@
       {
         "analystId": "user_davi",
         "name": "Davi",
-        "total": 8,
-        "done": 2,
-        "wip": 6,
+        "total": 14,
+        "done": 14,
+        "wip": 0,
         "paused": 0,
         "errors": 0,
-        "goalPercent": "0.8"
+        "goalPercent": "5.6"
       }
     ],
     "errorList": []
   },
   "records": [
     {
-      "id": "nb_1791485877011_hzk4zv",
+      "id": "nb_1791485934296_vepm63",
       "datasetId": "dataset_principal",
-      "hostname": "SPON010132263",
+      "hostname": "SPON010132315",
       "analystId": "user_davi",
       "brand": "Dell",
       "profile": "Local",
-      "processDate": "2026-10-08",
-      "currentStep": "4 DOMINIO E ARGUS",
-      "currentStepIndex": 3,
-      "status": "EM_ANDAMENTO",
-      "timerRunning": true,
+      "processDate": "2026-10-07",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 0,
         "2 WINDOWS UPDATE": 0,
         "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 1
+        "4 DOMINIO E ARGUS": 0
       },
-      "totalElapsedSeconds": 1,
+      "totalElapsedSeconds": 0,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": false,
+      "manualEntryBy": null,
+      "manualEntryAt": null,
+      "history": [
+        {
+          "action": "machine_edited",
+          "actorId": "user_davi",
+          "note": "Edicao do registro",
+          "createdAt": "2026-10-08T18:59:23.345Z"
+        },
+        {
+          "action": "machine_created",
+          "actorId": "user_davi",
+          "note": "Cadastro inicial",
+          "createdAt": "2026-10-08T18:58:54.296Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-08T18:58:54.296Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-08T18:58:54.296Z",
+      "updatedAt": "2026-10-08T18:59:23.345Z",
+      "completedAt": "2026-10-08T18:58:54.296Z",
+      "preparedAt": "2026-10-08T18:58:54.296Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791485934296_efohue",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132318",
+      "analystId": "user_davi",
+      "brand": "Dell",
+      "profile": "Local",
+      "processDate": "2026-10-08",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 0,
+        "2 WINDOWS UPDATE": 0,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
+        "4 DOMINIO E ARGUS": 0
+      },
+      "totalElapsedSeconds": 0,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -109,15 +157,231 @@
           "action": "machine_created",
           "actorId": "user_davi",
           "note": "Cadastro inicial",
+          "createdAt": "2026-10-08T18:58:54.296Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-08T18:58:54.296Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-08T18:58:54.296Z",
+      "updatedAt": "2026-10-08T18:58:54.296Z",
+      "completedAt": "2026-10-08T18:58:54.296Z",
+      "preparedAt": "2026-10-08T18:58:54.296Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791485934296_1sp5h3",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132301",
+      "analystId": "user_davi",
+      "brand": "Dell",
+      "profile": "Local",
+      "processDate": "2026-10-08",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 0,
+        "2 WINDOWS UPDATE": 0,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
+        "4 DOMINIO E ARGUS": 0
+      },
+      "totalElapsedSeconds": 0,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": false,
+      "manualEntryBy": null,
+      "manualEntryAt": null,
+      "history": [
+        {
+          "action": "machine_created",
+          "actorId": "user_davi",
+          "note": "Cadastro inicial",
+          "createdAt": "2026-10-08T18:58:54.296Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-08T18:58:54.296Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-08T18:58:54.296Z",
+      "updatedAt": "2026-10-08T18:58:54.296Z",
+      "completedAt": "2026-10-08T18:58:54.296Z",
+      "preparedAt": "2026-10-08T18:58:54.296Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791485934295_bynaqv",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132340",
+      "analystId": "user_davi",
+      "brand": "Dell",
+      "profile": "Local",
+      "processDate": "2026-10-08",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 0,
+        "2 WINDOWS UPDATE": 0,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
+        "4 DOMINIO E ARGUS": 0
+      },
+      "totalElapsedSeconds": 0,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": false,
+      "manualEntryBy": null,
+      "manualEntryAt": null,
+      "history": [
+        {
+          "action": "machine_created",
+          "actorId": "user_davi",
+          "note": "Cadastro inicial",
+          "createdAt": "2026-10-08T18:58:54.296Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-08T18:58:54.296Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-08T18:58:54.296Z",
+      "updatedAt": "2026-10-08T18:58:54.296Z",
+      "completedAt": "2026-10-08T18:58:54.296Z",
+      "preparedAt": "2026-10-08T18:58:54.296Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791485934295_ro16m3",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132339",
+      "analystId": "user_davi",
+      "brand": "Dell",
+      "profile": "Local",
+      "processDate": "2026-10-08",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 0,
+        "2 WINDOWS UPDATE": 0,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
+        "4 DOMINIO E ARGUS": 0
+      },
+      "totalElapsedSeconds": 0,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": false,
+      "manualEntryBy": null,
+      "manualEntryAt": null,
+      "history": [
+        {
+          "action": "machine_created",
+          "actorId": "user_davi",
+          "note": "Cadastro inicial",
+          "createdAt": "2026-10-08T18:58:54.295Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-08T18:58:54.295Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-08T18:58:54.295Z",
+      "updatedAt": "2026-10-08T18:58:54.295Z",
+      "completedAt": "2026-10-08T18:58:54.295Z",
+      "preparedAt": "2026-10-08T18:58:54.295Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791485934295_f06ppu",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132324",
+      "analystId": "user_davi",
+      "brand": "Dell",
+      "profile": "Local",
+      "processDate": "2026-10-08",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 0,
+        "2 WINDOWS UPDATE": 0,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
+        "4 DOMINIO E ARGUS": 0
+      },
+      "totalElapsedSeconds": 0,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": false,
+      "manualEntryBy": null,
+      "manualEntryAt": null,
+      "history": [
+        {
+          "action": "machine_created",
+          "actorId": "user_davi",
+          "note": "Cadastro inicial",
+          "createdAt": "2026-10-08T18:58:54.295Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-08T18:58:54.295Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-08T18:58:54.295Z",
+      "updatedAt": "2026-10-08T18:58:54.295Z",
+      "completedAt": "2026-10-08T18:58:54.295Z",
+      "preparedAt": "2026-10-08T18:58:54.295Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791485877011_hzk4zv",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132263",
+      "analystId": "user_davi",
+      "brand": "Dell",
+      "profile": "Local",
+      "processDate": "2026-10-08",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 0,
+        "2 WINDOWS UPDATE": 0,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
+        "4 DOMINIO E ARGUS": 2
+      },
+      "totalElapsedSeconds": 2,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": false,
+      "manualEntryBy": null,
+      "manualEntryAt": null,
+      "history": [
+        {
+          "action": "next_step",
+          "actorId": "user_davi",
+          "note": "CONCLUIDO",
+          "createdAt": "2026-10-08T18:57:59.863Z"
+        },
+        {
+          "action": "machine_created",
+          "actorId": "user_davi",
+          "note": "Cadastro inicial",
           "createdAt": "2026-10-08T18:57:57.011Z"
         }
       ],
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
-      "lastTickAt": "2026-10-08T18:57:58.515Z",
+      "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T18:57:58.515Z",
-      "completedAt": null,
-      "preparedAt": null,
+      "updatedAt": "2026-10-08T18:57:59.863Z",
+      "completedAt": "2026-10-08T18:57:59.863Z",
+      "preparedAt": "2026-10-08T18:57:59.863Z",
       "swappedAt": null,
       "swappedBy": null
     },
@@ -129,17 +393,17 @@
       "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
-      "currentStep": "4 DOMINIO E ARGUS",
-      "currentStepIndex": 3,
-      "status": "EM_ANDAMENTO",
-      "timerRunning": true,
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 0,
         "2 WINDOWS UPDATE": 0,
         "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 1
+        "4 DOMINIO E ARGUS": 3
       },
-      "totalElapsedSeconds": 1,
+      "totalElapsedSeconds": 3,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -148,6 +412,12 @@
       "manualEntryAt": null,
       "history": [
         {
+          "action": "next_step",
+          "actorId": "user_davi",
+          "note": "CONCLUIDO",
+          "createdAt": "2026-10-08T18:58:00.904Z"
+        },
+        {
           "action": "machine_created",
           "actorId": "user_davi",
           "note": "Cadastro inicial",
@@ -155,11 +425,11 @@
         }
       ],
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
-      "lastTickAt": "2026-10-08T18:57:58.515Z",
+      "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T18:57:58.515Z",
-      "completedAt": null,
-      "preparedAt": null,
+      "updatedAt": "2026-10-08T18:58:00.904Z",
+      "completedAt": "2026-10-08T18:58:00.904Z",
+      "preparedAt": "2026-10-08T18:58:00.904Z",
       "swappedAt": null,
       "swappedBy": null
     },
@@ -171,17 +441,17 @@
       "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
-      "currentStep": "4 DOMINIO E ARGUS",
-      "currentStepIndex": 3,
-      "status": "EM_ANDAMENTO",
-      "timerRunning": true,
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 0,
         "2 WINDOWS UPDATE": 0,
         "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 1
+        "4 DOMINIO E ARGUS": 4
       },
-      "totalElapsedSeconds": 1,
+      "totalElapsedSeconds": 4,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -190,6 +460,12 @@
       "manualEntryAt": null,
       "history": [
         {
+          "action": "next_step",
+          "actorId": "user_davi",
+          "note": "CONCLUIDO",
+          "createdAt": "2026-10-08T18:58:02.304Z"
+        },
+        {
           "action": "machine_created",
           "actorId": "user_davi",
           "note": "Cadastro inicial",
@@ -197,11 +473,11 @@
         }
       ],
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
-      "lastTickAt": "2026-10-08T18:57:58.515Z",
+      "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T18:57:58.515Z",
-      "completedAt": null,
-      "preparedAt": null,
+      "updatedAt": "2026-10-08T18:58:02.304Z",
+      "completedAt": "2026-10-08T18:58:02.304Z",
+      "preparedAt": "2026-10-08T18:58:02.304Z",
       "swappedAt": null,
       "swappedBy": null
     },
@@ -213,17 +489,17 @@
       "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
-      "currentStep": "4 DOMINIO E ARGUS",
-      "currentStepIndex": 3,
-      "status": "EM_ANDAMENTO",
-      "timerRunning": true,
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 0,
         "2 WINDOWS UPDATE": 0,
         "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 1
+        "4 DOMINIO E ARGUS": 5
       },
-      "totalElapsedSeconds": 1,
+      "totalElapsedSeconds": 5,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -232,6 +508,12 @@
       "manualEntryAt": null,
       "history": [
         {
+          "action": "next_step",
+          "actorId": "user_davi",
+          "note": "CONCLUIDO",
+          "createdAt": "2026-10-08T18:58:03.416Z"
+        },
+        {
           "action": "machine_created",
           "actorId": "user_davi",
           "note": "Cadastro inicial",
@@ -239,11 +521,11 @@
         }
       ],
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
-      "lastTickAt": "2026-10-08T18:57:58.515Z",
+      "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T18:57:58.515Z",
-      "completedAt": null,
-      "preparedAt": null,
+      "updatedAt": "2026-10-08T18:58:03.416Z",
+      "completedAt": "2026-10-08T18:58:03.416Z",
+      "preparedAt": "2026-10-08T18:58:03.416Z",
       "swappedAt": null,
       "swappedBy": null
     },
@@ -255,17 +537,17 @@
       "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
-      "currentStep": "4 DOMINIO E ARGUS",
-      "currentStepIndex": 3,
-      "status": "EM_ANDAMENTO",
-      "timerRunning": true,
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 0,
         "2 WINDOWS UPDATE": 0,
         "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 1
+        "4 DOMINIO E ARGUS": 5
       },
-      "totalElapsedSeconds": 1,
+      "totalElapsedSeconds": 5,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -274,6 +556,12 @@
       "manualEntryAt": null,
       "history": [
         {
+          "action": "next_step",
+          "actorId": "user_davi",
+          "note": "CONCLUIDO",
+          "createdAt": "2026-10-08T18:58:04.015Z"
+        },
+        {
           "action": "machine_created",
           "actorId": "user_davi",
           "note": "Cadastro inicial",
@@ -281,11 +569,11 @@
         }
       ],
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
-      "lastTickAt": "2026-10-08T18:57:58.515Z",
+      "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T18:57:58.515Z",
-      "completedAt": null,
-      "preparedAt": null,
+      "updatedAt": "2026-10-08T18:58:04.015Z",
+      "completedAt": "2026-10-08T18:58:04.015Z",
+      "preparedAt": "2026-10-08T18:58:04.015Z",
       "swappedAt": null,
       "swappedBy": null
     },
@@ -297,17 +585,17 @@
       "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
-      "currentStep": "4 DOMINIO E ARGUS",
-      "currentStepIndex": 3,
-      "status": "EM_ANDAMENTO",
-      "timerRunning": true,
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 0,
         "2 WINDOWS UPDATE": 0,
         "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 1
+        "4 DOMINIO E ARGUS": 8
       },
-      "totalElapsedSeconds": 1,
+      "totalElapsedSeconds": 8,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -316,6 +604,12 @@
       "manualEntryAt": null,
       "history": [
         {
+          "action": "next_step",
+          "actorId": "user_davi",
+          "note": "CONCLUIDO",
+          "createdAt": "2026-10-08T18:58:06.600Z"
+        },
+        {
           "action": "machine_created",
           "actorId": "user_davi",
           "note": "Cadastro inicial",
@@ -323,11 +617,11 @@
         }
       ],
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
-      "lastTickAt": "2026-10-08T18:57:58.515Z",
+      "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T18:57:58.515Z",
-      "completedAt": null,
-      "preparedAt": null,
+      "updatedAt": "2026-10-08T18:58:06.600Z",
+      "completedAt": "2026-10-08T18:58:06.600Z",
+      "preparedAt": "2026-10-08T18:58:06.600Z",
       "swappedAt": null,
       "swappedBy": null
     },
