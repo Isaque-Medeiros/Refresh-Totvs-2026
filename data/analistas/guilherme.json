@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-08T19:12:14.969Z",
+  "exportedAt": "2026-10-08T19:13:44.368Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -13,26 +13,26 @@
     "role": "analyst"
   },
   "summary": {
-    "total": 4,
+    "total": 6,
     "doneCount": 0,
     "wipCount": 0,
-    "pausedCount": 4,
+    "pausedCount": 6,
     "errorCount": 0,
     "successRate": "100",
     "globalPercent": "0.0",
     "avgTimeString": "00m 00s",
-    "manualCount": 4,
+    "manualCount": 6,
     "stepAvgTimes": {
-      "1 FORMATAÇÃO E BIOS": "32m 00s",
-      "2 WINDOWS UPDATE": "12m 00s",
-      "3 ATIVAR ADM E SUBIR DRIVERS": "21m 00s",
-      "4 DOMINIO E ARGUS": "10m 45s"
+      "1 FORMATAÇÃO E BIOS": "29m 20s",
+      "2 WINDOWS UPDATE": "14m 40s",
+      "3 ATIVAR ADM E SUBIR DRIVERS": "20m 00s",
+      "4 DOMINIO E ARGUS": "13m 40s"
     },
     "stepAvgSeconds": {
-      "1 FORMATAÇÃO E BIOS": 1920,
-      "2 WINDOWS UPDATE": 720,
-      "3 ATIVAR ADM E SUBIR DRIVERS": 1260,
-      "4 DOMINIO E ARGUS": 645
+      "1 FORMATAÇÃO E BIOS": 1760,
+      "2 WINDOWS UPDATE": 880,
+      "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
+      "4 DOMINIO E ARGUS": 820
     },
     "analystStats": [
       {
@@ -58,10 +58,10 @@
       {
         "analystId": "user_guilherme",
         "name": "Guilherme",
-        "total": 4,
+        "total": 6,
         "done": 0,
         "wip": 0,
-        "paused": 4,
+        "paused": 6,
         "errors": 0,
         "goalPercent": "0.0"
       },
@@ -79,6 +79,90 @@
     "errorList": []
   },
   "records": [
+    {
+      "id": "nb_1791486822852_6e9bzm",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132332",
+      "analystId": "user_guilherme",
+      "brand": "Dell",
+      "profile": "Local",
+      "processDate": "2026-10-08",
+      "currentStep": "1 FORMATAÇÃO E BIOS",
+      "currentStepIndex": 0,
+      "status": "PAUSADO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 1440,
+        "2 WINDOWS UPDATE": 600,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 960,
+        "4 DOMINIO E ARGUS": 540
+      },
+      "totalElapsedSeconds": 3540,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": true,
+      "manualEntryBy": "user_guilherme",
+      "manualEntryAt": "2026-10-08T19:13:42.852Z",
+      "history": [
+        {
+          "action": "machine_created_manual",
+          "actorId": "user_guilherme",
+          "note": "Lançamento manual com tempo digitado",
+          "createdAt": "2026-10-08T19:13:42.852Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-08T19:13:42.852Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-08T19:13:42.852Z",
+      "updatedAt": "2026-10-08T19:13:42.852Z",
+      "completedAt": null,
+      "preparedAt": null,
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791486778884_xdgusk",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132280",
+      "analystId": "user_guilherme",
+      "brand": "Dell",
+      "profile": "Local",
+      "processDate": "2026-10-08",
+      "currentStep": "1 FORMATAÇÃO E BIOS",
+      "currentStepIndex": 0,
+      "status": "PAUSADO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 0,
+        "2 WINDOWS UPDATE": 1800,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
+        "4 DOMINIO E ARGUS": 1800
+      },
+      "totalElapsedSeconds": 3600,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": true,
+      "manualEntryBy": "user_guilherme",
+      "manualEntryAt": "2026-10-08T19:12:58.884Z",
+      "history": [
+        {
+          "action": "machine_created_manual",
+          "actorId": "user_guilherme",
+          "note": "Lançamento manual com tempo digitado",
+          "createdAt": "2026-10-08T19:12:58.884Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-08T19:12:58.884Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-08T19:12:58.884Z",
+      "updatedAt": "2026-10-08T19:12:58.884Z",
+      "completedAt": null,
+      "preparedAt": null,
+      "swappedAt": null,
+      "swappedBy": null
+    },
     {
       "id": "nb_1791486733467_kabi4v",
       "datasetId": "dataset_principal",
