@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-08T19:04:06.530Z",
+  "exportedAt": "2026-10-08T19:10:18.262Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -13,14 +13,14 @@
     "role": "analyst"
   },
   "summary": {
-    "total": 14,
-    "doneCount": 14,
+    "total": 18,
+    "doneCount": 18,
     "wipCount": 0,
     "pausedCount": 0,
     "errorCount": 0,
     "successRate": "100",
-    "globalPercent": "1.4",
-    "avgTimeString": "06m 03s",
+    "globalPercent": "1.8",
+    "avgTimeString": "04m 42s",
     "manualCount": 0,
     "stepAvgTimes": {
       "1 FORMATAÇÃO E BIOS": "00m 00s",
@@ -68,17 +68,185 @@
       {
         "analystId": "user_davi",
         "name": "Davi",
-        "total": 14,
-        "done": 14,
+        "total": 18,
+        "done": 18,
         "wip": 0,
         "paused": 0,
         "errors": 0,
-        "goalPercent": "5.6"
+        "goalPercent": "7.2"
       }
     ],
     "errorList": []
   },
   "records": [
+    {
+      "id": "nb_1791486616749_1i9t1m",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132303",
+      "analystId": "user_davi",
+      "brand": "HP",
+      "profile": "Local",
+      "processDate": "2026-10-06",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 0,
+        "2 WINDOWS UPDATE": 0,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
+        "4 DOMINIO E ARGUS": 0
+      },
+      "totalElapsedSeconds": 0,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": false,
+      "manualEntryBy": null,
+      "manualEntryAt": null,
+      "history": [
+        {
+          "action": "machine_created",
+          "actorId": "user_davi",
+          "note": "Cadastro inicial",
+          "createdAt": "2026-10-08T19:10:16.749Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-08T19:10:16.749Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-08T19:10:16.749Z",
+      "updatedAt": "2026-10-08T19:10:16.749Z",
+      "completedAt": "2026-10-08T19:10:16.749Z",
+      "preparedAt": "2026-10-08T19:10:16.749Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791486616749_j9nis7",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132337",
+      "analystId": "user_davi",
+      "brand": "HP",
+      "profile": "Local",
+      "processDate": "2026-10-06",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 0,
+        "2 WINDOWS UPDATE": 0,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
+        "4 DOMINIO E ARGUS": 0
+      },
+      "totalElapsedSeconds": 0,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": false,
+      "manualEntryBy": null,
+      "manualEntryAt": null,
+      "history": [
+        {
+          "action": "machine_created",
+          "actorId": "user_davi",
+          "note": "Cadastro inicial",
+          "createdAt": "2026-10-08T19:10:16.749Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-08T19:10:16.749Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-08T19:10:16.749Z",
+      "updatedAt": "2026-10-08T19:10:16.749Z",
+      "completedAt": "2026-10-08T19:10:16.749Z",
+      "preparedAt": "2026-10-08T19:10:16.749Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791486616749_qrmjpk",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132347",
+      "analystId": "user_davi",
+      "brand": "HP",
+      "profile": "Local",
+      "processDate": "2026-10-06",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 0,
+        "2 WINDOWS UPDATE": 0,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
+        "4 DOMINIO E ARGUS": 0
+      },
+      "totalElapsedSeconds": 0,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": false,
+      "manualEntryBy": null,
+      "manualEntryAt": null,
+      "history": [
+        {
+          "action": "machine_created",
+          "actorId": "user_davi",
+          "note": "Cadastro inicial",
+          "createdAt": "2026-10-08T19:10:16.749Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-08T19:10:16.749Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-08T19:10:16.749Z",
+      "updatedAt": "2026-10-08T19:10:16.749Z",
+      "completedAt": "2026-10-08T19:10:16.749Z",
+      "preparedAt": "2026-10-08T19:10:16.749Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791486616749_x77qde",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132336",
+      "analystId": "user_davi",
+      "brand": "HP",
+      "profile": "Local",
+      "processDate": "2026-10-06",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 0,
+        "2 WINDOWS UPDATE": 0,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
+        "4 DOMINIO E ARGUS": 0
+      },
+      "totalElapsedSeconds": 0,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": false,
+      "manualEntryBy": null,
+      "manualEntryAt": null,
+      "history": [
+        {
+          "action": "machine_created",
+          "actorId": "user_davi",
+          "note": "Cadastro inicial",
+          "createdAt": "2026-10-08T19:10:16.749Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-08T19:10:16.749Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-08T19:10:16.749Z",
+      "updatedAt": "2026-10-08T19:10:16.749Z",
+      "completedAt": "2026-10-08T19:10:16.749Z",
+      "preparedAt": "2026-10-08T19:10:16.749Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
     {
       "id": "nb_1791485934296_vepm63",
       "datasetId": "dataset_principal",
