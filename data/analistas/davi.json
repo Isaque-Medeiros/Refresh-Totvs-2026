@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-08T18:59:24.856Z",
+  "exportedAt": "2026-10-08T19:00:33.001Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -134,7 +134,7 @@
       "analystId": "user_davi",
       "brand": "Dell",
       "profile": "Local",
-      "processDate": "2026-10-08",
+      "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
       "currentStepIndex": 4,
       "status": "CONCLUIDO",
@@ -154,6 +154,12 @@
       "manualEntryAt": null,
       "history": [
         {
+          "action": "machine_edited",
+          "actorId": "user_davi",
+          "note": "Edicao do registro",
+          "createdAt": "2026-10-08T19:00:14.200Z"
+        },
+        {
           "action": "machine_created",
           "actorId": "user_davi",
           "note": "Cadastro inicial",
@@ -163,7 +169,7 @@
       "currentStepStartedAt": "2026-10-08T18:58:54.296Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:58:54.296Z",
-      "updatedAt": "2026-10-08T18:58:54.296Z",
+      "updatedAt": "2026-10-08T19:00:14.200Z",
       "completedAt": "2026-10-08T18:58:54.296Z",
       "preparedAt": "2026-10-08T18:58:54.296Z",
       "swappedAt": null,
@@ -176,7 +182,7 @@
       "analystId": "user_davi",
       "brand": "Dell",
       "profile": "Local",
-      "processDate": "2026-10-08",
+      "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
       "currentStepIndex": 4,
       "status": "CONCLUIDO",
@@ -196,6 +202,12 @@
       "manualEntryAt": null,
       "history": [
         {
+          "action": "machine_edited",
+          "actorId": "user_davi",
+          "note": "Edicao do registro",
+          "createdAt": "2026-10-08T19:00:31.491Z"
+        },
+        {
           "action": "machine_created",
           "actorId": "user_davi",
           "note": "Cadastro inicial",
@@ -205,7 +217,7 @@
       "currentStepStartedAt": "2026-10-08T18:58:54.296Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:58:54.296Z",
-      "updatedAt": "2026-10-08T18:58:54.296Z",
+      "updatedAt": "2026-10-08T19:00:31.491Z",
       "completedAt": "2026-10-08T18:58:54.296Z",
       "preparedAt": "2026-10-08T18:58:54.296Z",
       "swappedAt": null,
