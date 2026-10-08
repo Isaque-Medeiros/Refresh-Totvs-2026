@@ -29,47 +29,18 @@
             </div>
 
             <form id="loginForm" class="login-form" autocomplete="off">
-                <div class="login-device hidden" id="loginDeviceBox">
-                    <span class="login-device-label">Dispositivo lembrado</span>
-                    <strong id="loginDeviceName">--</strong>
-                    <span class="helper-text" id="loginDeviceEmail">--</span>
-
-                    <button type="button" class="btn btn-primary btn-block" id="btnLoginDevice">
-                        Entrar como <span id="loginDeviceShort">--</span>
-                    </button>
-
-                    <div class="stack-actions">
-                        <button type="button" class="btn btn-outline btn-sm" id="btnSwitchAccount">Entrar com outra conta</button>
-                        <button type="button" class="btn btn-outline btn-sm" id="btnForgetDevice">Esquecer este dispositivo</button>
-                    </div>
+                <div class="form-group">
+                    <label for="loginUsername">Usuário</label>
+                    <select id="loginUsername" class="form-control"></select>
                 </div>
-
-                <div id="loginFields">
-                    <div class="form-group">
-                        <label for="loginEmail">E-mail</label>
-                        <input type="email" id="loginEmail" class="form-control" list="loginEmailList"
-                               placeholder="nome@db4serv.com.br" autocomplete="email">
-                        <datalist id="loginEmailList"></datalist>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="loginPassword">Senha</label>
-                        <input type="password" id="loginPassword" class="form-control"
-                               placeholder="Digite a senha" autocomplete="current-password">
-                    </div>
-
-                    <label class="checkbox-container">
-                        <input type="checkbox" id="checkRememberDevice" checked>
-                        <span class="checkmark"></span>
-                        <span class="checkbox-text">Lembrar neste dispositivo</span>
-                    </label>
-
-                    <button type="submit" class="btn btn-primary btn-block">Entrar no painel</button>
-
-                    <p class="login-tip">
-                        Senha inicial dos perfis padrão: <strong>FieldTotvs2026</strong>
-                    </p>
+                <div class="form-group">
+                    <label for="loginPassword">Senha</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Digite a senha">
                 </div>
+                <button type="submit" class="btn btn-primary btn-block">Entrar no painel</button>
+                <p class="login-tip">
+                    Senha inicial dos perfis padrão: <strong>FieldTotvs2026</strong>
+                </p>
             </form>
         </div>
     </section>
