@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-08T19:04:19.134Z",
+  "exportedAt": "2026-10-08T19:05:19.958Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -80,11 +80,11 @@
   },
   "records": [
     {
-      "id": "nb_1791486257631_comtbq",
+      "id": "nb_1791486318448_tao562",
       "datasetId": "dataset_principal",
       "hostname": "SPON010132306",
       "analystId": "user_guilherme",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-06",
       "currentStep": "1 FORMATAÇÃO E BIOS",
@@ -103,19 +103,19 @@
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_guilherme",
-      "manualEntryAt": "2026-10-08T19:04:17.631Z",
+      "manualEntryAt": "2026-10-08T19:05:18.448Z",
       "history": [
         {
           "action": "machine_created_manual",
           "actorId": "user_guilherme",
           "note": "Lançamento manual com tempo digitado",
-          "createdAt": "2026-10-08T19:04:17.631Z"
+          "createdAt": "2026-10-08T19:05:18.448Z"
         }
       ],
-      "currentStepStartedAt": "2026-10-08T19:04:17.631Z",
+      "currentStepStartedAt": "2026-10-08T19:05:18.448Z",
       "lastTickAt": null,
-      "createdAt": "2026-10-08T19:04:17.631Z",
-      "updatedAt": "2026-10-08T19:04:17.631Z",
+      "createdAt": "2026-10-08T19:05:18.448Z",
+      "updatedAt": "2026-10-08T19:05:18.448Z",
       "completedAt": null,
       "preparedAt": null,
       "swappedAt": null,
