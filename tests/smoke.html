@@ -259,6 +259,86 @@
             equal('merge remoto aplica o nome quando e mais recente',
                 TOTVSStorage.loadState().users.find((u) => u.id === 'user_isaque').displayName, 'Isaque Renomeado');
 
+            /* ---------------- Exclusao nao volta pelo repositorio ---------------- */
+            const doomed = TOTVSStorage.createMachines({
+                ...basePayload,
+                hostnames: 'MAQUINAAPAGADA01',
+                notes: 'vai ser excluida'
+            }, 'user_manager').createdItems[0];
+
+            TOTVSStorage.deleteMachine(doomed.id, 'user_manager');
+            equal('maquina excluida sai do estado',
+                TOTVSStorage.loadState().machines.some((m) => m.id === doomed.id), false);
+            ok('exclusao fica registrada como tombstone',
+                Boolean(TOTVSStorage.loadState().deletedMachines[doomed.id]));
+
+            // O arquivo do analista ainda lista a maquina apagada (ele nao sincronizou).
+            TOTVSStorage.mergeRemoteBundle({
+                general: null,
+                analysts: [{
+                    username: 'isaque',
+                    data: {
+                        kind: 'analyst',
+                        analystId: 'user_isaque',
+                        deletedMachines: {},
+                        records: [{
+                            id: doomed.id,
+                            datasetId: 'dataset_principal',
+                            hostname: 'MAQUINAAPAGADA01',
+                            analystId: 'user_isaque',
+                            currentStep: 'CONCLUIDO',
+                            status: 'CONCLUIDO',
+                            updatedAt: '2099-01-01T00:00:00.000Z'
+                        }]
+                    }
+                }]
+            }, managerUser);
+            equal('maquina excluida nao volta pelo arquivo do analista',
+                TOTVSStorage.loadState().machines.some((m) => m.id === doomed.id), false);
+
+            // Exclusao feita em outra maquina: chega aqui pelo arquivo geral.
+            const remoteGoneId = 'apagada_em_outro_pc';
+            const withRemote = TOTVSStorage.loadState();
+            withRemote.machines.push({
+                id: remoteGoneId,
+                datasetId: 'dataset_principal',
+                hostname: 'APAGADAEMOUTROPC',
+                analystId: 'user_isaque',
+                currentStep: 'CONCLUIDO',
+                status: 'CONCLUIDO',
+                updatedAt: '2026-01-01T00:00:00.000Z'
+            });
+            TOTVSStorage.saveState(withRemote);
+
+            TOTVSStorage.mergeRemoteBundle({
+                general: {
+                    activeDatasetId: 'dataset_principal',
+                    datasets: [{ id: 'dataset_principal', name: 'Operacao Principal' }],
+                    records: [],
+                    deletedMachines: {
+                        [remoteGoneId]: {
+                            id: remoteGoneId,
+                            hostname: 'APAGADAEMOUTROPC',
+                            analystId: 'user_isaque',
+                            deletedAt: '2030-01-01T00:00:00.000Z',
+                            deletedBy: 'user_manager'
+                        }
+                    }
+                },
+                analysts: []
+            }, managerUser);
+            equal('exclusao vinda do repositorio derruba a maquina local',
+                TOTVSStorage.loadState().machines.some((m) => m.id === remoteGoneId), false);
+
+            // As exclusoes viajam para o repositorio, senao voltariam na proxima leitura.
+            const deletionState = TOTVSStorage.loadState();
+            ok('arquivo geral carrega as exclusoes',
+                Object.keys(TOTVSGithubSync.buildGeneralPayload(deletionState).deletedMachines).length >= 2);
+
+            const deletionsAnalystUser = TOTVSStorage.getUserById(deletionState, 'user_isaque');
+            ok('arquivo do analista carrega a exclusao dele',
+                Boolean(TOTVSGithubSync.buildUserPayload(deletionState, deletionsAnalystUser).deletedMachines[doomed.id]));
+
             /* ---------------- Restaurar snapshot exige gerente ---------------- */
             const liveState = TOTVSStorage.loadState();
             const snapshotJson = JSON.stringify(liveState);

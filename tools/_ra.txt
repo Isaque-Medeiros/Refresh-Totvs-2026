@@ -1,3 +1,0 @@
-﻿37 :: â”œâ”€ tests/smoke.html          -> auto-teste de logica (144 verificacoes)
-255 :: - `tipo: "apontamento-analista"` â€” os arquivos do antigo **ImplementarAuto**, convertidos
-265 :: `ImplementarAuto.html` e `status-report-rollout-totvs-local.html` na raiz sao os

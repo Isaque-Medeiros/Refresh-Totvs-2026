@@ -1,1 +1,0 @@
-﻿antes=272 depois=242

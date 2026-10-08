@@ -332,6 +332,10 @@ vai para o repositorio sem intervencao.
 
 - Merge por `id`, e vence a versao com `updatedAt` **mais recente**.
 - Dado local mais novo nunca e rebaixado.
+- **Maquina excluida nao volta.** Cada exclusao entra num registro proprio
+  (`deletedMachines`), que viaja junto com os dados. Ele e aplicado **antes** do
+  merge -- entao mesmo que um arquivo antigo (do analista ou do gerente) ainda
+  liste a maquina apagada, ela e descartada de novo.
 - A gravacao tem retry automatico quando o GitHub responde 409/422 (sha desatualizado).
 - O **hash de senha nunca** e sobrescrito por um arquivo remoto.
 
@@ -367,7 +371,8 @@ Roda a verificacao de IDs (JS x HTML), o smoke test de logica no navegador
 
 O smoke test cobre cadastro em lote, o bug antigo de nao conseguir salvar
 maquinas depois do primeiro lote, timers, permissoes por perfil, troca e reset
-de senha, merge por data, leitura publica, retry em conflito 409 e relatorios.
+de senha, merge por data, **exclusao de maquina (que nao pode voltar pelo
+repositorio)**, leitura publica, retry em conflito 409 e relatorios.
 
 ---
 

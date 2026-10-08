@@ -1,0 +1,36 @@
+﻿    }
+
+    function getAnalystName(state, analystId) {
+        const user = getUserById(state, analystId);
+        return user ? user.displayName : 'Sem analista';
+    }
+
+    function normalizeMachine(state, machine) {
+        const currentStep = machine.currentStep && machine.currentStep !== 'CONCLUIDO'
+            ? machine.currentStep
+            : PROCESS_STEPS[Math.max(0, Math.min(PROCESS_STEPS.length - 1, machine.currentStepIndex || 0))];
+        const currentStepIndex = machine.currentStep === 'CONCLUIDO'
+            ? PROCESS_STEPS.length
+            : Math.max(0, PROCESS_STEPS.indexOf(currentStep));
+        const stepDurations = machine.stepDurations || {};
+        const normalizedStepDurations = {};
+        PROCESS_STEPS.forEach((step) => {
+            normalizedStepDurations[step] = Number(stepDurations[step] || 0);
+        });
+
+        const analystId = machine.analystId || (getAnalystUsers(state)[0] ? getAnalystUsers(state)[0].id : 'user_isaque');
+
+        // Status e datas derivadas.
+        // "Preparada" = concluiu as 4 etapas da bancada (data automatica).
+        // "Trocada"   = acao separada, com data propria escolhida pelo analista.
+        const status = machine.status || 'PAUSADO';
+        const completedAt = machine.completedAt || null;
+        const preparedAt = machine.preparedAt
+            || (status === 'CONCLUIDO' ? (completedAt || machine.updatedAt || null) : null);
+
+        return {
+            id: machine.id || uid('nb'),
+            datasetId: machine.datasetId || state.activeDatasetId || 'dataset_principal',
+            hostname: String(machine.hostname || '').toUpperCase(),
+            analystId,
+            brand: machine.brand || 'Dell',

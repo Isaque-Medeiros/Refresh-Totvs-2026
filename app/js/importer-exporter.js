@@ -115,6 +115,7 @@ const TOTVSImporterExporter = (() => {
             exportedAt: new Date().toISOString(),
             organization: state.organization,
             dataset,
+            deletedMachines: state.deletedMachines || {},
             summary: TOTVSReports.calculateMetrics(state, machines),
             records: machines.map((machine) => ({
                 id: machine.id,
@@ -174,6 +175,7 @@ const TOTVSImporterExporter = (() => {
             activeDatasetId: state.activeDatasetId,
             users: state.users,
             machines: state.machines,
+            deletedMachines: state.deletedMachines || {},
             auditTrail: state.auditTrail
         };
     }

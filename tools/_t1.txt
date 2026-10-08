@@ -1,33 +1,51 @@
-﻿            } catch (error) {
-                const message = String(error && error.message ? error.message : error);
-                record(name, message.toLowerCase().includes(String(expectedFragment).toLowerCase()),
-                    `mensagem="${message}" nao contem "${expectedFragment}"`);
+﻿            TOTVSStorage.startMachine(target.id, 'user_manager');
+            equal('reiniciar religa o cronometro',
+                TOTVSStorage.loadState().machines.find((m) => m.id === target.id).timerRunning, true);
+
+            for (let index = 0; index < 4; index += 1) {
+                TOTVSStorage.nextMachineStep(target.id, 'user_manager');
             }
-        }
+            const concluded = TOTVSStorage.loadState().machines.find((m) => m.id === target.id);
+            equal('apos 4 avancos a maquina fica CONCLUIDO', concluded.status, 'CONCLUIDO');
+            equal('ao concluir o cronometro para', concluded.timerRunning, false);
+            ok('ao concluir grava a data de conclusao', Boolean(concluded.completedAt));
 
-        function reset() {
-            [
-                'TOTVS_REFRESH_2026_STATE_V3',
-                'TOTVS_REFRESH_2026_SESSION_V3',
-                'TOTVS_REFRESH_2026_GITHUB_SYNC_V1',
-                'TOTVS_REFRESH_2026_GITHUB_STATUS_V1',
-                'TOTVS_REFRESH_2026_GESTAO_V1',
-                'TOTVS_REFRESH_2026_DEVICE_V1'
-            ].forEach((key) => localStorage.removeItem(key));
+            /* ---------------- Permissoes ---------------- */
+            const openMachine = TOTVSStorage.loadState().machines.find(
+                (machine) => machine.analystId === 'user_isaque' && machine.status !== 'CONCLUIDO'
+            );
+            throws('analista nao pode excluir maquina de outro analista',
+                () => TOTVSStorage.deleteMachine(openMachine.id, 'user_vinicius'), 'permiss');
+            throws('analista nao pode criar lote',
+                () => TOTVSStorage.createDataset('Lote indevido', 'user_isaque'), 'gerente');
+            throws('analista nao pode excluir lote',
+                () => TOTVSStorage.deleteDataset('dataset_principal', 'user_isaque'), 'gerente');
 
-            try {
-                sessionStorage.clear();
-            } catch (error) {
-                /* sessionStorage indisponivel */
-            }
-        }
+            /* ---------------- Senhas ---------------- */
+            throws('troca de senha exige a senha atual correta',
+                () => TOTVSStorage.changeOwnPassword('user_isaque', 'errada', 'NovaSenha123'), 'senha atual incorreta');
 
-        function finish() {
-            const failed = failCount > 0;
-            summaryEl.className = failed ? 'fail' : 'pass';
-            summaryEl.textContent = failed
-                ? `FALHOU: ${failCount} teste(s) com erro de ${passCount + failCount}`
-                : `TODOS OS TESTES PASSARAM: ${passCount}/${passCount}`;
-            document.title = failed ? 'SMOKE-FAIL' : 'SMOKE-PASS';
-        }
+            TOTVSStorage.changeOwnPassword('user_isaque', 'FieldTotvs2026', 'NovaSenha123');
+            equal('login funciona com a senha nova', TOTVSStorage.login('isaque', 'NovaSenha123').id, 'user_isaque');
 
+            throws('reset de senha exige a chave mestra',
+                () => TOTVSStorage.resetUserPassword('user_manager', 'user_isaque', 'chave-errada', 'Outra12345'), 'senha mestra');
+
+            TOTVSStorage.resetUserPassword('user_manager', 'user_isaque', 'FieldTotvs2026', 'FieldTotvs2026');
+            equal('reset devolve a senha padrao', TOTVSStorage.login('isaque', 'FieldTotvs2026').id, 'user_isaque');
+
+            /* ---------------- Merge por data ---------------- */
+            const older = { id: 'x1', updatedAt: '2026-01-01T00:00:00.000Z', notes: 'antigo' };
+            const newer = { id: 'x1', updatedAt: '2026-06-01T00:00:00.000Z', notes: 'novo' };
+            equal('merge mantem a versao mais recente', TOTVSStorage.mergeById([older], [newer])[0].notes, 'novo');
+            equal('merge nao rebaixa registro local mais novo', TOTVSStorage.mergeById([newer], [older])[0].notes, 'novo');
+            equal('merge adiciona registro inexistente', TOTVSStorage.mergeById([], [newer]).length, 1);
+
+            /* ---------------- Merge remoto por perfil ---------------- */
+            const remoteBundle = {
+                general: {
+                    activeDatasetId: 'dataset_principal',
+                    datasets: [{ id: 'dataset_principal', name: 'OperaÃ§Ã£o Principal' }],
+                    records: [
+                        {
+                            id: 'rm_isaque', datasetId: 'dataset_principal', hostname: 'REMOTEISAQUE',

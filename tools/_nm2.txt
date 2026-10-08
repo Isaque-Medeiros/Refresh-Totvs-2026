@@ -1,0 +1,73 @@
+﻿    function normalizeMachine(state, machine) {
+        const currentStep = machine.currentStep && machine.currentStep !== 'CONCLUIDO'
+            ? machine.currentStep
+            : PROCESS_STEPS[Math.max(0, Math.min(PROCESS_STEPS.length - 1, machine.currentStepIndex || 0))];
+        const currentStepIndex = machine.currentStep === 'CONCLUIDO'
+            ? PROCESS_STEPS.length
+            : Math.max(0, PROCESS_STEPS.indexOf(currentStep));
+        const stepDurations = machine.stepDurations || {};
+        const normalizedStepDurations = {};
+        PROCESS_STEPS.forEach((step) => {
+            normalizedStepDurations[step] = Number(stepDurations[step] || 0);
+        });
+
+        const analystId = machine.analystId || (getAnalystUsers(state)[0] ? getAnalystUsers(state)[0].id : 'user_isaque');
+
+        // Status e datas derivadas.
+        // "Preparada" = concluiu as 4 etapas da bancada (data automatica).
+        // "Trocada"   = acao separada, com data propria escolhida pelo analista.
+        const status = machine.status || 'PAUSADO';
+        const completedAt = machine.completedAt || null;
+        const preparedAt = machine.preparedAt
+            || (status === 'CONCLUIDO' ? (completedAt || machine.updatedAt || null) : null);
+
+        return {
+            id: machine.id || uid('nb'),
+            datasetId: machine.datasetId || state.activeDatasetId || 'dataset_principal',
+            hostname: String(machine.hostname || '').toUpperCase(),
+            analystId,
+            brand: machine.brand || 'Dell',
+            profile: machine.profile || 'Local',
+            processDate: machine.processDate || todayBrInput(),
+            currentStep: machine.currentStep === 'CONCLUIDO' ? 'CONCLUIDO' : currentStep,
+            currentStepIndex,
+            status,
+            timerRunning: Boolean(machine.timerRunning),
+            stepDurations: normalizedStepDurations,
+            totalElapsedSeconds: Number(machine.totalElapsedSeconds || 0),
+            hasError: Boolean(machine.hasError),
+            errorDetails: machine.errorDetails || null,
+            notes: machine.notes || '',
+            manualEntry: Boolean(machine.manualEntry),
+            manualEntryBy: machine.manualEntryBy || null,
+            manualEntryAt: machine.manualEntryAt || null,
+            history: Array.isArray(machine.history) ? machine.history : [],
+            currentStepStartedAt: machine.currentStepStartedAt || nowIso(),
+            lastTickAt: machine.lastTickAt || null,
+            createdAt: machine.createdAt || nowIso(),
+            updatedAt: machine.updatedAt || nowIso(),
+            completedAt,
+            preparedAt,
+            swappedAt: machine.swappedAt || null,
+            swappedBy: machine.swappedBy || null
+        };
+    }
+
+    function getVisibleMachines(state, currentUser, datasetId = null) {
+        const targetDatasetId = datasetId || state.activeDatasetId;
+        const list = state.machines.filter((machine) => machine.datasetId === targetDatasetId);
+        if (!currentUser || currentUser.role === 'manager') {
+            return list;
+        }
+        return list.filter((machine) => machine.analystId === currentUser.id);
+    }
+
+    function getAllMachinesByDataset(state, datasetId = null) {
+        const targetDatasetId = datasetId || state.activeDatasetId;
+        return state.machines.filter((machine) => machine.datasetId === targetDatasetId);
+    }
+
+    /* --------------------- Merge com o repositorio (GitHub) --------------------- */
+
+    function pickNewest(localItem, remoteItem) {
+        const localTime = new Date(localItem.updatedAt || localItem.createdAt || 0).getTime();

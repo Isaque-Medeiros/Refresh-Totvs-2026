@@ -1,0 +1,6 @@
+﻿240 :: const managerUser = TOTVSStorage.getUserById(TOTVSStorage.loadState(), 'user_manager');
+241 :: TOTVSStorage.mergeRemoteBundle(remoteBundle, managerUser);
+256 :: }, managerUser);
+295 :: }, managerUser);
+329 :: }, managerUser);
+446 :: TOTVSStorage.getVisibleMachines(reportState, managerUser).length >= visAnalyst.length);

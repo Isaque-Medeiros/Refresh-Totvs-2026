@@ -222,6 +222,7 @@ const TOTVSStorage = (() => {
             activeDatasetId: 'dataset_principal',
             users: createDefaultUsers(),
             machines: [],
+            deletedMachines: {},
             auditTrail: []
         };
     }
@@ -288,6 +289,13 @@ const TOTVSStorage = (() => {
         state.machines = Array.isArray(state.machines) ? state.machines : [];
         state.auditTrail = Array.isArray(state.auditTrail) ? state.auditTrail : [];
 
+        // Registro de exclusoes (tombstones). O merge com o repositorio so sabe
+        // somar por id, entao sem esta lista toda maquina apagada voltaria no
+        // proximo pull -- inclusive vinda de um arquivo de analista desatualizado.
+        state.deletedMachines = (state.deletedMachines && typeof state.deletedMachines === 'object')
+            ? state.deletedMachines
+            : {};
+
         state.users = state.users.map((user) => ({
             active: true,
             createdAt: nowIso(),
@@ -296,6 +304,7 @@ const TOTVSStorage = (() => {
         }));
 
         state.machines = state.machines.map((machine) => normalizeMachine(state, machine));
+        applyDeletions(state);
         return saveState(state);
     }
 
@@ -474,6 +483,79 @@ const TOTVSStorage = (() => {
         return Array.from(map.values());
     }
 
+    /* -------------------------- Exclusoes (tombstones) -------------------------- */
+
+    // Marca as maquinas como excluidas. E o unico jeito de uma exclusao sobreviver
+    // ao merge: o merge so somaria o registro de volta na proxima leitura.
+    function registerMachineDeletions(state, machines, actorId) {
+        const deletedAt = nowIso();
+        machines.forEach((machine) => {
+            state.deletedMachines[machine.id] = {
+                id: machine.id,
+                hostname: machine.hostname,
+                analystId: machine.analystId,
+                deletedAt,
+                deletedBy: actorId || null
+            };
+        });
+        return state.deletedMachines;
+    }
+
+    // Absorve as exclusoes vindas do repositorio. Vale a mais recente por id,
+    // para que uma exclusao feita em outra maquina chegue ate aqui.
+    function mergeDeletions(state, remoteDeletions) {
+        if (!remoteDeletions || typeof remoteDeletions !== 'object') {
+            return 0;
+        }
+
+        let applied = 0;
+        Object.keys(remoteDeletions).forEach((machineId) => {
+            const remote = remoteDeletions[machineId];
+            if (!remote || !remote.deletedAt) {
+                return;
+            }
+
+            // Ja marcada como excluida aqui: nada a fazer.
+            if (state.deletedMachines[machineId]) {
+                return;
+            }
+
+            state.deletedMachines[machineId] = {
+                id: machineId,
+                hostname: remote.hostname || '',
+                analystId: remote.analystId || '',
+                deletedAt: remote.deletedAt,
+                deletedBy: remote.deletedBy || null
+            };
+            applied += 1;
+        });
+
+        return applied;
+    }
+
+    // Tira do estado tudo que esta marcado como excluido. A exclusao sempre vence:
+    // se a maquina reaparecer em qualquer arquivo (de analista ou do gerente),
+    // ela e descartada de novo aqui. E isso que impede o apagado de voltar.
+    function applyDeletions(state) {
+        const before = state.machines.length;
+        state.machines = state.machines.filter((machine) => !state.deletedMachines[machine.id]);
+        return before - state.machines.length;
+    }
+
+    // Exclusoes que interessam a um analista (vai no arquivo individual dele).
+    function getDeletionsForAnalyst(state, userId) {
+        const result = {};
+
+        Object.keys(state.deletedMachines || {}).forEach((machineId) => {
+            const tombstone = state.deletedMachines[machineId];
+            if (tombstone && tombstone.analystId === userId) {
+                result[machineId] = tombstone;
+            }
+        });
+
+        return result;
+    }
+
     function mergeDatasets(state, remoteDatasets) {
         const list = Array.isArray(remoteDatasets) ? remoteDatasets : [];
         list.forEach((dataset) => {
@@ -558,6 +640,10 @@ const TOTVSStorage = (() => {
 
         const remoteMachines = [];
         sources.forEach((source) => {
+            // Exclusoes primeiro: uma maquina apagada em outra maquina precisa
+            // derrubar o registro antes de ele ser somado de volta aqui.
+            mergeDeletions(state, source.deletedMachines);
+
             (Array.isArray(source.records) ? source.records : []).forEach((record) => {
                 remoteMachines.push(normalizeMachine(state, record));
             });
@@ -571,6 +657,8 @@ const TOTVSStorage = (() => {
 
         const beforeCount = state.machines.length;
         state.machines = mergeById(state.machines, scopedRemote);
+        const absorbed = state.machines.length - beforeCount;
+        const removed = applyDeletions(state);
 
         if (isManager && bundle && bundle.users) {
             mergeUsers(state, bundle.users.users);
@@ -593,13 +681,15 @@ const TOTVSStorage = (() => {
 
         audit(state, 'merge_remote', currentUser ? currentUser.id : null, {
             received: remoteMachines.length,
-            applied: state.machines.length - beforeCount
+            applied: absorbed,
+            removed
         });
 
         saveState(state);
         return {
             received: remoteMachines.length,
-            applied: state.machines.length - beforeCount,
+            applied: absorbed,
+            removed,
             total: state.machines.length
         };
     }
@@ -837,6 +927,11 @@ const TOTVSStorage = (() => {
             throw new Error('Não é possível excluir o único lote do sistema.');
         }
 
+        registerMachineDeletions(
+            state,
+            state.machines.filter((machine) => machine.datasetId === datasetId),
+            actorId
+        );
         state.datasets = state.datasets.filter((dataset) => dataset.id !== datasetId);
         state.machines = state.machines.filter((machine) => machine.datasetId !== datasetId);
         if (state.activeDatasetId === datasetId) {
@@ -1179,6 +1274,7 @@ const TOTVSStorage = (() => {
             throw new Error('Você não possui permissão para excluir este registro.');
         }
 
+        registerMachineDeletions(state, [machine], actorId);
         state.machines = state.machines.filter((item) => item.id !== machineId);
         audit(state, 'delete_machine', actorId, { machineId, hostname: machine.hostname });
         saveState(state);
@@ -1326,6 +1422,9 @@ const TOTVSStorage = (() => {
         getSession,
         getStateSummary,
         getUserById,
+        getDeletionsForAnalyst,
+        applyDeletions,
+        mergeDeletions,
         loadState,
         login,
         logout,

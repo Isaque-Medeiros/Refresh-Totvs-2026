@@ -1,0 +1,46 @@
+﻿A aplicacao fica em `https://<usuario>.github.io/<repositorio>/app/`. Nada precisa
+ser compilado.
+
+---
+
+## Exportacao manual de JSON (reserva)
+
+O modal **Sync / Exportar** gera arquivos com os mesmos nomes e formato da
+sincronizacao automatica:
+
+- `dados-gerais.json` -> `data/`
+- `usuarios.json` -> `data/`
+- `analista-<usuario>.json` -> `data/analistas/<usuario>.json`
+- Snapshot completo -> backup/restauracao integral (somente gerente)
+
+---
+
+## Validacao
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\validate.ps1
+```
+
+Roda a verificacao de IDs (JS x HTML), o smoke test de logica no navegador
+(`tests/smoke.html`) e o teste de carregamento da aplicacao. Gera
+`tools/last-validation.txt`.
+
+O smoke test cobre cadastro em lote, o bug antigo de nao conseguir salvar
+maquinas depois do primeiro lote, timers, permissoes por perfil, troca e reset
+de senha, merge por data, leitura publica, retry em conflito 409 e relatorios.
+
+---
+
+## Timelapse / gravacao de tela
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\timelapse.ps1
+# powershell -ExecutionPolicy Bypass -File tools\timelapse.ps1 -IntervalSeconds 15 -Frames 60 -Scale 50
+```
+
+Captura a tela em intervalos regulares para `docs/timelapse/frame-NNNN.png` e gera
+`docs/timelapse/index.html`, um reprodutor pronto para assistir a sequencia.
+Veja tambem `TIMELAPSE_ATUALIZACAO.md`.
+
+---
+

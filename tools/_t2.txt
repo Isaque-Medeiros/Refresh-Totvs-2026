@@ -1,52 +1,31 @@
-﻿122: equal('estado inicial tem 5 usuarios', state.users.length, 5);
-124: ok('existe um usuario com perfil gerente', state.users.some((user) => user.role === 'manager'));
-288: ok('payload geral usa o caminho data/analistas/<usuario>.json',
-302: ok('payload de usuarios NAO expoe hash de senha',
-434: if (target.endsWith('usuarios.json')) {
-453: ok('leitura publica acha o analista pelo usuarios.json com manifest desatualizado',
-456: record('leitura publica acha o analista pelo usuarios.json com manifest desatualizado', false, error.message);
-593: TOTVSStorage.setFrentes({ ok: ['Imagem na rede'], pd: ['Usuario de rede'] }, 'user_manager');
-605: /* ---------------- Login por e-mail ---------------- */
-608: const byEmail = TOTVSStorage.login('  ISaque@DB4SERV.com.BR  ', 'FieldTotvs2026');
-609: equal('login por e-mail ignora maiusculas e espacos', byEmail.id, 'user_isaque');
-611: throws('e-mail nao vinculado e recusado',
-615: throws('senha errada com e-mail valido e recusada',
-619: equal('login por usuario continua funcionando',
-622: /* ---------------- Dispositivo lembrado ---------------- */
-624: equal('sem lembrete, nenhum dispositivo', TOTVSStorage.getRememberedDevice(), null);
-627: const device = TOTVSStorage.rememberDevice(deviceUser);
-628: equal('dispositivo lembra o usuario', device.userId, 'user_manager');
-629: equal('dispositivo guarda o e-mail', device.email, 'gerente@db4serv.com.br');
-635: const viaDevice = TOTVSStorage.loginFromDevice();
-636: equal('entrada pelo dispositivo funciona sem senha', viaDevice.id, 'user_manager');
-640: equal('esquecer o dispositivo apaga o lembrete', TOTVSStorage.getRememberedDevice(), null);
-642: /* ---------------- Gestao de usuarios ---------------- */
-643: const created = TOTVSStorage.createUser(
-644: { displayName: 'Teste Silva', email: 'teste.silva@db4serv.com.br', role: 'analyst' },
-647: equal('usuario criado entra como analista', created.role, 'analyst');
-648: equal('usuario criado usa o e-mail informado', created.email, 'teste.silva@db4serv.com.br');
-649: equal('usuario criado entra com a senha padrao',
-652: throws('nao permite e-mail repetido',
-653: () => TOTVSStorage.createUser(
-654: { displayName: 'Outro', email: 'teste.silva@db4serv.com.br', role: 'analyst' },
-658: throws('nao permite e-mail invalido',
-659: () => TOTVSStorage.createUser(
-660: { displayName: 'Sem Email', email: 'sem-arroba', role: 'analyst' },
-662: ), 'Informe um e-mail');
-664: throws('analista nao pode criar usuario',
-665: () => TOTVSStorage.createUser(
-666: { displayName: 'X', email: 'x@db4serv.com.br', role: 'analyst' },
-670: const updated = TOTVSStorage.updateUser(created.id, { email: 'teste.novo@db4serv.com.br' }, 'user_manager');
-671: equal('e-mail do usuario pode ser editado', updated.email, 'teste.novo@db4serv.com.br');
-672: equal('login passa a aceitar o novo e-mail',
-675: TOTVSStorage.setUserActive(created.id, false, 'user_manager');
-676: throws('usuario desativado nao entra',
-680: TOTVSStorage.setUserActive(created.id, true, 'user_manager');
-682: throws('nao permite excluir o proprio usuario',
-683: () => TOTVSStorage.deleteUser('user_manager', 'user_manager'), 'excluir o pr');
-685: throws('nao permite excluir usuario com registros',
-686: () => TOTVSStorage.deleteUser('user_isaque', 'user_manager'), 'registro');
-688: const removed = TOTVSStorage.deleteUser(created.id, 'user_manager');
-689: equal('usuario sem registros pode ser excluido', removed.id, created.id);
-691: ok('usuarios.json passa a incluir o e-mail',
-693: .every((user) => typeof user.email === 'string'));
+﻿                    users: [{
+                        id: 'user_isaque', username: 'isaque', displayName: 'Isaque Renomeado',
+                        role: 'analyst', active: true, updatedAt: '2030-01-01T00:00:00.000Z'
+                    }]
+                }
+            }, managerUser);
+            equal('merge remoto nao sobrescreve o hash de senha',
+                TOTVSStorage.loadState().users.find((u) => u.id === 'user_isaque').passwordHash, hashBefore);
+            equal('merge remoto aplica o nome quando e mais recente',
+                TOTVSStorage.loadState().users.find((u) => u.id === 'user_isaque').displayName, 'Isaque Renomeado');
+
+            /* ---------------- Restaurar snapshot exige gerente ---------------- */
+            const liveState = TOTVSStorage.loadState();
+            const snapshotJson = JSON.stringify(liveState);
+            throws('analista nao pode restaurar snapshot completo',
+                () => TOTVSStorage.restoreFullBackup(JSON.stringify({
+                    version: '3.0.0',
+                    datasets: [{ id: 'd1', name: 'D' }],
+                    users: [],
+                    machines: []
+                }), 'user_isaque'), 'apenas o gerente');
+            ok('gerente consegue restaurar snapshot',
+                Boolean(TOTVSStorage.restoreFullBackup(snapshotJson, 'user_manager')));
+
+            /* ---------------- Payloads do GitHub ---------------- */
+            const payloadState = TOTVSStorage.loadState();
+            const generalPayload = TOTVSGithubSync.buildGeneralPayload(payloadState);
+            equal('payload geral tem kind=general', generalPayload.kind, 'general');
+            equal('payload geral lista os 4 analistas',
+                Array.isArray(generalPayload.analystFiles) ? generalPayload.analystFiles.length : -1, 4);
+            ok('payload geral usa o caminho data/analistas/<usuario>.json',

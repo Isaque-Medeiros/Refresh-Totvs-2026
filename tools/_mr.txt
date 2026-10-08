@@ -1,0 +1,29 @@
+﻿
+        saveState(state);
+        return {
+            received: remoteMachines.length,
+            applied: state.machines.length - beforeCount,
+            total: state.machines.length
+        };
+    }
+
+    /* ------------------------ Configuracao de gestao ------------------------ */
+
+    function emptyManagement() {
+        return { adjustments: {}, notes: {}, frentes: { ok: [], pd: [] }, updatedAt: null };
+    }
+
+    function loadManagement() {
+        try {
+            const raw = localStorage.getItem(MANAGEMENT_KEY);
+            if (!raw) {
+                return emptyManagement();
+            }
+
+            const parsed = JSON.parse(raw);
+            return {
+                adjustments: parsed.adjustments || {},
+                notes: parsed.notes || {},
+                frentes: {
+                    ok: (parsed.frentes && parsed.frentes.ok) || [],
+                    pd: (parsed.frentes && parsed.frentes.pd) || []

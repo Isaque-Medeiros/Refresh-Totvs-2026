@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Apontamento diário · Rollout TOTVS · DB4SERV</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#F4F6FA;--card:#FFFFFF;--ink:#0E2240;--muted:#5B6475;--line:#DCE1EA;--orange:#F2821F;--blue:#2E6FD8;--input:#FFFFFF}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0B1628;--card:#142238;--ink:#EEF2F8;--muted:#A9B4C6;--line:#2A3A55;--input:#0F1C30}}
+:root[data-theme="dark"]{--bg:#0B1628;--card:#142238;--ink:#EEF2F8;--muted:#A9B4C6;--line:#2A3A55;--input:#0F1C30}
+*{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Arial,sans-serif;line-height:1.4}
+.wrap{max-width:720px;margin:0 auto;padding:16px}
+header{display:flex;gap:10px;align-items:center;margin-bottom:14px}
+.logo{background:var(--orange);color:#0E2240;font-weight:800;padding:6px 12px;border-radius:8px}
+h1{font-size:1.15rem;margin:0}.sub{color:var(--muted);font-size:.85rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}
+.card h2{font-size:1rem;margin:0 0 10px}
+label{display:block;font-size:.8rem;color:var(--muted);margin:10px 0 4px}
+input,textarea,select,button{font:inherit;color:var(--ink)}
+input,textarea,select{width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--input)}
+textarea{min-height:90px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:520px){.two{grid-template-columns:1fr}}
+.btn{background:var(--orange);color:#0E2240;border:0;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer}
+.btn.sec{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.btn.sm{padding:6px 10px;font-size:.85rem}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.msg{font-size:.85rem;color:var(--muted)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.kpi{background:#0E2240;color:#F4F6FA;border-radius:12px;padding:10px}
+.kpi .v{font-size:1.5rem;font-weight:800}.kpi .l{font-size:.75rem;opacity:.85}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th,td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--muted);font-size:.75rem}td.n,th.n{text-align:right}
+.cnt{font-size:.8rem;color:var(--blue);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><span class="logo">DB4SERV</span><div><h1>Apontamento diário · Rollout TOTVS</h1><div class="sub">Preencha ao final do dia e envie o arquivo exportado ao gestor do projeto</div></div></header>
+
+<div class="kpis"><div class="kpi"><div class="v" id="kPrep">0</div><div class="l">preparadas (total)</div></div><div class="kpi"><div class="v" id="kTroca">0</div><div class="l">trocadas (total)</div></div><div class="kpi"><div class="v" id="kDias">0</div><div class="l">dias lançados</div></div></div>
+
+<div class="card">
+ <h2>Lançamento do dia</h2>
+ <div class="two">
+  <div><label>Analista</label><select id="fAn"><option>Guilherme</option><option>Isaque</option><option>Vinicius</option><option>Davi</option><option value="__o">Outro...</option></select><input type="text" id="fAnO" placeholder="Nome" style="display:none;margin-top:6px"></div>
+  <div><label>Data</label><input type="date" id="fDate"></div>
+ </div>
+ <label>Máquinas preparadas hoje (hostnames, um por linha) <span class="cnt" id="cPrep"></span></label>
+ <textarea id="fPrep" placeholder="SPON010132306&#10;SPON010132304"></textarea>
+ <label>Máquinas trocadas hoje (hostnames, um por linha) <span class="cnt" id="cTroca"></span></label>
+ <textarea id="fTroca" placeholder="SPON010132306"></textarea>
+ <label>Observações (bloqueios, no-show, problemas)</label>
+ <textarea id="fObs" style="min-height:60px"></textarea>
+ <div class="actions"><button class="btn" id="bSave">Salvar dia</button><button class="btn sec" id="bDel">Excluir dia</button><span class="msg" id="saveMsg"></span></div>
+</div>
+
+<div class="card">
+ <h2>Enviar ao gestor</h2>
+ <p class="msg">Gera um arquivo com todos os seus lançamentos. Envie por e-mail ou Teams; o gestor importa no painel consolidado. Pode exportar todos os dias: o arquivo sempre leva o histórico completo.</p>
+ <div class="actions"><button class="btn" id="bExp">Exportar meu apontamento (JSON)</button><button class="btn sec" id="bCopy">Copiar resumo do dia</button></div>
+</div>
+
+<div class="card">
+ <h2>Meus lançamentos</h2>
+ <table><thead><tr><th>Data</th><th class="n">Prep.</th><th class="n">Trocas</th><th>Obs.</th><th></th></tr></thead><tbody id="hist"></tbody></table>
+</div>
+<p class="msg">Os dados ficam salvos neste navegador. Rascunho para validação · DB4SERV · Cliente: TOTVS</p>
+</div>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const KEY="apontamento-rollout-totvs";
+const fmt=d=>d.slice(8,10)+"/"+d.slice(5,7);
+const todayISO=()=>new Date().toISOString().slice(0,10);
+const lines=t=>(t||"").split(/\n|,|;/).map(s=>s.trim()).filter(Boolean);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let st={analista:"",days:{}};
+try{st=Object.assign(st,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
+const store=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){alert("Não foi possível gravar no navegador")}};
+const anName=()=>$("fAn").value==="__o"?$("fAnO").value.trim():$("fAn").value;
+function setAn(n){const opts=[...$("fAn").options].map(o=>o.value);if(opts.includes(n)){$("fAn").value=n;$("fAnO").style.display="none"}else if(n){$("fAn").value="__o";$("fAnO").style.display="block";$("fAnO").value=n}}
+$("fAn").onchange=()=>{$("fAnO").style.display=$("fAn").value==="__o"?"block":"none"};
+function fill(date){$("fDate").value=date;const d=st.days[date];$("fPrep").value=d?(d.hosts||[]).join("\n"):"";$("fTroca").value=d?(d.hostsTroca||[]).join("\n"):"";$("fObs").value=d?d.obs||"":"";count()}
+function count(){$("cPrep").textContent=lines($("fPrep").value).length+" máquina(s)";$("cTroca").textContent=lines($("fTroca").value).length+" máquina(s)"}
+$("fPrep").oninput=count;$("fTroca").oninput=count;$("fDate").onchange=e=>fill(e.target.value);
+function render(){let p=0,t=0;const rows=Object.values(st.days).sort((a,b)=>a.date<b.date?-1:1);rows.forEach(d=>{p+=d.prep;t+=d.troca});$("kPrep").textContent=p;$("kTroca").textContent=t;$("kDias").textContent=rows.length;const h=$("hist");h.innerHTML="";rows.slice().reverse().forEach(d=>{const tr=document.createElement("tr");tr.innerHTML=`<td>${fmt(d.date)}</td><td class="n">${d.prep}</td><td class="n">${d.troca}</td><td style="white-space:normal">${esc(d.obs||"")}</td><td><button class="btn sec sm" data-d="${d.date}">editar</button></td>`;h.appendChild(tr)});h.querySelectorAll("button").forEach(b=>b.onclick=()=>{fill(b.dataset.d);window.scrollTo({top:0,behavior:"smooth"})})}
+$("bSave").onclick=()=>{const an=anName();if(!an){alert("Informe o analista");return}const date=$("fDate").value;if(!date){alert("Informe a data");return}const hosts=lines($("fPrep").value),ht=lines($("fTroca").value);st.analista=an;st.days[date]={date,prep:hosts.length,troca:ht.length,hosts,hostsTroca:ht,obs:$("fObs").value.trim()};store();render();$("saveMsg").textContent="Salvo ✔"};
+$("bDel").onclick=()=>{const date=$("fDate").value;if(!st.days[date])return;if(confirm("Excluir "+fmt(date)+"?")){delete st.days[date];store();render();fill(date)}};
+$("bExp").onclick=()=>{const an=anName()||st.analista;if(!an){alert("Informe o analista");return}st.analista=an;store();const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({tipo:"apontamento-analista",analista:an,exportadoEm:todayISO(),days:st.days},null,2)],{type:"application/json"}));a.download="apontamento-"+an.toLowerCase().replace(/\s+/g,"-")+"-"+todayISO()+".json";a.click()};
+$("bCopy").onclick=()=>{const date=$("fDate").value;const d=st.days[date];if(!d){alert("Salve o dia antes");return}const txt=[`${anName()} · ${fmt(date)}`,`Preparadas: ${d.prep}`+(d.hosts.length?" ("+d.hosts.join(", ")+")":""),`Trocadas: ${d.troca}`+(d.hostsTroca.length?" ("+d.hostsTroca.join(", ")+")":""),d.obs?"Obs: "+d.obs:""].filter(Boolean).join("\n");(navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>$("saveMsg").textContent="Resumo copiado ✔").catch(()=>prompt("Copie:",txt))};
+setAn(st.analista);fill(todayISO());render();
+})();
+</script>
+</body>
+</html>

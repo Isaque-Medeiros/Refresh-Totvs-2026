@@ -1,0 +1,73 @@
+﻿            if (file && file.data) {
+                bundle.analysts.push({ username, data: file.data });
+            }
+        }
+
+        return bundle;
+    }
+
+    async function fetchPublishedBundle() {
+        try {
+            const general = await fetchJsonRelative(`${PUBLISHED_BASE}/dados-gerais.json`);
+            if (!general) {
+                return null;
+            }
+
+            const bundle = { general, users: null, management: null, analysts: [], fetchedAt: nowIso(), source: 'published' };
+
+            const users = await fetchJsonRelative(`${PUBLISHED_BASE}/usuarios.json`);
+            if (users) {
+                bundle.users = users;
+            }
+
+            const management = await fetchJsonRelative(`${PUBLISHED_BASE}/gestao.json`);
+            if (management) {
+                bundle.management = management;
+            }
+
+            // Nomes vindos do manifest do arquivo geral.
+            const manifestNames = (Array.isArray(general.analystFiles) ? general.analystFiles : [])
+                .map((entry) => String(entry.username || '').trim().toLowerCase());
+
+            // Nomes vindos do usuarios.json: garante que um analista recem-criado seja
+            // lido mesmo que o gerente ainda nao tenha sincronizado o arquivo geral.
+            const userNames = (bundle.users && Array.isArray(bundle.users.users) ? bundle.users.users : [])
+                .filter((user) => user && user.role === 'analyst')
+                .map((user) => String(user.username || '').trim().toLowerCase());
+
+            const usernames = Array.from(new Set([...manifestNames, ...userNames].filter(Boolean)));
+
+            for (const username of usernames) {
+                const data = await fetchJsonRelative(`${PUBLISHED_BASE}/analistas/${username}.json`);
+                if (data) {
+                    bundle.analysts.push({ username, data });
+                }
+            }
+
+            return bundle;
+        } catch (error) {
+            // Leitura publica indisponivel (ex: pagina aberta direto por file://).
+            return null;
+        }
+    }
+
+    async function pushUserFile(state, user) {
+        const config = requireConfig();
+        return writeFile(
+            config,
+            analystPath(user.username),
+            buildUserPayload(state, user),
+            `chore(dados): atualiza registros de ${user.username}`
+        );
+    }
+
+    async function pushGeneralFile(state) {
+        const config = requireConfig();
+        return writeFile(config, PATH_GENERAL, buildGeneralPayload(state), 'chore(dados): atualiza dados gerais');
+    }
+
+    async function pushUsersFile(state) {
+        const config = requireConfig();
+        return writeFile(config, PATH_USERS, buildUsersPayload(state), 'chore(dados): atualiza usuarios');
+    }
+

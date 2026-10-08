@@ -31,6 +31,10 @@ O merge e feito por `id` do registro, e a versao com `updatedAt` **mais recente 
 Nenhum dado local mais novo e perdido, e o hash de senha **nunca** e sobrescrito
 por um arquivo remoto.
 
+**Exclusao:** o arquivo carrega tambem um mapa `deletedMachines` com as maquinas
+apagadas. Ele e aplicado antes do merge, entao uma maquina excluida nao volta
+mesmo que outro arquivo (de analista ou o geral) ainda a liste.
+
 ## Nao coloque token aqui
 
 O token do GitHub fica salvo no `localStorage` de cada navegador, nunca no repositorio.

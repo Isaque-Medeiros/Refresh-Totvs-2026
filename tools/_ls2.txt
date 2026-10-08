@@ -1,0 +1,35 @@
+﻿            };
+        } catch (error) {
+            console.error('Falha ao migrar storage antigo:', error);
+            return null;
+        }
+    }
+
+    function loadState() {
+        try {
+            const raw = localStorage.getItem(APP_STATE_KEY);
+            if (raw) {
+                return ensureStateShape(JSON.parse(raw));
+            }
+
+            const legacyState = migrateLegacyState();
+            if (legacyState) {
+                return saveState(legacyState);
+            }
+
+            return saveState(createDefaultState());
+        } catch (error) {
+            console.error('Erro ao carregar estado:', error);
+            return saveState(createDefaultState());
+        }
+    }
+
+    function audit(state, action, actorId, details) {
+        state.auditTrail.unshift({
+            id: uid('audit'),
+            action,
+            actorId,
+            details,
+            createdAt: nowIso()
+        });
+        state.auditTrail = state.auditTrail.slice(0, 300);

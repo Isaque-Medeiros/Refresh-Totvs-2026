@@ -1,0 +1,57 @@
+﻿        }
+
+        machine.swappedAt = null;
+        machine.swappedBy = null;
+        machine.updatedAt = nowIso();
+        machine.history.unshift(createHistoryEntry('machine_swap_undone', actorId, 'Troca desfeita'));
+        audit(state, 'swap_undo', actorId, { machineId });
+        saveState(state);
+        return machine;
+    }
+
+    function deleteMachine(machineId, actorId) {
+        const state = loadState();
+        const actor = getUserById(state, actorId);
+        const machine = state.machines.find((item) => item.id === machineId);
+        if (!machine) {
+            throw new Error('MÃ¡quina nÃ£o encontrada.');
+        }
+        if (!canEditMachine(actor, machine)) {
+            throw new Error('VocÃª nÃ£o possui permissÃ£o para excluir este registro.');
+        }
+
+        state.machines = state.machines.filter((item) => item.id !== machineId);
+        audit(state, 'delete_machine', actorId, { machineId, hostname: machine.hostname });
+        saveState(state);
+        return machine;
+    }
+
+    function startMachine(machineId, actorId) {
+        const state = processRunningTimers();
+        const actor = getUserById(state, actorId);
+        const machine = state.machines.find((item) => item.id === machineId);
+        if (!machine) throw new Error('MÃ¡quina nÃ£o encontrada.');
+        if (!canEditMachine(actor, machine)) throw new Error('PermissÃ£o insuficiente.');
+        if (machine.currentStep === 'CONCLUIDO') throw new Error('MÃ¡quina jÃ¡ concluÃ­da.');
+
+        machine.timerRunning = true;
+        machine.status = 'EM_ANDAMENTO';
+        machine.lastTickAt = nowIso();
+        machine.updatedAt = nowIso();
+        machine.history.unshift(createHistoryEntry('start_timer', actorId, machine.currentStep));
+        audit(state, 'start_timer', actorId, { machineId });
+        saveState(state);
+        return machine;
+    }
+
+    function pauseMachine(machineId, actorId) {
+        const state = processRunningTimers();
+        const actor = getUserById(state, actorId);
+        const machine = state.machines.find((item) => item.id === machineId);
+        if (!machine) throw new Error('MÃ¡quina nÃ£o encontrada.');
+        if (!canEditMachine(actor, machine)) throw new Error('PermissÃ£o insuficiente.');
+
+        machine.timerRunning = false;
+        machine.status = machine.hasError ? 'ERRO' : 'PAUSADO';
+        machine.lastTickAt = null;
+        machine.updatedAt = nowIso();

@@ -1,0 +1,18 @@
+﻿
+### Como os dados sao organizados (anti-conflito)
+
+- Cada analista escreve **somente o seu proprio arquivo** (`data/analistas/<usuario>.json`).
+- O gerente escreve `data/dados-gerais.json` e `data/usuarios.json`.
+- Assim **dois analistas nunca disputam a mesma gravacao**.
+
+### Como os conflitos sao resolvidos
+
+- Merge por `id`, e vence a versao com `updatedAt` **mais recente**.
+- Dado local mais novo nunca e rebaixado.
+- A gravacao tem retry automatico quando o GitHub responde 409/422 (sha desatualizado).
+- O **hash de senha nunca** e sobrescrito por um arquivo remoto.
+
+### Publicando no GitHub Pages
+
+Suba o repositorio e em **Settings -> Pages** publique a raiz (`/`).
+A aplicacao fica em `https://<usuario>.github.io/<repositorio>/app/`. Nada precisa

@@ -1,0 +1,143 @@
+﻿    function pickNewest(localItem, remoteItem) {
+        const localTime = new Date(localItem.updatedAt || localItem.createdAt || 0).getTime();
+        const remoteTime = new Date(remoteItem.updatedAt || remoteItem.createdAt || 0).getTime();
+        return remoteTime > localTime ? { ...localItem, ...remoteItem } : localItem;
+    }
+
+    function mergeById(localList, remoteList) {
+        const map = new Map();
+        localList.forEach((item) => map.set(item.id, item));
+        remoteList.forEach((remote) => {
+            if (!remote || !remote.id) return;
+            const local = map.get(remote.id);
+            map.set(remote.id, local ? pickNewest(local, remote) : remote);
+        });
+        return Array.from(map.values());
+    }
+
+    function mergeDatasets(state, remoteDatasets) {
+        const list = Array.isArray(remoteDatasets) ? remoteDatasets : [];
+        list.forEach((dataset) => {
+            if (!dataset || !dataset.id) return;
+            const exists = state.datasets.some((item) => item.id === dataset.id);
+            if (!exists) {
+                state.datasets.push({
+                    id: dataset.id,
+                    name: dataset.name || 'Lote importado',
+                    createdAt: dataset.createdAt || nowIso()
+                });
+            }
+        });
+    }
+
+    function mergeUsers(state, remoteUsers) {
+        const list = Array.isArray(remoteUsers) ? remoteUsers : [];
+        list.forEach((remote) => {
+            if (!remote || !remote.id) return;
+            const local = state.users.find((item) => item.id === remote.id);
+
+            if (!local) {
+                // Usuario novo vindo do repositorio entra com a senha padrao.
+                state.users.push({
+                    id: remote.id,
+                    username: remote.username || remote.id,
+                    displayName: remote.displayName || remote.username || 'Usuario',
+                    role: remote.role === 'manager' ? 'manager' : 'analyst',
+                    passwordHash: sha256(MASTER_RESET_SECRET),
+                    active: remote.active !== false,
+                    createdAt: nowIso(),
+                    updatedAt: remote.updatedAt || nowIso()
+                });
+                return;
+            }
+
+            // Nunca sobrescreve o hash de senha; apenas dados cadastrais mais recentes.
+            const remoteTime = new Date(remote.updatedAt || 0).getTime();
+            const localTime = new Date(local.updatedAt || 0).getTime();
+            if (remoteTime > localTime) {
+                local.displayName = remote.displayName || local.displayName;
+                local.active = remote.active !== false;
+                local.updatedAt = remote.updatedAt;
+            }
+        });
+    }
+
+    function mergeManagement(remote) {
+        if (!remote) {
+            return loadManagement();
+        }
+
+        const local = loadManagement();
+        const remoteTime = new Date(remote.updatedAt || 0).getTime();
+        const localTime = new Date(local.updatedAt || 0).getTime();
+
+        // Somente o gerente escreve este arquivo, entao vale a versao mais recente.
+        if (remoteTime <= localTime) {
+            return local;
+        }
+
+        return saveManagement({
+            adjustments: remote.adjustments || {},
+            notes: remote.notes || {},
+            frentes: remote.frentes || { ok: [], pd: [] }
+        });
+    }
+
+    function mergeRemoteBundle(bundle, currentUser) {
+        const state = loadState();
+        const isManager = Boolean(currentUser && currentUser.role === 'manager');
+        const sources = [];
+
+        if (bundle && bundle.general) {
+            sources.push(bundle.general);
+        }
+        if (bundle && Array.isArray(bundle.analysts)) {
+            bundle.analysts.forEach((entry) => {
+                if (entry && entry.data) sources.push(entry.data);
+            });
+        }
+
+        const remoteMachines = [];
+        sources.forEach((source) => {
+            (Array.isArray(source.records) ? source.records : []).forEach((record) => {
+                remoteMachines.push(normalizeMachine(state, record));
+            });
+            mergeDatasets(state, source.datasets);
+        });
+
+        // Analista absorve somente os proprios registros; o gerente absorve todos.
+        const scopedRemote = isManager
+            ? remoteMachines
+            : remoteMachines.filter((machine) => machine.analystId === (currentUser ? currentUser.id : ''));
+
+        const beforeCount = state.machines.length;
+        state.machines = mergeById(state.machines, scopedRemote);
+
+        if (isManager && bundle && bundle.users) {
+            mergeUsers(state, bundle.users.users);
+        }
+
+        if (isManager && bundle && bundle.management) {
+            mergeManagement(bundle.management);
+        }
+
+        if (bundle && bundle.general && bundle.general.activeDatasetId) {
+            const known = state.datasets.some((dataset) => dataset.id === bundle.general.activeDatasetId);
+            if (known) {
+                state.activeDatasetId = bundle.general.activeDatasetId;
+            }
+        }
+
+        if (!state.datasets.some((dataset) => dataset.id === state.activeDatasetId)) {
+            state.activeDatasetId = state.datasets[0].id;
+        }
+
+        audit(state, 'merge_remote', currentUser ? currentUser.id : null, {
+            received: remoteMachines.length,
+            applied: state.machines.length - beforeCount
+        });
+
+        saveState(state);
+        return {
+            received: remoteMachines.length,
+total-gh=604

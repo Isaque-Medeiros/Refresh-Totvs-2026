@@ -1,0 +1,87 @@
+﻿
+        text += 'DB4 Serv for Totvs by Isaque de Medeiros';
+        return text;
+    }
+
+    function buildGeneralExport(state) {
+        const dataset = TOTVSStorage.getDatasetById(state, state.activeDatasetId);
+        const machines = TOTVSStorage.getAllMachinesByDataset(state);
+        return {
+            version: state.version,
+            exportedAt: new Date().toISOString(),
+            organization: state.organization,
+            dataset,
+            summary: TOTVSReports.calculateMetrics(state, machines),
+            records: machines.map((machine) => ({
+                id: machine.id,
+                hostname: machine.hostname,
+                analyst: getAnalystName(state, machine),
+                brand: machine.brand,
+                profile: machine.profile,
+                processDate: machine.processDate,
+                currentStep: machine.currentStep,
+                status: machine.status,
+                totalElapsedSeconds: machine.totalElapsedSeconds,
+                stepDurations: machine.stepDurations,
+                hasError: machine.hasError,
+                errorDetails: machine.errorDetails,
+                notes: machine.notes,
+                createdAt: machine.createdAt,
+                updatedAt: machine.updatedAt,
+                completedAt: machine.completedAt
+            }))
+        };
+    }
+
+    function buildUserExport(state, userId) {
+        const targetUser = TOTVSStorage.getUserById(state, userId);
+        const machines = TOTVSStorage
+            .getAllMachinesByDataset(state)
+            .filter((machine) => machine.analystId === userId);
+
+        return {
+            exportedAt: new Date().toISOString(),
+            organization: state.organization,
+            user: targetUser ? {
+                id: targetUser.id,
+                username: targetUser.username,
+                displayName: targetUser.displayName,
+                role: targetUser.role
+            } : null,
+            summary: TOTVSReports.calculateMetrics(state, machines),
+            records: machines
+        };
+    }
+
+    function buildUsersExport(state) {
+        return {
+            exportedAt: new Date().toISOString(),
+            organization: state.organization,
+            users: TOTVSStorage.getSanitizedUsers(state)
+        };
+    }
+
+    function buildFullSnapshot(state) {
+        return {
+            version: state.version,
+            exportedAt: new Date().toISOString(),
+            organization: state.organization,
+            datasets: state.datasets,
+            activeDatasetId: state.activeDatasetId,
+            users: state.users,
+            machines: state.machines,
+            auditTrail: state.auditTrail
+        };
+    }
+
+    function downloadJson(filename, data) {
+        const json = JSON.stringify(data, null, 2);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = filename;
+        anchor.click();
+        URL.revokeObjectURL(url);
+    }
+

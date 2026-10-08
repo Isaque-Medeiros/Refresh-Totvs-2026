@@ -195,6 +195,29 @@ Registrar, em formato resumido, a evolucao da atualizacao da interface e da logi
 
 ---
 
+### Sessao 6 - Reversao do login por e-mail e correcao da exclusao de maquinas
+
+67. **Login revertido** para o seletor de usuarios (`<select>`) com os mesmos cinco
+    perfis. Sairam o campo de e-mail, o `datalist` de sugestoes e a entrada por
+    dispositivo lembrado. O `login()` voltou a aceitar apenas o **usuario**.
+68. **Bug corrigido: maquina excluida voltava.** O merge com o repositorio so sabe
+    *somar* por `id`. Bastava um arquivo antigo ainda listar a maquina -- o do
+    analista, que o gerente nunca reescreve, ou o geral desatualizado -- para o
+    registro apagado reaparecer no proximo pull.
+69. **Registro de exclusoes (tombstones)**: novo `deletedMachines` no estado, com
+    `registerMachineDeletions`, `mergeDeletions` e `applyDeletions`. As exclusoes
+    sao absorvidas **antes** do merge e reaplicadas **depois** da soma, entao a
+    exclusao sempre vence, venha de onde vier. `deleteDataset` tambem marca as
+    maquinas do lote.
+70. **As exclusoes viajam junto**: o `dados-gerais.json` leva o mapa completo e o
+    arquivo do analista leva apenas as exclusoes dele (`getDeletionsForAnalyst`).
+    O snapshot completo tambem carrega o mapa, para o backup nao perder isso.
+71. **Testes**: o smoke test subiu de **119 para 125** verificacoes, cobrindo o
+    tombstone criado, a maquina que nao volta pelo arquivo do analista, a exclusao
+    que chega do repositorio e os dois payloads carregando as exclusoes.
+
+---
+
 ## Resultado da validacao
 
 Executado por `tools/validate.ps1` (Edge headless sobre servidor local):

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Status Report · Rollout TOTVS · DB4SERV</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+ --bg:#F4F6FA;--card:#FFFFFF;--ink:#0E2240;--muted:#5B6475;--line:#DCE1EA;--navy:#0E2240;--navyink:#F4F6FA;--orange:#F2821F;--blue:#2E6FD8;--lblue:#7FA8E8;--red:#C0392B;--green:#1E8E5A;--input:#FFFFFF}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0B1628;--card:#142238;--ink:#EEF2F8;--muted:#A9B4C6;--line:#2A3A55;--navy:#1C2F4F;--navyink:#EEF2F8;--input:#0F1C30}}
+:root[data-theme="dark"]{--bg:#0B1628;--card:#142238;--ink:#EEF2F8;--muted:#A9B4C6;--line:#2A3A55;--navy:#1C2F4F;--navyink:#EEF2F8;--input:#0F1C30}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Arial,sans-serif;line-height:1.4}
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{background:var(--orange);color:#0E2240;font-weight:800;padding:6px 12px;border-radius:8px}
+h1{font-size:1.25rem;margin:0}
+.sub{color:var(--muted);font-size:.9rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.kpi{background:var(--navy);color:var(--navyink);border-radius:14px;padding:14px}
+.kpi.o{background:var(--orange);color:#0E2240}
+.kpi .v{font-size:1.9rem;font-weight:800;line-height:1.1}
+.kpi .l{font-size:.8rem;opacity:.85;margin-top:4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}
+.card h2{font-size:1rem;margin:0 0 10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.chart{position:relative;width:100%;height:300px}
+.chart.sm{height:220px}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{color:var(--muted);font-weight:600;font-size:.8rem}
+td.n,th.n{text-align:right}
+.scroll{overflow-x:auto}
+input,textarea,select,button{font:inherit;color:var(--ink)}
+input[type=number],input[type=date],input[type=text],textarea,select{width:100%;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--input)}
+textarea{min-height:48px;resize:vertical}
+.row{display:grid;grid-template-columns:1.2fr 1fr 1fr 2fr;gap:8px;align-items:center;margin-bottom:8px}
+.row .nm{font-weight:600}
+.hd{font-size:.75rem;color:var(--muted)}
+.btn{background:var(--orange);color:#0E2240;border:0;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer}
+.btn.sec{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.btn.sm{padding:6px 10px;font-size:.85rem}
+.btn:disabled{opacity:.5;cursor:default}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.msg{font-size:.85rem;color:var(--muted)}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.75rem;font-weight:600}
+.pill.ok{background:#E3F4EA;color:#1E8E5A}.pill.warn{background:#FDE8D3;color:#B5590A}.pill.bad{background:#F9DEDC;color:#B3261E}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:720px){.two{grid-template-columns:1fr}.row{grid-template-columns:1fr 1fr 1fr;}.row .hn{grid-column:1/-1}}
+.list li{margin-bottom:4px}
+.ro{display:none;color:var(--muted);font-size:.85rem}
+.chip{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+.chip input[type=text]{flex:1}
+.leg{font-size:.8rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+ <div class="brand"><span class="logo">DB4SERV</span><div><h1>Status Report · Rollout de máquinas TOTVS</h1><div class="sub" id="subtitle">1.000 máquinas · 05/10/2026 a 29/01/2027</div></div></div>
+ <div class="sub" id="today"></div>
+</header>
+
+<div class="grid">
+ <div class="kpi o"><div class="v" id="kTroc">0</div><div class="l">máquinas trocadas (acumulado)</div></div>
+ <div class="kpi"><div class="v" id="kPct">0%</div><div class="l">do total de 1.000</div></div>
+ <div class="kpi"><div class="v" id="kPrep">0</div><div class="l">preparadas (acumulado)</div></div>
+ <div class="kpi"><div class="v" id="kPlan">0</div><div class="l">previsto no plano até hoje</div></div>
+ <div class="kpi"><div class="v" id="kDesv">0</div><div class="l">desvio vs plano (trocas)</div></div>
+ <div class="kpi"><div class="v" id="kRitmo">—</div><div class="l">ritmo médio últimos 5 dias</div></div>
+ <div class="kpi"><div class="v" id="kProj">—</div><div class="l">projeção de término</div></div>
+ <div class="kpi"><div class="v" id="kRest">—</div><div class="l">dias úteis restantes</div></div>
+</div>
+
+<div class="card">
+ <h2>Evolução acumulada · plano x realizado <span class="leg">linha tracejada = plano de trocas</span></h2>
+ <div class="chart"><canvas id="cBurn"></canvas></div>
+</div>
+
+<div class="two">
+ <div class="card"><h2>Por analista (acumulado)</h2><div class="chart sm"><canvas id="cAn"></canvas></div></div>
+ <div class="card"><h2>Últimos 10 dias (trocas por dia)</h2><div class="chart sm"><canvas id="cDay"></canvas></div></div>
+</div>
+
+<div class="card" id="formCard">
+ <h2>Lançamento do dia <span class="ro" id="roMsg">somente leitura</span></h2>
+ <div class="row hd"><div>Data</div><div></div><div></div><div></div></div>
+ <div class="row"><div><input type="date" id="fDate"></div><div></div><div></div><div class="msg" id="loadMsg"></div></div>
+ <div class="row hd"><div>Analista</div><div>Preparadas</div><div>Trocadas</div><div class="hn">Hostnames do dia (opcional, 1 por linha)</div></div>
+ <div id="rows"></div>
+ <div class="row hd"><div>Observações da daily</div></div>
+ <textarea id="fObs" placeholder="Bloqueios, no-shows, decisões..."></textarea>
+ <div class="actions"><button class="btn" id="bSave">Salvar dia</button><button class="btn sec" id="bDel">Excluir dia</button><button class="btn sec" id="bCopy">Copiar resumo para a daily</button><span class="msg" id="saveMsg"></span></div>
+</div>
+
+<div class="two">
+ <div class="card"><h2>Frentes · superado</h2><div id="okList"></div><div class="actions"><input type="text" id="okNew" placeholder="Novo item superado"><button class="btn sm" id="okAdd">Adicionar</button></div></div>
+ <div class="card"><h2>Frentes · pendente</h2><div id="pdList"></div><div class="actions"><input type="text" id="pdNew" placeholder="Nova pendência"><button class="btn sm" id="pdAdd">Adicionar</button></div></div>
+</div>
+
+<div class="card">
+ <h2>Histórico diário</h2>
+ <div class="scroll"><table><thead><tr><th>Data</th><th class="n">Prep.</th><th class="n">Trocas</th><th class="n">Acum. trocas</th><th class="n">Plano</th><th>Status</th><th>Obs.</th><th></th></tr></thead><tbody id="hist"></tbody></table></div>
+</div>
+<p class="msg">Versão local: os dados ficam salvos neste navegador. Importe os arquivos JSON enviados pelos analistas (pode selecionar vários de uma vez); o painel soma por dia e por analista. Use "Exportar backup" para guardar o consolidado.<br>Rascunho para validação · DB4SERV, integradora e execução · Cliente: TOTVS</p>
+</div>
+
+<script>
+(function(){
+const TOTAL=1000, START="2026-10-05", END="2027-01-29", TROCA_START="2026-10-19";
+const HOL=new Set(["2026-10-12","2026-11-02","2026-11-20","2026-12-24","2026-12-25","2026-12-31","2027-01-01"]);
+const DEFAULT_AN=["Guilherme","Isaque","Vinicius","Davi"];
+const MONTH_TARGET={"2026-10":160,"2026-11":300,"2026-12":280,"2027-01":260};
+const COLORS=["#2E6FD8","#F2821F","#7FA8E8","#1E8E5A","#9B59B6","#C0392B"];
+const $=id=>document.getElementById(id);
+const fmt=d=>d.slice(8,10)+"/"+d.slice(5,7);
+const addDays=(s,n)=>{const d=new Date(s+"T12:00:00");d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)};
+const isBiz=s=>{const w=new Date(s+"T12:00:00").getDay();return w>0&&w<6&&!HOL.has(s)};
+// business days
+const DAYS=[];for(let d=START;d<=END;d=addDays(d,1)) if(isBiz(d)) DAYS.push(d);
+// plan: cumulative trocas per business day
+const PLAN={};{let cum=0;const perMonth={};DAYS.forEach(d=>{if(d>=TROCA_START){const m=d.slice(0,7);perMonth[m]=(perMonth[m]||0)+1}});const rate={};for(const m in perMonth)rate[m]=(MONTH_TARGET[m]||0)/perMonth[m];DAYS.forEach(d=>{if(d>=TROCA_START)cum+=rate[d.slice(0,7)]||0;PLAN[d]=Math.min(TOTAL,Math.round(cum))})}
+const todayISO=()=>new Date().toISOString().slice(0,10);
+$("today").textContent="Atualizado em "+new Date().toLocaleDateString("pt-BR");
+
+let analistas=DEFAULT_AN.slice(), days={}, config={ok:[],pd:[]}, db=null, canWrite=true, saving=false;
+let cBurn,cAn,cDay;
+
+function buildRows(){const r=$("rows");r.innerHTML="";analistas.forEach((a,i)=>{const d=document.createElement("div");d.className="row";d.innerHTML=`<div class="nm">${esc(a)}</div><div><input type="number" min="0" data-k="prep" data-i="${i}" placeholder="0"></div><div><input type="number" min="0" data-k="troca" data-i="${i}" placeholder="0"></div><div class="hn"><textarea data-k="hosts" data-i="${i}" placeholder="SPON..."></textarea></div>`;r.appendChild(d)});
+ r.querySelectorAll("textarea").forEach(t=>t.addEventListener("input",e=>{const i=e.target.dataset.i;const n=e.target.value.split(/\n|,|;/).map(s=>s.trim()).filter(Boolean).length;const p=r.querySelector(`input[data-k=prep][data-i="${i}"]`);if(n&&!p.value)p.placeholder=n+" (auto)";}))}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+function fillForm(date){$("fDate").value=date;const d=days[date];const r=$("rows");r.querySelectorAll("input,textarea").forEach(el=>{el.value="";el.placeholder=el.tagName==="TEXTAREA"?"SPON...":"0"});$("fObs").value=d?d.obs||"":"";
+ if(d){analistas.forEach((a,i)=>{const x=(d.an||{})[a]||{};const p=r.querySelector(`input[data-k=prep][data-i="${i}"]`),t=r.querySelector(`input[data-k=troca][data-i="${i}"]`),h=r.querySelector(`textarea[data-i="${i}"]`);if(p)p.value=x.prep||"";if(t)t.value=x.troca||"";if(h)h.value=(x.hosts||[]).join("\n")});$("loadMsg").textContent="Editando lançamento existente"}else $("loadMsg").textContent="Novo lançamento"}
+function readForm(){const r=$("rows");const an={};let tp=0,tt=0;analistas.forEach((a,i)=>{const p=r.querySelector(`input[data-k=prep][data-i="${i}"]`),t=r.querySelector(`input[data-k=troca][data-i="${i}"]`),h=r.querySelector(`textarea[data-i="${i}"]`);const hosts=(h.value||"").split(/\n|,|;/).map(s=>s.trim()).filter(Boolean);let prep=parseInt(p.value,10);if(isNaN(prep))prep=hosts.length;const troca=parseInt(t.value,10)||0;an[a]={prep,troca,hosts};tp+=prep;tt+=troca});return{date:$("fDate").value,an,prep:tp,troca:tt,obs:$("fObs").value.trim()}}
+
+function stats(){const list=Object.values(days).sort((a,b)=>a.date<b.date?-1:1);let cumT=0,cumP=0;const rows=list.map(d=>{cumT+=d.troca||0;cumP+=d.prep||0;return{...d,cumT,cumP}});const t=todayISO();const planToday=(()=>{let v=0;for(const d of DAYS){if(d>t)break;v=PLAN[d]}return v})();
+ const last=rows.slice(-5).filter(d=>d.troca>0);const ritmo=last.length?last.reduce((s,d)=>s+d.troca,0)/last.length:0;const rest=TOTAL-cumT;const remBiz=DAYS.filter(d=>d>t).length;let proj="—";if(ritmo>0&&rest>0){const n=Math.ceil(rest/ritmo);let i=DAYS.findIndex(d=>d>t);if(i<0)i=DAYS.length;const idx=i+n-1;proj=idx<DAYS.length?fmt(DAYS[idx]):"após "+fmt(END)+" (+"+(idx-DAYS.length+1)+" d.u.)"}else if(rest<=0)proj="Concluído";
+ return{rows,cumT,cumP,planToday,ritmo,rest,remBiz,proj}}
+
+function render(){const s=stats();$("kTroc").textContent=s.cumT;$("kPct").textContent=Math.round(s.cumT/TOTAL*100)+"%";$("kPrep").textContent=s.cumP;$("kPlan").textContent=s.planToday;const dv=s.cumT-s.planToday;$("kDesv").textContent=(dv>=0?"+":"")+dv;$("kDesv").parentElement.style.background=dv<-20?"var(--red)":(dv<0?"#B5590A":"var(--green)");$("kRitmo").textContent=s.ritmo?s.ritmo.toFixed(1)+"/dia":"—";$("kProj").textContent=s.proj;$("kRest").textContent=s.remBiz;
+ // burn-up
+ const labels=DAYS.map(fmt);const planS=DAYS.map(d=>PLAN[d]);const byDate={};s.rows.forEach(r=>byDate[r.date]=r);let ct=0,cp=0;const t=todayISO();const realT=[],realP=[];DAYS.forEach(d=>{if(byDate[d]){ct=byDate[d].cumT;cp=byDate[d].cumP}realT.push(d<=t?ct:null);realP.push(d<=t?cp:null)});
+ const ink=getComputedStyle(document.documentElement).getPropertyValue("--ink").trim(),line=getComputedStyle(document.documentElement).getPropertyValue("--line").trim();
+ const base={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:ink}}},scales:{x:{ticks:{color:ink,maxTicksLimit:12},grid:{color:line}},y:{ticks:{color:ink},grid:{color:line},beginAtZero:true}}};
+ if(cBurn)cBurn.destroy();cBurn=new Chart($("cBurn"),{type:"line",data:{labels,datasets:[{label:"Plano (trocas)",data:planS,borderColor:"#7FA8E8",borderDash:[6,4],pointRadius:0,borderWidth:2},{label:"Trocadas",data:realT,borderColor:"#F2821F",backgroundColor:"rgba(242,130,31,.15)",fill:true,pointRadius:0,borderWidth:3,spanGaps:false},{label:"Preparadas",data:realP,borderColor:"#2E6FD8",pointRadius:0,borderWidth:2}]},options:{...base,interaction:{mode:"index",intersect:false},scales:{...base.scales,y:{...base.scales.y,max:TOTAL}}}});
+ // per analyst
+ const ap=analistas.map(a=>s.rows.reduce((x,r)=>x+(((r.an||{})[a]||{}).prep||0),0)),at=analistas.map(a=>s.rows.reduce((x,r)=>x+(((r.an||{})[a]||{}).troca||0),0));
+ if(cAn)cAn.destroy();cAn=new Chart($("cAn"),{type:"bar",data:{labels:analistas,datasets:[{label:"Preparadas",data:ap,backgroundColor:"#2E6FD8"},{label:"Trocadas",data:at,backgroundColor:"#F2821F"}]},options:base});
+ const last=s.rows.slice(-10);if(cDay)cDay.destroy();cDay=new Chart($("cDay"),{type:"bar",data:{labels:last.map(r=>fmt(r.date)),datasets:[{label:"Trocas",data:last.map(r=>r.troca),backgroundColor:"#F2821F"},{label:"Preparadas",data:last.map(r=>r.prep),backgroundColor:"#2E6FD8"}]},options:base});
+ // history
+ const h=$("hist");h.innerHTML="";s.rows.slice().reverse().forEach(r=>{const p=PLAN[r.date]||0;const d=r.cumT-p;const pill=d>=0?'<span class="pill ok">no plano</span>':(d>-20?'<span class="pill warn">atenção</span>':'<span class="pill bad">atrasado</span>');const tr=document.createElement("tr");tr.innerHTML=`<td>${fmt(r.date)}</td><td class="n">${r.prep}</td><td class="n">${r.troca}</td><td class="n">${r.cumT}</td><td class="n">${p}</td><td>${pill}</td><td style="white-space:normal;max-width:260px">${esc(r.obs||"")}</td><td><button class="btn sec sm" data-d="${r.date}">editar</button></td>`;h.appendChild(tr)});h.querySelectorAll("button").forEach(b=>b.onclick=()=>{fillForm(b.dataset.d);$("formCard").scrollIntoView({behavior:"smooth"})});
+ // lists
+ renderList("okList",config.ok||[],"ok");renderList("pdList",config.pd||[],"pd");}
+function renderList(id,arr,key){const el=$(id);el.innerHTML="";arr.forEach((t,i)=>{const d=document.createElement("div");d.className="chip";d.innerHTML=`<span style="flex:1">${key==="ok"?"✅":"⏳"} ${esc(t)}</span>`;if(canWrite){const b=document.createElement("button");b.className="btn sec sm";b.textContent=key==="ok"?"remover":"concluir";b.onclick=async()=>{const c={ok:(config.ok||[]).slice(),pd:(config.pd||[]).slice()};if(key==="ok")c.ok.splice(i,1);else{c.pd.splice(i,1);c.ok.push(t)}await saveConfig(c)};d.appendChild(b)}el.appendChild(d)})}
+
+async function saveConfig(c){if(!db||saving)return;saving=true;try{await db.doc("config/main").set({analistas,ok:c.ok,pd:c.pd});config=c}catch(e){alert("Não foi possível salvar: "+(e&&e.message||e))}saving=false}
+async function saveDay(){const d=readForm();if(!d.date){alert("Informe a data");return}if(!db||saving)return;saving=true;$("saveMsg").textContent="Salvando...";try{await db.doc("dias/"+d.date).set(d);days[d.date]=d;$("saveMsg").textContent="Salvo ✔";render();fillForm(d.date)}catch(e){$("saveMsg").textContent="Erro ao salvar";alert("Não foi possível salvar: "+(e&&e.message||e))}saving=false}
+async function delDay(){const date=$("fDate").value;if(!date||!days[date]){alert("Nenhum lançamento nessa data");return}if(!confirm("Excluir o lançamento de "+fmt(date)+"?"))return;try{await db.doc("dias/"+date).delete();delete days[date];render();fillForm(date)}catch(e){alert("Não foi possível excluir")}}
+function copySummary(){const s=stats();const date=$("fDate").value||todayISO();const d=days[date];const lines=["Status Rollout TOTVS · "+fmt(date),"Trocadas: "+s.cumT+"/"+TOTAL+" ("+Math.round(s.cumT/TOTAL*100)+"%) · plano até hoje: "+s.planToday+" · desvio: "+(s.cumT-s.planToday>=0?"+":"")+(s.cumT-s.planToday),"Preparadas: "+s.cumP+" · ritmo: "+(s.ritmo?s.ritmo.toFixed(1)+"/dia":"—")+" · projeção: "+s.proj];if(d){lines.push("Hoje: "+d.prep+" preparadas, "+d.troca+" trocadas");analistas.forEach(a=>{const x=(d.an||{})[a];if(x&&(x.prep||x.troca))lines.push("- "+a+": "+x.prep+" prep / "+x.troca+" trocas")});if(d.obs)lines.push("Obs: "+d.obs)}if((config.pd||[]).length)lines.push("Pendências: "+config.pd.join("; "));const txt=lines.join("\n");(navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>$("saveMsg").textContent="Resumo copiado ✔").catch(()=>prompt("Copie o texto:",txt))}
+
+function setReadOnly(){canWrite=false;$("roMsg").style.display="inline";["bSave","bDel","okAdd","pdAdd"].forEach(id=>$(id).disabled=true)}
+
+buildRows();fillForm(todayISO());render();
+$("fDate").addEventListener("change",e=>fillForm(e.target.value));
+$("bSave").onclick=saveDay;$("bDel").onclick=delDay;$("bCopy").onclick=copySummary;
+$("okAdd").onclick=async()=>{const v=$("okNew").value.trim();if(!v)return;await saveConfig({ok:[...(config.ok||[]),v],pd:config.pd||[]});$("okNew").value="";render()};
+$("pdAdd").onclick=async()=>{const v=$("pdNew").value.trim();if(!v)return;await saveConfig({ok:config.ok||[],pd:[...(config.pd||[]),v]});$("pdNew").value="";render()};
+
+(function(){
+ const KEY="status-rollout-totvs";
+ const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return{}}};
+ const store=()=>{try{localStorage.setItem(KEY,JSON.stringify({days,config,analistas}))}catch(e){alert("Não foi possível gravar no navegador")}};
+ db={doc:p=>({set:async d=>{if(p.startsWith("dias/"))days[d.date]=d;else config={ok:d.ok,pd:d.pd};store()},delete:async()=>{delete days[p.slice(5)];store()}})};
+ const st=load();days=st.days||{};config=st.config||{ok:["Imagem nova disponibilizada na rede","Treinamento da equipe realizado","Acesso ao SGTC validado"],pd:["Usuário de rede para colocar as máquinas na rede e no ARTS","Validação de quais usuários utilizam BT, Office e WA","Definição do limite diário X com a Segurança","Tratamento das máquinas do time Cloud"]};
+ render();fillForm(todayISO());
+ // export / import backup
+ const act=document.querySelector("#formCard .actions");
+ const be=document.createElement("button");be.className="btn sec";be.textContent="Exportar backup (JSON)";be.onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({days,config,analistas},null,2)],{type:"application/json"}));a.download="status-rollout-totvs-"+todayISO()+".json";a.click()};
+ const bi=document.createElement("button");bi.className="btn sec";bi.textContent="Importar apontamentos dos analistas / backup";const fi=document.createElement("input");fi.type="file";fi.accept=".json";fi.style.display="none";fi.multiple=true;fi.onchange=e=>{const files=[...e.target.files];if(!files.length)return;let done=0,imported=[];files.forEach(f=>{const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);
+ if(j.tipo==="apontamento-analista"&&j.analista&&j.days){const an=j.analista;if(!analistas.includes(an))analistas.push(an);Object.values(j.days).forEach(d=>{const day=days[d.date]||{date:d.date,an:{},prep:0,troca:0,obs:""};day.an=day.an||{};day.an[an]={prep:d.prep||0,troca:d.troca||0,hosts:d.hosts||[]};day.prep=0;day.troca=0;Object.values(day.an).forEach(x=>{day.prep+=x.prep||0;day.troca+=x.troca||0});if(d.obs){const tag=an+": "+d.obs;const parts=(day.obs||"").split(" | ").filter(p=>p&&!p.startsWith(an+": "));parts.push(tag);day.obs=parts.join(" | ")}days[d.date]=day});imported.push(an+" ("+Object.keys(j.days).length+" dias)")}
+ else if(j.days&&!j.tipo){days=j.days||{};config=j.config||config;if(j.analistas)analistas=j.analistas;imported.push("backup completo")}
+ else alert("Arquivo não reconhecido: "+f.name)}catch(err){alert("Arquivo inválido: "+f.name)}
+ if(++done===files.length){store();buildRows();render();fillForm($("fDate").value);$("saveMsg").textContent="Importado: "+imported.join(", ")}};r.readAsText(f)})};bi.onclick=()=>fi.click();
+ act.appendChild(be);act.appendChild(bi);act.appendChild(fi);
+})();
+})();
+</script>
+</body>
+</html>

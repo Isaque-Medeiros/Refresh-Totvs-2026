@@ -1,0 +1,4 @@
+﻿325 :: ### Como os dados sao organizados (anti-conflito)
+331 :: ### Como os conflitos sao resolvidos
+333 :: - Merge por `id`, e vence a versao com `updatedAt` **mais recente**.
+370 :: de senha, merge por data, leitura publica, retry em conflito 409 e relatorios.

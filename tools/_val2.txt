@@ -1,0 +1,32 @@
+﻿  [OK  ] Pagina renderizou o titulo TOTVS
+  [OK  ] login.js executou (seletor de usuarios cheio)
+  [OK  ] Analista carregado no seletor de login
+  [OK  ] View de login visivel por padrao
+  [OK  ] View do app comeca oculta
+  [OK  ] UI de sincronizacao GitHub presente
+  [OK  ] Campo de token presente
+  [OK  ] Botao de leitura publica presente
+  [OK  ] Download por analista presente
+  [OK  ] Botao de restaurar snapshot marcado gerente-only
+  [OK  ] Script github-sync.js carregado
+  [OK  ] Area de impressao presente
+  [OK  ] Lancamento manual presente
+  [OK  ] Campos de tempo manual presentes
+  [OK  ] Total manual calculado ao vivo
+  [OK  ] Graficos gerais renderizados
+  [OK  ] Graficos por analista renderizados
+  [OK  ] Botao de imprimir grafico geral
+  [OK  ] Botao de imprimir grafico do analista
+  [OK  ] Aba Visao geral restrita ao gerente
+  [OK  ] Snapshot restrito ao gerente
+  [OK  ] Barra de troca em lote presente
+  [OK  ] Botao marcar como trocadas
+  [OK  ] Botao do painel de gestao (gerente)
+  [OK  ] Modulo de rollout carregado
+  [OK  ] Filtro de trocada presente
+  [OK  ] Login com seletor de usuario
+
+Resultado carregamento: OK
+
+[3.2] Painel de gestao do gerente (app/gestao.html)
+------------------------------------------------------------

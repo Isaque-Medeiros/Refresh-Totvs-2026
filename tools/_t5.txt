@@ -1,2 +1,41 @@
-﻿606: TOTVSStorage.logout();
-632: TOTVSStorage.logout();
+﻿                brand: 'Dell',
+                profile: 'Local',
+                processDate: TOTVSStorage.todayBrInput(),
+                step: '1 FORMATAÃ‡ÃƒO E BIOS',
+                autoStart: true,
+                hasError: false,
+                errorDescription: '',
+                notes: 'lote 1'
+            };
+
+            const result = TOTVSStorage.createMachines(basePayload, 'user_manager');
+            equal('cadastro em lote cria 3 registros', result.createdItems.length, 3);
+
+            /* ---------------- BUG ANTIGO (item 20 do guia) ---------------- */
+            const second = TOTVSStorage.createMachines(
+                { ...basePayload, hostnames: 'SPON010134570', notes: 'lote 2' },
+                'user_manager'
+            );
+            equal('salvar novas maquinas depois do primeiro lote funciona', second.createdItems.length, 1);
+            equal('total apos o segundo lote', TOTVSStorage.loadState().machines.length, 4);
+
+            const third = TOTVSStorage.createMachines(
+                { ...basePayload, hostnames: 'SPON010134567', notes: 'atualizado' },
+                'user_manager'
+            );
+            equal('reenvio do mesmo hostname nao duplica', TOTVSStorage.loadState().machines.length, 4);
+            equal('reenvio conta como atualizacao', third.updatedItems.length, 1);
+
+            /* ---------------- Timers ---------------- */
+            const target = TOTVSStorage.loadState().machines.find((m) => m.hostname === 'SPON010134567');
+            equal('cronometro inicia junto com o salvamento', target.timerRunning, true);
+            ok('registro guarda a data da cronometragem', Boolean(target.processDate));
+
+            TOTVSStorage.pauseMachine(target.id, 'user_manager');
+            equal('pausar desliga o cronometro',
+                TOTVSStorage.loadState().machines.find((m) => m.id === target.id).timerRunning, false);
+
+            TOTVSStorage.startMachine(target.id, 'user_manager');
+            equal('reiniciar religa o cronometro',
+                TOTVSStorage.loadState().machines.find((m) => m.id === target.id).timerRunning, true);
+

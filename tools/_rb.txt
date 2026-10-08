@@ -1,4 +1,0 @@
-﻿37 :: â”œâ”€ tests/smoke.html          -> auto-teste de logica (144 verificacoes)
-364 :: Roda a verificacao de IDs (JS x HTML), o smoke test de logica no navegador
-365 :: (`tests/smoke.html`) e o teste de carregamento da aplicacao. Gera
-368 :: O smoke test cobre cadastro em lote, o bug antigo de nao conseguir salvar

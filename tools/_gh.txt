@@ -1,4 +1,4 @@
-/*
+﻿/*
  * TOTVS Field Refresh 2026 - Sincronizacao automatica com o GitHub
  * ---------------------------------------------------------------------------
  * Grava e le os arquivos de dados direto no repositorio usando a Contents API
@@ -303,7 +303,6 @@ const TOTVSGithubSync = (() => {
             ...base,
             kind: 'general',
             analystFiles: buildAnalystManifest(state),
-            deletedMachines: state.deletedMachines || {},
             records: state.machines.map((machine) => ({ ...machine }))
         };
     }
@@ -315,7 +314,6 @@ const TOTVSGithubSync = (() => {
             kind: 'analyst',
             username: user.username,
             analystId: user.id,
-            deletedMachines: TOTVSStorage.getDeletionsForAnalyst(state, user.id),
             records: state.machines
                 .filter((machine) => machine.analystId === user.id)
                 .map((machine) => ({ ...machine }))
