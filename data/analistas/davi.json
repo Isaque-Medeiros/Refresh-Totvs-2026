@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-09T14:27:10.575Z",
+  "exportedAt": "2026-10-09T14:54:41.275Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -14,25 +14,25 @@
   },
   "summary": {
     "total": 21,
-    "doneCount": 19,
-    "wipCount": 2,
+    "doneCount": 21,
+    "wipCount": 0,
     "pausedCount": 0,
     "errorCount": 0,
     "successRate": "100",
-    "globalPercent": "1.9",
-    "avgTimeString": "02h 01m 55s",
+    "globalPercent": "2.1",
+    "avgTimeString": "01h 59m 04s",
     "manualCount": 18,
     "stepAvgTimes": {
       "1 FORMATAÇÃO E BIOS": "54m 49s",
       "2 WINDOWS UPDATE": "28m 22s",
       "3 ATIVAR ADM E SUBIR DRIVERS": "23m 27s",
-      "4 DOMINIO E ARGUS": "16m 27s"
+      "4 DOMINIO E ARGUS": "18m 22s"
     },
     "stepAvgSeconds": {
       "1 FORMATAÇÃO E BIOS": 3289,
       "2 WINDOWS UPDATE": 1702,
       "3 ATIVAR ADM E SUBIR DRIVERS": 1407,
-      "4 DOMINIO E ARGUS": 987
+      "4 DOMINIO E ARGUS": 1102
     },
     "analystStats": [
       {
@@ -69,11 +69,11 @@
         "analystId": "user_davi",
         "name": "Davi",
         "total": 21,
-        "done": 19,
-        "wip": 2,
+        "done": 21,
+        "wip": 0,
         "paused": 0,
         "errors": 0,
-        "goalPercent": "7.6"
+        "goalPercent": "8.4"
       }
     ],
     "errorList": []
@@ -87,17 +87,17 @@
       "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-09",
-      "currentStep": "3 ATIVAR ADM E SUBIR DRIVERS",
-      "currentStepIndex": 2,
-      "status": "EM_ANDAMENTO",
-      "timerRunning": true,
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 1843,
         "2 WINDOWS UPDATE": 770,
         "3 ATIVAR ADM E SUBIR DRIVERS": 1255,
-        "4 DOMINIO E ARGUS": 0
+        "4 DOMINIO E ARGUS": 1646
       },
-      "totalElapsedSeconds": 3868,
+      "totalElapsedSeconds": 5514,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -105,6 +105,18 @@
       "manualEntryBy": null,
       "manualEntryAt": null,
       "history": [
+        {
+          "action": "next_step",
+          "actorId": "user_davi",
+          "note": "CONCLUIDO",
+          "createdAt": "2026-10-09T14:54:38.340Z"
+        },
+        {
+          "action": "next_step",
+          "actorId": "user_davi",
+          "note": "4 DOMINIO E ARGUS",
+          "createdAt": "2026-10-09T14:27:11.341Z"
+        },
         {
           "action": "next_step",
           "actorId": "user_davi",
@@ -124,12 +136,12 @@
           "createdAt": "2026-10-09T13:22:38.238Z"
         }
       ],
-      "currentStepStartedAt": "2026-10-09T14:06:13.875Z",
-      "lastTickAt": "2026-10-09T14:27:10.575Z",
+      "currentStepStartedAt": "2026-10-09T14:27:11.341Z",
+      "lastTickAt": null,
       "createdAt": "2026-10-09T13:22:38.238Z",
-      "updatedAt": "2026-10-09T14:27:10.575Z",
-      "completedAt": null,
-      "preparedAt": null,
+      "updatedAt": "2026-10-09T14:54:38.340Z",
+      "completedAt": "2026-10-09T14:54:38.340Z",
+      "preparedAt": "2026-10-09T14:54:38.340Z",
       "swappedAt": null,
       "swappedBy": null
     },
@@ -141,17 +153,17 @@
       "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-09",
-      "currentStep": "4 DOMINIO E ARGUS",
-      "currentStepIndex": 3,
-      "status": "EM_ANDAMENTO",
-      "timerRunning": true,
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 1844,
         "2 WINDOWS UPDATE": 770,
         "3 ATIVAR ADM E SUBIR DRIVERS": 1253,
-        "4 DOMINIO E ARGUS": 1
+        "4 DOMINIO E ARGUS": 1649
       },
-      "totalElapsedSeconds": 3868,
+      "totalElapsedSeconds": 5516,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -159,6 +171,12 @@
       "manualEntryBy": null,
       "manualEntryAt": null,
       "history": [
+        {
+          "action": "next_step",
+          "actorId": "user_davi",
+          "note": "CONCLUIDO",
+          "createdAt": "2026-10-09T14:54:39.764Z"
+        },
         {
           "action": "next_step",
           "actorId": "user_davi",
@@ -185,11 +203,11 @@
         }
       ],
       "currentStepStartedAt": "2026-10-09T14:27:09.061Z",
-      "lastTickAt": "2026-10-09T14:27:10.575Z",
+      "lastTickAt": null,
       "createdAt": "2026-10-09T13:22:38.238Z",
-      "updatedAt": "2026-10-09T14:27:10.575Z",
-      "completedAt": null,
-      "preparedAt": null,
+      "updatedAt": "2026-10-09T14:54:39.764Z",
+      "completedAt": "2026-10-09T14:54:39.764Z",
+      "preparedAt": "2026-10-09T14:54:39.764Z",
       "swappedAt": null,
       "swappedBy": null
     },
