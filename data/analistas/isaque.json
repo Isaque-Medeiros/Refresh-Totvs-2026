@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-09T19:51:59.774Z",
+  "exportedAt": "2026-10-09T19:52:45.289Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -14,14 +14,14 @@
   },
   "summary": {
     "total": 12,
-    "doneCount": 9,
-    "awaitingChecklistCount": 1,
+    "doneCount": 10,
+    "awaitingChecklistCount": 0,
     "wipCount": 0,
     "pausedCount": 2,
     "errorCount": 0,
     "successRate": "100",
-    "globalPercent": "0.9",
-    "avgTimeString": "01h 28m 27s",
+    "globalPercent": "1.0",
+    "avgTimeString": "01h 28m 08s",
     "manualCount": 6,
     "stepAvgTimes": {
       "1 FORMATAÇÃO E BIOS": "37m 40s",
@@ -40,12 +40,12 @@
         "analystId": "user_isaque",
         "name": "Isaque",
         "total": 12,
-        "done": 9,
-        "awaitingChecklist": 1,
+        "done": 10,
+        "awaitingChecklist": 0,
         "wip": 0,
         "paused": 2,
         "errors": 0,
-        "goalPercent": "3.6"
+        "goalPercent": "4.0"
       },
       {
         "analystId": "user_vinicius",
@@ -744,9 +744,9 @@
       "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-06",
-      "currentStep": "AGUARDANDO_CHECKLIST",
+      "currentStep": "CONCLUIDO",
       "currentStepIndex": 4,
-      "status": "AGUARDANDO_CHECKLIST",
+      "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 2340,
@@ -758,11 +758,24 @@
       "hasError": false,
       "errorDetails": null,
       "notes": "",
-      "checklist": null,
+      "checklist": {
+        "microsoftCert": true,
+        "trellix": true,
+        "hpDrivers": true,
+        "windowsUpdate": true,
+        "doneAt": "2026-10-09T19:52:43.780Z",
+        "doneBy": "user_isaque"
+      },
       "manualEntry": true,
       "manualEntryBy": "user_manager",
       "manualEntryAt": "2026-10-09T16:28:38.799Z",
       "history": [
+        {
+          "action": "checklist_done",
+          "actorId": "user_isaque",
+          "note": "Checklist final aprovado",
+          "createdAt": "2026-10-09T19:52:43.780Z"
+        },
         {
           "action": "next_step",
           "actorId": "user_isaque",
@@ -815,8 +828,8 @@
       "currentStepStartedAt": "2026-10-09T19:50:39.383Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:30:29.608Z",
-      "updatedAt": "2026-10-09T19:51:58.261Z",
-      "completedAt": null,
+      "updatedAt": "2026-10-09T19:52:43.780Z",
+      "completedAt": "2026-10-09T19:52:43.780Z",
       "preparedAt": "2026-10-09T19:51:58.261Z",
       "swappedAt": null,
       "swappedBy": null
@@ -958,10 +971,10 @@
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 3,
         "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 96484,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 96528,
         "4 DOMINIO E ARGUS": 0
       },
-      "totalElapsedSeconds": 96487,
+      "totalElapsedSeconds": 96531,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -990,9 +1003,9 @@
         }
       ],
       "currentStepStartedAt": "2026-10-08T17:03:35.786Z",
-      "lastTickAt": "2026-10-09T19:51:59.773Z",
+      "lastTickAt": "2026-10-09T19:52:45.289Z",
       "createdAt": "2026-10-08T17:03:31.463Z",
-      "updatedAt": "2026-10-09T19:51:59.773Z",
+      "updatedAt": "2026-10-09T19:52:45.289Z",
       "completedAt": null,
       "preparedAt": null,
       "swappedAt": null,
@@ -1014,9 +1027,9 @@
         "1 FORMATAÇÃO E BIOS": 4,
         "2 WINDOWS UPDATE": 3,
         "3 ATIVAR ADM E SUBIR DRIVERS": 94245,
-        "4 DOMINIO E ARGUS": 2235
+        "4 DOMINIO E ARGUS": 2279
       },
-      "totalElapsedSeconds": 96487,
+      "totalElapsedSeconds": 96531,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -1051,9 +1064,9 @@
         }
       ],
       "currentStepStartedAt": "2026-10-09T19:14:31.705Z",
-      "lastTickAt": "2026-10-09T19:51:59.773Z",
+      "lastTickAt": "2026-10-09T19:52:45.289Z",
       "createdAt": "2026-10-08T17:03:31.463Z",
-      "updatedAt": "2026-10-09T19:51:59.773Z",
+      "updatedAt": "2026-10-09T19:52:45.289Z",
       "completedAt": null,
       "preparedAt": null,
       "swappedAt": null,
@@ -1142,9 +1155,9 @@
         "1 FORMATAÇÃO E BIOS": 5,
         "2 WINDOWS UPDATE": 2,
         "3 ATIVAR ADM E SUBIR DRIVERS": 2,
-        "4 DOMINIO E ARGUS": 96477
+        "4 DOMINIO E ARGUS": 96521
       },
-      "totalElapsedSeconds": 96486,
+      "totalElapsedSeconds": 96530,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -1179,9 +1192,9 @@
         }
       ],
       "currentStepStartedAt": "2026-10-08T17:03:44.358Z",
-      "lastTickAt": "2026-10-09T19:51:59.773Z",
+      "lastTickAt": "2026-10-09T19:52:45.289Z",
       "createdAt": "2026-10-08T17:03:31.463Z",
-      "updatedAt": "2026-10-09T19:51:59.773Z",
+      "updatedAt": "2026-10-09T19:52:45.289Z",
       "completedAt": null,
       "preparedAt": null,
       "swappedAt": null,
@@ -1201,11 +1214,11 @@
       "timerRunning": true,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 9,
-        "2 WINDOWS UPDATE": 96478,
+        "2 WINDOWS UPDATE": 96522,
         "3 ATIVAR ADM E SUBIR DRIVERS": 0,
         "4 DOMINIO E ARGUS": 0
       },
-      "totalElapsedSeconds": 96487,
+      "totalElapsedSeconds": 96531,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -1228,9 +1241,9 @@
         }
       ],
       "currentStepStartedAt": "2026-10-08T17:03:43.666Z",
-      "lastTickAt": "2026-10-09T19:51:59.773Z",
+      "lastTickAt": "2026-10-09T19:52:45.289Z",
       "createdAt": "2026-10-08T17:03:31.463Z",
-      "updatedAt": "2026-10-09T19:51:59.773Z",
+      "updatedAt": "2026-10-09T19:52:45.289Z",
       "completedAt": null,
       "preparedAt": null,
       "swappedAt": null,
