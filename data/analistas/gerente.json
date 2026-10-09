@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-09T16:24:28.079Z",
+  "exportedAt": "2026-10-09T19:14:33.219Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -15,6 +15,7 @@
   "summary": {
     "total": 0,
     "doneCount": 0,
+    "awaitingChecklistCount": 0,
     "wipCount": 0,
     "pausedCount": 0,
     "errorCount": 0,
@@ -40,6 +41,7 @@
         "name": "Isaque",
         "total": 0,
         "done": 0,
+        "awaitingChecklist": 0,
         "wip": 0,
         "paused": 0,
         "errors": 0,
@@ -50,6 +52,7 @@
         "name": "Vinicius",
         "total": 0,
         "done": 0,
+        "awaitingChecklist": 0,
         "wip": 0,
         "paused": 0,
         "errors": 0,
@@ -60,6 +63,7 @@
         "name": "Guilherme",
         "total": 0,
         "done": 0,
+        "awaitingChecklist": 0,
         "wip": 0,
         "paused": 0,
         "errors": 0,
@@ -70,6 +74,7 @@
         "name": "Davi",
         "total": 0,
         "done": 0,
+        "awaitingChecklist": 0,
         "wip": 0,
         "paused": 0,
         "errors": 0,
