@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-09T15:47:40.369Z",
+  "exportedAt": "2026-10-09T16:01:19.988Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -14,36 +14,36 @@
   },
   "summary": {
     "total": 12,
-    "doneCount": 10,
-    "wipCount": 2,
+    "doneCount": 12,
+    "wipCount": 0,
     "pausedCount": 0,
     "errorCount": 0,
     "successRate": "100",
-    "globalPercent": "1.0",
-    "avgTimeString": "01h 49m 49s",
+    "globalPercent": "1.2",
+    "avgTimeString": "01h 44m 39s",
     "manualCount": 6,
     "stepAvgTimes": {
       "1 FORMATAÇÃO E BIOS": "45m 56s",
       "2 WINDOWS UPDATE": "21m 49s",
       "3 ATIVAR ADM E SUBIR DRIVERS": "21m 01s",
-      "4 DOMINIO E ARGUS": "13m 37s"
+      "4 DOMINIO E ARGUS": "15m 53s"
     },
     "stepAvgSeconds": {
       "1 FORMATAÇÃO E BIOS": 2756,
       "2 WINDOWS UPDATE": 1309,
       "3 ATIVAR ADM E SUBIR DRIVERS": 1261,
-      "4 DOMINIO E ARGUS": 817
+      "4 DOMINIO E ARGUS": 953
     },
     "analystStats": [
       {
         "analystId": "user_isaque",
         "name": "Isaque",
         "total": 12,
-        "done": 10,
-        "wip": 2,
+        "done": 12,
+        "wip": 0,
         "paused": 0,
         "errors": 0,
-        "goalPercent": "4.0"
+        "goalPercent": "4.8"
       },
       {
         "analystId": "user_vinicius",
@@ -87,17 +87,17 @@
       "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-09",
-      "currentStep": "4 DOMINIO E ARGUS",
-      "currentStepIndex": 3,
-      "status": "EM_ANDAMENTO",
-      "timerRunning": true,
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 2254,
         "2 WINDOWS UPDATE": 407,
         "3 ATIVAR ADM E SUBIR DRIVERS": 1037,
-        "4 DOMINIO E ARGUS": 215
+        "4 DOMINIO E ARGUS": 1032
       },
-      "totalElapsedSeconds": 3913,
+      "totalElapsedSeconds": 4730,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -105,6 +105,12 @@
       "manualEntryBy": null,
       "manualEntryAt": null,
       "history": [
+        {
+          "action": "next_step",
+          "actorId": "user_isaque",
+          "note": "CONCLUIDO",
+          "createdAt": "2026-10-09T16:01:18.478Z"
+        },
         {
           "action": "next_step",
           "actorId": "user_isaque",
@@ -131,11 +137,11 @@
         }
       ],
       "currentStepStartedAt": "2026-10-09T15:44:03.764Z",
-      "lastTickAt": "2026-10-09T15:47:40.368Z",
+      "lastTickAt": null,
       "createdAt": "2026-10-09T14:42:22.148Z",
-      "updatedAt": "2026-10-09T15:47:40.368Z",
-      "completedAt": null,
-      "preparedAt": null,
+      "updatedAt": "2026-10-09T16:01:18.478Z",
+      "completedAt": "2026-10-09T16:01:18.478Z",
+      "preparedAt": "2026-10-09T16:01:18.478Z",
       "swappedAt": null,
       "swappedBy": null
     },
@@ -147,17 +153,17 @@
       "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-09",
-      "currentStep": "4 DOMINIO E ARGUS",
-      "currentStepIndex": 3,
-      "status": "EM_ANDAMENTO",
-      "timerRunning": true,
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 2253,
         "2 WINDOWS UPDATE": 645,
         "3 ATIVAR ADM E SUBIR DRIVERS": 1014,
-        "4 DOMINIO E ARGUS": 1
+        "4 DOMINIO E ARGUS": 818
       },
-      "totalElapsedSeconds": 3913,
+      "totalElapsedSeconds": 4730,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -165,6 +171,12 @@
       "manualEntryBy": null,
       "manualEntryAt": null,
       "history": [
+        {
+          "action": "next_step",
+          "actorId": "user_isaque",
+          "note": "CONCLUIDO",
+          "createdAt": "2026-10-09T16:01:17.496Z"
+        },
         {
           "action": "next_step",
           "actorId": "user_isaque",
@@ -191,11 +203,11 @@
         }
       ],
       "currentStepStartedAt": "2026-10-09T15:47:38.847Z",
-      "lastTickAt": "2026-10-09T15:47:40.368Z",
+      "lastTickAt": null,
       "createdAt": "2026-10-09T14:42:22.148Z",
-      "updatedAt": "2026-10-09T15:47:40.368Z",
-      "completedAt": null,
-      "preparedAt": null,
+      "updatedAt": "2026-10-09T16:01:17.496Z",
+      "completedAt": "2026-10-09T16:01:17.496Z",
+      "preparedAt": "2026-10-09T16:01:17.496Z",
       "swappedAt": null,
       "swappedBy": null
     },
