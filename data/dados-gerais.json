@@ -1,6 +1,6 @@
 {
   "version": "3.0.0",
-  "exportedAt": "2026-10-09T04:30:33.513Z",
+  "exportedAt": "2026-10-09T04:31:35.904Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -43,26 +43,26 @@
     }
   },
   "summary": {
-    "total": 33,
-    "doneCount": 33,
+    "total": 44,
+    "doneCount": 44,
     "wipCount": 0,
     "pausedCount": 0,
     "errorCount": 0,
     "successRate": "100",
-    "globalPercent": "3.3",
-    "avgTimeString": "39m 16s",
-    "manualCount": 17,
+    "globalPercent": "4.4",
+    "avgTimeString": "56m 57s",
+    "manualCount": 28,
     "stepAvgTimes": {
-      "1 FORMATAÇÃO E BIOS": "36m 50s",
-      "2 WINDOWS UPDATE": "23m 56s",
-      "3 ATIVAR ADM E SUBIR DRIVERS": "20m 45s",
-      "4 DOMINIO E ARGUS": "08m 36s"
+      "1 FORMATAÇÃO E BIOS": "43m 08s",
+      "2 WINDOWS UPDATE": "26m 24s",
+      "3 ATIVAR ADM E SUBIR DRIVERS": "20m 25s",
+      "4 DOMINIO E ARGUS": "09m 05s"
     },
     "stepAvgSeconds": {
-      "1 FORMATAÇÃO E BIOS": 2210,
-      "2 WINDOWS UPDATE": 1436,
-      "3 ATIVAR ADM E SUBIR DRIVERS": 1245,
-      "4 DOMINIO E ARGUS": 516
+      "1 FORMATAÇÃO E BIOS": 2588,
+      "2 WINDOWS UPDATE": 1584,
+      "3 ATIVAR ADM E SUBIR DRIVERS": 1225,
+      "4 DOMINIO E ARGUS": 545
     },
     "analystStats": [
       {
@@ -78,12 +78,12 @@
       {
         "analystId": "user_vinicius",
         "name": "Vinicius",
-        "total": 0,
-        "done": 0,
+        "total": 11,
+        "done": 11,
         "wip": 0,
         "paused": 0,
         "errors": 0,
-        "goalPercent": "0.0"
+        "goalPercent": "4.4"
       },
       {
         "analystId": "user_guilherme",
@@ -109,6 +109,468 @@
     "errorList": []
   },
   "records": [
+    {
+      "id": "nb_1791520293155_uo9esz",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132345",
+      "analystId": "user_vinicius",
+      "brand": "HP",
+      "profile": "Local",
+      "processDate": "2026-10-08",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 3000,
+        "2 WINDOWS UPDATE": 1800,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
+        "4 DOMINIO E ARGUS": 600
+      },
+      "totalElapsedSeconds": 6600,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:31:33.155Z",
+      "history": [
+        {
+          "action": "machine_created_manual",
+          "actorId": "user_manager",
+          "note": "Lançamento manual com tempo digitado",
+          "createdAt": "2026-10-09T04:31:33.155Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-09T04:31:33.155Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-09T04:31:33.155Z",
+      "updatedAt": "2026-10-09T04:31:33.155Z",
+      "completedAt": "2026-10-09T04:31:33.155Z",
+      "preparedAt": "2026-10-09T04:31:33.155Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791520293155_con4nk",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132333",
+      "analystId": "user_vinicius",
+      "brand": "HP",
+      "profile": "Local",
+      "processDate": "2026-10-08",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 3000,
+        "2 WINDOWS UPDATE": 1800,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
+        "4 DOMINIO E ARGUS": 600
+      },
+      "totalElapsedSeconds": 6600,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:31:33.155Z",
+      "history": [
+        {
+          "action": "machine_created_manual",
+          "actorId": "user_manager",
+          "note": "Lançamento manual com tempo digitado",
+          "createdAt": "2026-10-09T04:31:33.155Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-09T04:31:33.155Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-09T04:31:33.155Z",
+      "updatedAt": "2026-10-09T04:31:33.155Z",
+      "completedAt": "2026-10-09T04:31:33.155Z",
+      "preparedAt": "2026-10-09T04:31:33.155Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791520293155_dbdn3n",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132265",
+      "analystId": "user_vinicius",
+      "brand": "HP",
+      "profile": "Local",
+      "processDate": "2026-10-08",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 3000,
+        "2 WINDOWS UPDATE": 1800,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
+        "4 DOMINIO E ARGUS": 600
+      },
+      "totalElapsedSeconds": 6600,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:31:33.155Z",
+      "history": [
+        {
+          "action": "machine_created_manual",
+          "actorId": "user_manager",
+          "note": "Lançamento manual com tempo digitado",
+          "createdAt": "2026-10-09T04:31:33.155Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-09T04:31:33.155Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-09T04:31:33.155Z",
+      "updatedAt": "2026-10-09T04:31:33.155Z",
+      "completedAt": "2026-10-09T04:31:33.155Z",
+      "preparedAt": "2026-10-09T04:31:33.155Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791520293154_ch1vj6",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132249",
+      "analystId": "user_vinicius",
+      "brand": "HP",
+      "profile": "Local",
+      "processDate": "2026-10-08",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 3000,
+        "2 WINDOWS UPDATE": 1800,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
+        "4 DOMINIO E ARGUS": 600
+      },
+      "totalElapsedSeconds": 6600,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:31:33.154Z",
+      "history": [
+        {
+          "action": "machine_created_manual",
+          "actorId": "user_manager",
+          "note": "Lançamento manual com tempo digitado",
+          "createdAt": "2026-10-09T04:31:33.154Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-09T04:31:33.154Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-09T04:31:33.155Z",
+      "updatedAt": "2026-10-09T04:31:33.155Z",
+      "completedAt": "2026-10-09T04:31:33.155Z",
+      "preparedAt": "2026-10-09T04:31:33.155Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791520293154_v8ln1n",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132248",
+      "analystId": "user_vinicius",
+      "brand": "HP",
+      "profile": "Local",
+      "processDate": "2026-10-08",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 3000,
+        "2 WINDOWS UPDATE": 1800,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
+        "4 DOMINIO E ARGUS": 600
+      },
+      "totalElapsedSeconds": 6600,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:31:33.154Z",
+      "history": [
+        {
+          "action": "machine_created_manual",
+          "actorId": "user_manager",
+          "note": "Lançamento manual com tempo digitado",
+          "createdAt": "2026-10-09T04:31:33.154Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-09T04:31:33.154Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-09T04:31:33.154Z",
+      "updatedAt": "2026-10-09T04:31:33.154Z",
+      "completedAt": "2026-10-09T04:31:33.154Z",
+      "preparedAt": "2026-10-09T04:31:33.154Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791520269258_vm3rpu",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132341",
+      "analystId": "user_vinicius",
+      "brand": "HP",
+      "profile": "Local",
+      "processDate": "2026-10-07",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 3000,
+        "2 WINDOWS UPDATE": 1800,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
+        "4 DOMINIO E ARGUS": 600
+      },
+      "totalElapsedSeconds": 6600,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:31:09.258Z",
+      "history": [
+        {
+          "action": "machine_created_manual",
+          "actorId": "user_manager",
+          "note": "Lançamento manual com tempo digitado",
+          "createdAt": "2026-10-09T04:31:09.258Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-09T04:31:09.258Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-09T04:31:09.258Z",
+      "updatedAt": "2026-10-09T04:31:09.258Z",
+      "completedAt": "2026-10-09T04:31:09.258Z",
+      "preparedAt": "2026-10-09T04:31:09.258Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791520269258_vatkof",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132316",
+      "analystId": "user_vinicius",
+      "brand": "HP",
+      "profile": "Local",
+      "processDate": "2026-10-07",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 3000,
+        "2 WINDOWS UPDATE": 1800,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
+        "4 DOMINIO E ARGUS": 600
+      },
+      "totalElapsedSeconds": 6600,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:31:09.258Z",
+      "history": [
+        {
+          "action": "machine_created_manual",
+          "actorId": "user_manager",
+          "note": "Lançamento manual com tempo digitado",
+          "createdAt": "2026-10-09T04:31:09.258Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-09T04:31:09.258Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-09T04:31:09.258Z",
+      "updatedAt": "2026-10-09T04:31:09.258Z",
+      "completedAt": "2026-10-09T04:31:09.258Z",
+      "preparedAt": "2026-10-09T04:31:09.258Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791520269258_i0qjs2",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132319",
+      "analystId": "user_vinicius",
+      "brand": "HP",
+      "profile": "Local",
+      "processDate": "2026-10-07",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 3000,
+        "2 WINDOWS UPDATE": 1800,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
+        "4 DOMINIO E ARGUS": 600
+      },
+      "totalElapsedSeconds": 6600,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:31:09.258Z",
+      "history": [
+        {
+          "action": "machine_created_manual",
+          "actorId": "user_manager",
+          "note": "Lançamento manual com tempo digitado",
+          "createdAt": "2026-10-09T04:31:09.258Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-09T04:31:09.258Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-09T04:31:09.258Z",
+      "updatedAt": "2026-10-09T04:31:09.258Z",
+      "completedAt": "2026-10-09T04:31:09.258Z",
+      "preparedAt": "2026-10-09T04:31:09.258Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791520269258_u1vy6n",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132320",
+      "analystId": "user_vinicius",
+      "brand": "HP",
+      "profile": "Local",
+      "processDate": "2026-10-07",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 3000,
+        "2 WINDOWS UPDATE": 1800,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
+        "4 DOMINIO E ARGUS": 600
+      },
+      "totalElapsedSeconds": 6600,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:31:09.258Z",
+      "history": [
+        {
+          "action": "machine_created_manual",
+          "actorId": "user_manager",
+          "note": "Lançamento manual com tempo digitado",
+          "createdAt": "2026-10-09T04:31:09.258Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-09T04:31:09.258Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-09T04:31:09.258Z",
+      "updatedAt": "2026-10-09T04:31:09.258Z",
+      "completedAt": "2026-10-09T04:31:09.258Z",
+      "preparedAt": "2026-10-09T04:31:09.258Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791520269258_i26sfv",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132282",
+      "analystId": "user_vinicius",
+      "brand": "HP",
+      "profile": "Local",
+      "processDate": "2026-10-07",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 3000,
+        "2 WINDOWS UPDATE": 1800,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
+        "4 DOMINIO E ARGUS": 600
+      },
+      "totalElapsedSeconds": 6600,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:31:09.258Z",
+      "history": [
+        {
+          "action": "machine_created_manual",
+          "actorId": "user_manager",
+          "note": "Lançamento manual com tempo digitado",
+          "createdAt": "2026-10-09T04:31:09.258Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-09T04:31:09.258Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-09T04:31:09.258Z",
+      "updatedAt": "2026-10-09T04:31:09.258Z",
+      "completedAt": "2026-10-09T04:31:09.258Z",
+      "preparedAt": "2026-10-09T04:31:09.258Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
+    {
+      "id": "nb_1791520269258_in6nqh",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132309",
+      "analystId": "user_vinicius",
+      "brand": "HP",
+      "profile": "Local",
+      "processDate": "2026-10-07",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 3000,
+        "2 WINDOWS UPDATE": 1800,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
+        "4 DOMINIO E ARGUS": 600
+      },
+      "totalElapsedSeconds": 6600,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:31:09.258Z",
+      "history": [
+        {
+          "action": "machine_created_manual",
+          "actorId": "user_manager",
+          "note": "Lançamento manual com tempo digitado",
+          "createdAt": "2026-10-09T04:31:09.258Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-09T04:31:09.258Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-09T04:31:09.258Z",
+      "updatedAt": "2026-10-09T04:31:09.258Z",
+      "completedAt": "2026-10-09T04:31:09.258Z",
+      "preparedAt": "2026-10-09T04:31:09.258Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
     {
       "id": "nb_1791520229608_h5ievl",
       "datasetId": "dataset_principal",
@@ -1745,8 +2207,8 @@
       "username": "vinicius",
       "displayName": "Vinicius",
       "file": "data/analistas/vinicius.json",
-      "records": 0,
-      "updatedAt": null
+      "records": 11,
+      "updatedAt": "2026-10-09T04:31:33.155Z"
     },
     {
       "id": "user_guilherme",
