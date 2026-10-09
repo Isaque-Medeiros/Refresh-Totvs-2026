@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-09T19:24:00.889Z",
+  "exportedAt": "2026-10-09T19:24:20.083Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -13,26 +13,26 @@
     "role": "analyst"
   },
   "summary": {
-    "total": 19,
-    "doneCount": 19,
+    "total": 17,
+    "doneCount": 17,
     "wipCount": 0,
     "pausedCount": 0,
     "errorCount": 0,
     "successRate": "100",
-    "globalPercent": "1.9",
-    "avgTimeString": "02h 17m 13s",
+    "globalPercent": "1.7",
+    "avgTimeString": "02h 23m 12s",
     "manualCount": 13,
     "stepAvgTimes": {
-      "1 FORMATAÇÃO E BIOS": "01h 13m 19s",
-      "2 WINDOWS UPDATE": "26m 58s",
-      "3 ATIVAR ADM E SUBIR DRIVERS": "23m 37s",
-      "4 DOMINIO E ARGUS": "16m 52s"
+      "1 FORMATAÇÃO E BIOS": "01h 11m 54s",
+      "2 WINDOWS UPDATE": "30m 13s",
+      "3 ATIVAR ADM E SUBIR DRIVERS": "25m 01s",
+      "4 DOMINIO E ARGUS": "17m 51s"
     },
     "stepAvgSeconds": {
-      "1 FORMATAÇÃO E BIOS": 4399,
-      "2 WINDOWS UPDATE": 1618,
-      "3 ATIVAR ADM E SUBIR DRIVERS": 1417,
-      "4 DOMINIO E ARGUS": 1012
+      "1 FORMATAÇÃO E BIOS": 4314,
+      "2 WINDOWS UPDATE": 1813,
+      "3 ATIVAR ADM E SUBIR DRIVERS": 1501,
+      "4 DOMINIO E ARGUS": 1071
     },
     "analystStats": [
       {
@@ -58,12 +58,12 @@
       {
         "analystId": "user_guilherme",
         "name": "Guilherme",
-        "total": 19,
-        "done": 19,
+        "total": 17,
+        "done": 17,
         "wip": 0,
         "paused": 0,
         "errors": 0,
-        "goalPercent": "7.6"
+        "goalPercent": "6.8"
       },
       {
         "analystId": "user_davi",
@@ -1230,138 +1230,6 @@
       "preparedAt": "2026-10-09T15:08:22.402Z",
       "swappedAt": null,
       "swappedBy": null
-    },
-    {
-      "id": "nb_1791568580495_zrbaxg",
-      "datasetId": "dataset_principal",
-      "hostname": "SPON010132274",
-      "analystId": "user_guilherme",
-      "brand": "HP",
-      "profile": "Local",
-      "processDate": "2026-10-09",
-      "currentStep": "CONCLUIDO",
-      "currentStepIndex": 4,
-      "status": "CONCLUIDO",
-      "timerRunning": false,
-      "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 5092,
-        "2 WINDOWS UPDATE": 56,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 0
-      },
-      "totalElapsedSeconds": 5148,
-      "hasError": false,
-      "errorDetails": null,
-      "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
-      "history": [
-        {
-          "action": "next_step",
-          "actorId": "user_guilherme",
-          "note": "CONCLUIDO",
-          "createdAt": "2026-10-09T19:22:17.902Z"
-        },
-        {
-          "action": "next_step",
-          "actorId": "user_guilherme",
-          "note": "4 DOMINIO E ARGUS",
-          "createdAt": "2026-10-09T19:22:17.355Z"
-        },
-        {
-          "action": "next_step",
-          "actorId": "user_guilherme",
-          "note": "3 ATIVAR ADM E SUBIR DRIVERS",
-          "createdAt": "2026-10-09T19:22:16.589Z"
-        },
-        {
-          "action": "next_step",
-          "actorId": "user_guilherme",
-          "note": "2 WINDOWS UPDATE",
-          "createdAt": "2026-10-09T19:21:18.434Z"
-        },
-        {
-          "action": "machine_created",
-          "actorId": "user_guilherme",
-          "note": "Cadastro inicial",
-          "createdAt": "2026-10-09T17:56:20.495Z"
-        }
-      ],
-      "currentStepStartedAt": "2026-10-09T19:22:17.355Z",
-      "lastTickAt": null,
-      "createdAt": "2026-10-09T17:56:20.495Z",
-      "updatedAt": "2026-10-09T19:22:17.902Z",
-      "completedAt": "2026-10-09T19:22:17.902Z",
-      "preparedAt": "2026-10-09T19:22:17.902Z",
-      "swappedAt": null,
-      "swappedBy": null
-    },
-    {
-      "id": "nb_1791568518751_zfyg0c",
-      "datasetId": "dataset_principal",
-      "hostname": "SPON010132271",
-      "analystId": "user_guilherme",
-      "brand": "HP",
-      "profile": "Local",
-      "processDate": "2026-10-09",
-      "currentStep": "CONCLUIDO",
-      "currentStepIndex": 4,
-      "status": "CONCLUIDO",
-      "timerRunning": false,
-      "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 5154,
-        "2 WINDOWS UPDATE": 54,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 3,
-        "4 DOMINIO E ARGUS": 5
-      },
-      "totalElapsedSeconds": 5216,
-      "hasError": false,
-      "errorDetails": null,
-      "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
-      "history": [
-        {
-          "action": "next_step",
-          "actorId": "user_guilherme",
-          "note": "CONCLUIDO",
-          "createdAt": "2026-10-09T19:22:24.373Z"
-        },
-        {
-          "action": "next_step",
-          "actorId": "user_guilherme",
-          "note": "4 DOMINIO E ARGUS",
-          "createdAt": "2026-10-09T19:22:18.704Z"
-        },
-        {
-          "action": "next_step",
-          "actorId": "user_guilherme",
-          "note": "3 ATIVAR ADM E SUBIR DRIVERS",
-          "createdAt": "2026-10-09T19:22:14.204Z"
-        },
-        {
-          "action": "next_step",
-          "actorId": "user_guilherme",
-          "note": "2 WINDOWS UPDATE",
-          "createdAt": "2026-10-09T19:21:19.565Z"
-        },
-        {
-          "action": "machine_created",
-          "actorId": "user_guilherme",
-          "note": "Cadastro inicial",
-          "createdAt": "2026-10-09T17:55:18.751Z"
-        }
-      ],
-      "currentStepStartedAt": "2026-10-09T19:22:18.704Z",
-      "lastTickAt": null,
-      "createdAt": "2026-10-09T17:55:18.751Z",
-      "updatedAt": "2026-10-09T19:22:24.373Z",
-      "completedAt": "2026-10-09T19:22:24.373Z",
-      "preparedAt": "2026-10-09T19:22:24.373Z",
-      "swappedAt": null,
-      "swappedBy": null
     }
   ],
   "kind": "analyst",
@@ -1387,6 +1255,20 @@
       "hostname": "SPON010132381",
       "analystId": "user_guilherme",
       "deletedAt": "2026-10-09T19:23:59.378Z",
+      "deletedBy": "user_guilherme"
+    },
+    "nb_1791568518751_zfyg0c": {
+      "id": "nb_1791568518751_zfyg0c",
+      "hostname": "SPON010132271",
+      "analystId": "user_guilherme",
+      "deletedAt": "2026-10-09T19:24:11.035Z",
+      "deletedBy": "user_guilherme"
+    },
+    "nb_1791568580495_zrbaxg": {
+      "id": "nb_1791568580495_zrbaxg",
+      "hostname": "SPON010132274",
+      "analystId": "user_guilherme",
+      "deletedAt": "2026-10-09T19:24:18.567Z",
       "deletedBy": "user_guilherme"
     }
   }
