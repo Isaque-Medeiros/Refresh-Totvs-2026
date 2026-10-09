@@ -1,6 +1,6 @@
 {
   "version": "3.0.0",
-  "exportedAt": "2026-10-09T04:31:35.904Z",
+  "exportedAt": "2026-10-09T04:36:21.274Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -50,19 +50,19 @@
     "errorCount": 0,
     "successRate": "100",
     "globalPercent": "4.4",
-    "avgTimeString": "56m 57s",
-    "manualCount": 28,
+    "avgTimeString": "02h 12m 36s",
+    "manualCount": 44,
     "stepAvgTimes": {
-      "1 FORMATAÇÃO E BIOS": "43m 08s",
-      "2 WINDOWS UPDATE": "26m 24s",
-      "3 ATIVAR ADM E SUBIR DRIVERS": "20m 25s",
-      "4 DOMINIO E ARGUS": "09m 05s"
+      "1 FORMATAÇÃO E BIOS": "57m 41s",
+      "2 WINDOWS UPDATE": "32m 33s",
+      "3 ATIVAR ADM E SUBIR DRIVERS": "24m 52s",
+      "4 DOMINIO E ARGUS": "17m 29s"
     },
     "stepAvgSeconds": {
-      "1 FORMATAÇÃO E BIOS": 2588,
-      "2 WINDOWS UPDATE": 1584,
-      "3 ATIVAR ADM E SUBIR DRIVERS": 1225,
-      "4 DOMINIO E ARGUS": 545
+      "1 FORMATAÇÃO E BIOS": 3461,
+      "2 WINDOWS UPDATE": 1953,
+      "3 ATIVAR ADM E SUBIR DRIVERS": 1492,
+      "4 DOMINIO E ARGUS": 1049
     },
     "analystStats": [
       {
@@ -114,7 +114,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132345",
       "analystId": "user_vinicius",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -122,19 +122,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 3000,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
-        "4 DOMINIO E ARGUS": 600
+        "1 FORMATAÇÃO E BIOS": 3797,
+        "2 WINDOWS UPDATE": 2078,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1648,
+        "4 DOMINIO E ARGUS": 1177
       },
-      "totalElapsedSeconds": 6600,
+      "totalElapsedSeconds": 8700,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:31:33.155Z",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.434Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created_manual",
           "actorId": "user_manager",
@@ -145,7 +157,7 @@
       "currentStepStartedAt": "2026-10-09T04:31:33.155Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:31:33.155Z",
-      "updatedAt": "2026-10-09T04:31:33.155Z",
+      "updatedAt": "2026-10-09T04:36:18.434Z",
       "completedAt": "2026-10-09T04:31:33.155Z",
       "preparedAt": "2026-10-09T04:31:33.155Z",
       "swappedAt": null,
@@ -156,7 +168,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132333",
       "analystId": "user_vinicius",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -164,19 +176,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 3000,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
-        "4 DOMINIO E ARGUS": 600
+        "1 FORMATAÇÃO E BIOS": 2870,
+        "2 WINDOWS UPDATE": 1948,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1523,
+        "4 DOMINIO E ARGUS": 1031
       },
-      "totalElapsedSeconds": 6600,
+      "totalElapsedSeconds": 7372,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:31:33.155Z",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.434Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created_manual",
           "actorId": "user_manager",
@@ -187,7 +211,7 @@
       "currentStepStartedAt": "2026-10-09T04:31:33.155Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:31:33.155Z",
-      "updatedAt": "2026-10-09T04:31:33.155Z",
+      "updatedAt": "2026-10-09T04:36:18.434Z",
       "completedAt": "2026-10-09T04:31:33.155Z",
       "preparedAt": "2026-10-09T04:31:33.155Z",
       "swappedAt": null,
@@ -198,7 +222,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132265",
       "analystId": "user_vinicius",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -206,19 +230,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 3000,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
-        "4 DOMINIO E ARGUS": 600
+        "1 FORMATAÇÃO E BIOS": 3468,
+        "2 WINDOWS UPDATE": 2044,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1288,
+        "4 DOMINIO E ARGUS": 1181
       },
-      "totalElapsedSeconds": 6600,
+      "totalElapsedSeconds": 7981,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:31:33.155Z",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created_manual",
           "actorId": "user_manager",
@@ -229,7 +265,7 @@
       "currentStepStartedAt": "2026-10-09T04:31:33.155Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:31:33.155Z",
-      "updatedAt": "2026-10-09T04:31:33.155Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-09T04:31:33.155Z",
       "preparedAt": "2026-10-09T04:31:33.155Z",
       "swappedAt": null,
@@ -240,7 +276,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132249",
       "analystId": "user_vinicius",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -248,19 +284,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 3000,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
-        "4 DOMINIO E ARGUS": 600
+        "1 FORMATAÇÃO E BIOS": 3043,
+        "2 WINDOWS UPDATE": 2101,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1337,
+        "4 DOMINIO E ARGUS": 1152
       },
-      "totalElapsedSeconds": 6600,
+      "totalElapsedSeconds": 7633,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:31:33.154Z",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created_manual",
           "actorId": "user_manager",
@@ -271,7 +319,7 @@
       "currentStepStartedAt": "2026-10-09T04:31:33.154Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:31:33.155Z",
-      "updatedAt": "2026-10-09T04:31:33.155Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-09T04:31:33.155Z",
       "preparedAt": "2026-10-09T04:31:33.155Z",
       "swappedAt": null,
@@ -282,7 +330,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132248",
       "analystId": "user_vinicius",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -290,19 +338,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 3000,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
-        "4 DOMINIO E ARGUS": 600
+        "1 FORMATAÇÃO E BIOS": 3303,
+        "2 WINDOWS UPDATE": 1956,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1666,
+        "4 DOMINIO E ARGUS": 984
       },
-      "totalElapsedSeconds": 6600,
+      "totalElapsedSeconds": 7909,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:31:33.154Z",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created_manual",
           "actorId": "user_manager",
@@ -313,7 +373,7 @@
       "currentStepStartedAt": "2026-10-09T04:31:33.154Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:31:33.154Z",
-      "updatedAt": "2026-10-09T04:31:33.154Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-09T04:31:33.154Z",
       "preparedAt": "2026-10-09T04:31:33.154Z",
       "swappedAt": null,
@@ -324,7 +384,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132341",
       "analystId": "user_vinicius",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -332,19 +392,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 3000,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
-        "4 DOMINIO E ARGUS": 600
+        "1 FORMATAÇÃO E BIOS": 2899,
+        "2 WINDOWS UPDATE": 1832,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1287,
+        "4 DOMINIO E ARGUS": 933
       },
-      "totalElapsedSeconds": 6600,
+      "totalElapsedSeconds": 6951,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:31:09.258Z",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.434Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created_manual",
           "actorId": "user_manager",
@@ -355,7 +427,7 @@
       "currentStepStartedAt": "2026-10-09T04:31:09.258Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:31:09.258Z",
-      "updatedAt": "2026-10-09T04:31:09.258Z",
+      "updatedAt": "2026-10-09T04:36:18.434Z",
       "completedAt": "2026-10-09T04:31:09.258Z",
       "preparedAt": "2026-10-09T04:31:09.258Z",
       "swappedAt": null,
@@ -366,7 +438,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132316",
       "analystId": "user_vinicius",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -374,19 +446,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 3000,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
-        "4 DOMINIO E ARGUS": 600
+        "1 FORMATAÇÃO E BIOS": 3971,
+        "2 WINDOWS UPDATE": 2158,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1373,
+        "4 DOMINIO E ARGUS": 1019
       },
-      "totalElapsedSeconds": 6600,
+      "totalElapsedSeconds": 8521,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:31:09.258Z",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created_manual",
           "actorId": "user_manager",
@@ -397,7 +481,7 @@
       "currentStepStartedAt": "2026-10-09T04:31:09.258Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:31:09.258Z",
-      "updatedAt": "2026-10-09T04:31:09.258Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-09T04:31:09.258Z",
       "preparedAt": "2026-10-09T04:31:09.258Z",
       "swappedAt": null,
@@ -408,7 +492,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132319",
       "analystId": "user_vinicius",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -416,19 +500,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 3000,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
-        "4 DOMINIO E ARGUS": 600
+        "1 FORMATAÇÃO E BIOS": 3872,
+        "2 WINDOWS UPDATE": 1934,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1516,
+        "4 DOMINIO E ARGUS": 907
       },
-      "totalElapsedSeconds": 6600,
+      "totalElapsedSeconds": 8229,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:31:09.258Z",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.434Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created_manual",
           "actorId": "user_manager",
@@ -439,7 +535,7 @@
       "currentStepStartedAt": "2026-10-09T04:31:09.258Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:31:09.258Z",
-      "updatedAt": "2026-10-09T04:31:09.258Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-09T04:31:09.258Z",
       "preparedAt": "2026-10-09T04:31:09.258Z",
       "swappedAt": null,
@@ -450,7 +546,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132320",
       "analystId": "user_vinicius",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -458,19 +554,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 3000,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
-        "4 DOMINIO E ARGUS": 600
+        "1 FORMATAÇÃO E BIOS": 3043,
+        "2 WINDOWS UPDATE": 1881,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1729,
+        "4 DOMINIO E ARGUS": 1043
       },
-      "totalElapsedSeconds": 6600,
+      "totalElapsedSeconds": 7696,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:31:09.258Z",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.434Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created_manual",
           "actorId": "user_manager",
@@ -481,7 +589,7 @@
       "currentStepStartedAt": "2026-10-09T04:31:09.258Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:31:09.258Z",
-      "updatedAt": "2026-10-09T04:31:09.258Z",
+      "updatedAt": "2026-10-09T04:36:18.434Z",
       "completedAt": "2026-10-09T04:31:09.258Z",
       "preparedAt": "2026-10-09T04:31:09.258Z",
       "swappedAt": null,
@@ -492,7 +600,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132282",
       "analystId": "user_vinicius",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -500,19 +608,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 3000,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
-        "4 DOMINIO E ARGUS": 600
+        "1 FORMATAÇÃO E BIOS": 4130,
+        "2 WINDOWS UPDATE": 2039,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1699,
+        "4 DOMINIO E ARGUS": 1192
       },
-      "totalElapsedSeconds": 6600,
+      "totalElapsedSeconds": 9060,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:31:09.258Z",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created_manual",
           "actorId": "user_manager",
@@ -523,7 +643,7 @@
       "currentStepStartedAt": "2026-10-09T04:31:09.258Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:31:09.258Z",
-      "updatedAt": "2026-10-09T04:31:09.258Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-09T04:31:09.258Z",
       "preparedAt": "2026-10-09T04:31:09.258Z",
       "swappedAt": null,
@@ -534,7 +654,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132309",
       "analystId": "user_vinicius",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -542,19 +662,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 3000,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
-        "4 DOMINIO E ARGUS": 600
+        "1 FORMATAÇÃO E BIOS": 3892,
+        "2 WINDOWS UPDATE": 1990,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1696,
+        "4 DOMINIO E ARGUS": 1103
       },
-      "totalElapsedSeconds": 6600,
+      "totalElapsedSeconds": 8681,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:31:09.258Z",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created_manual",
           "actorId": "user_manager",
@@ -565,7 +697,7 @@
       "currentStepStartedAt": "2026-10-09T04:31:09.258Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:31:09.258Z",
-      "updatedAt": "2026-10-09T04:31:09.258Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-09T04:31:09.258Z",
       "preparedAt": "2026-10-09T04:31:09.258Z",
       "swappedAt": null,
@@ -576,7 +708,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132322",
       "analystId": "user_isaque",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -584,19 +716,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 3000,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
-        "4 DOMINIO E ARGUS": 600
+        "1 FORMATAÇÃO E BIOS": 4016,
+        "2 WINDOWS UPDATE": 1948,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1303,
+        "4 DOMINIO E ARGUS": 1025
       },
-      "totalElapsedSeconds": 6600,
+      "totalElapsedSeconds": 8292,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:30:29.608Z",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.434Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created_manual",
           "actorId": "user_manager",
@@ -607,7 +751,7 @@
       "currentStepStartedAt": "2026-10-09T04:30:29.608Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:30:29.608Z",
-      "updatedAt": "2026-10-09T04:30:29.608Z",
+      "updatedAt": "2026-10-09T04:36:18.434Z",
       "completedAt": "2026-10-09T04:30:29.608Z",
       "preparedAt": "2026-10-09T04:30:29.608Z",
       "swappedAt": null,
@@ -618,7 +762,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132312",
       "analystId": "user_isaque",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -626,19 +770,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 3000,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
-        "4 DOMINIO E ARGUS": 600
+        "1 FORMATAÇÃO E BIOS": 4087,
+        "2 WINDOWS UPDATE": 1883,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1297,
+        "4 DOMINIO E ARGUS": 1100
       },
-      "totalElapsedSeconds": 6600,
+      "totalElapsedSeconds": 8367,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:30:29.608Z",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created_manual",
           "actorId": "user_manager",
@@ -649,7 +805,7 @@
       "currentStepStartedAt": "2026-10-09T04:30:29.608Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:30:29.608Z",
-      "updatedAt": "2026-10-09T04:30:29.608Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-09T04:30:29.608Z",
       "preparedAt": "2026-10-09T04:30:29.608Z",
       "swappedAt": null,
@@ -660,7 +816,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132343",
       "analystId": "user_isaque",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -668,19 +824,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 3000,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
-        "4 DOMINIO E ARGUS": 600
+        "1 FORMATAÇÃO E BIOS": 4178,
+        "2 WINDOWS UPDATE": 2027,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1386,
+        "4 DOMINIO E ARGUS": 1025
       },
-      "totalElapsedSeconds": 6600,
+      "totalElapsedSeconds": 8616,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:30:29.608Z",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.434Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created_manual",
           "actorId": "user_manager",
@@ -691,7 +859,7 @@
       "currentStepStartedAt": "2026-10-09T04:30:29.608Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:30:29.608Z",
-      "updatedAt": "2026-10-09T04:30:29.608Z",
+      "updatedAt": "2026-10-09T04:36:18.434Z",
       "completedAt": "2026-10-09T04:30:29.608Z",
       "preparedAt": "2026-10-09T04:30:29.608Z",
       "swappedAt": null,
@@ -702,7 +870,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132314",
       "analystId": "user_isaque",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -710,19 +878,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 3000,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
-        "4 DOMINIO E ARGUS": 600
+        "1 FORMATAÇÃO E BIOS": 2847,
+        "2 WINDOWS UPDATE": 2029,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1245,
+        "4 DOMINIO E ARGUS": 901
       },
-      "totalElapsedSeconds": 6600,
+      "totalElapsedSeconds": 7022,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:30:29.608Z",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created_manual",
           "actorId": "user_manager",
@@ -733,7 +913,7 @@
       "currentStepStartedAt": "2026-10-09T04:30:29.608Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:30:29.608Z",
-      "updatedAt": "2026-10-09T04:30:29.608Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-09T04:30:29.608Z",
       "preparedAt": "2026-10-09T04:30:29.608Z",
       "swappedAt": null,
@@ -744,7 +924,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132317",
       "analystId": "user_isaque",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -752,19 +932,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 3000,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
-        "4 DOMINIO E ARGUS": 600
+        "1 FORMATAÇÃO E BIOS": 3297,
+        "2 WINDOWS UPDATE": 1893,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1241,
+        "4 DOMINIO E ARGUS": 1182
       },
-      "totalElapsedSeconds": 6600,
+      "totalElapsedSeconds": 7613,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:30:29.607Z",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created_manual",
           "actorId": "user_manager",
@@ -775,7 +967,7 @@
       "currentStepStartedAt": "2026-10-09T04:30:29.607Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:30:29.608Z",
-      "updatedAt": "2026-10-09T04:30:29.608Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-09T04:30:29.608Z",
       "preparedAt": "2026-10-09T04:30:29.608Z",
       "swappedAt": null,
@@ -786,7 +978,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132247",
       "analystId": "user_davi",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -794,19 +986,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1466,
-        "4 DOMINIO E ARGUS": 1
+        "1 FORMATAÇÃO E BIOS": 2970,
+        "2 WINDOWS UPDATE": 2037,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1246,
+        "4 DOMINIO E ARGUS": 924
       },
-      "totalElapsedSeconds": 1467,
+      "totalElapsedSeconds": 7177,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "next_step",
           "actorId": "user_davi",
@@ -835,7 +1039,7 @@
       "currentStepStartedAt": "2026-10-08T18:05:53.032Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T16:15:22.859Z",
-      "updatedAt": "2026-10-08T18:05:54.472Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-08T18:05:54.472Z",
       "preparedAt": "2026-10-08T18:05:54.472Z",
       "swappedAt": null,
@@ -846,7 +1050,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132315",
       "analystId": "user_davi",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -854,19 +1058,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 0
+        "1 FORMATAÇÃO E BIOS": 3403,
+        "2 WINDOWS UPDATE": 1986,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1642,
+        "4 DOMINIO E ARGUS": 983
       },
-      "totalElapsedSeconds": 0,
+      "totalElapsedSeconds": 8014,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_edited",
           "actorId": "user_davi",
@@ -889,7 +1105,7 @@
       "currentStepStartedAt": "2026-10-08T18:58:54.296Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:58:54.296Z",
-      "updatedAt": "2026-10-08T19:02:44.328Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-08T18:58:54.296Z",
       "preparedAt": "2026-10-08T18:58:54.296Z",
       "swappedAt": null,
@@ -900,7 +1116,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132318",
       "analystId": "user_davi",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -908,19 +1124,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 0
+        "1 FORMATAÇÃO E BIOS": 3919,
+        "2 WINDOWS UPDATE": 2131,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1298,
+        "4 DOMINIO E ARGUS": 1056
       },
-      "totalElapsedSeconds": 0,
+      "totalElapsedSeconds": 8404,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_edited",
           "actorId": "user_davi",
@@ -943,7 +1171,7 @@
       "currentStepStartedAt": "2026-10-08T18:58:54.296Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:58:54.296Z",
-      "updatedAt": "2026-10-08T19:02:33.616Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-08T18:58:54.296Z",
       "preparedAt": "2026-10-08T18:58:54.296Z",
       "swappedAt": null,
@@ -954,7 +1182,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132301",
       "analystId": "user_davi",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-06",
       "currentStep": "CONCLUIDO",
@@ -962,19 +1190,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 0
+        "1 FORMATAÇÃO E BIOS": 2900,
+        "2 WINDOWS UPDATE": 1943,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1543,
+        "4 DOMINIO E ARGUS": 1134
       },
-      "totalElapsedSeconds": 0,
+      "totalElapsedSeconds": 7520,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_edited",
           "actorId": "user_manager",
@@ -1003,7 +1243,7 @@
       "currentStepStartedAt": "2026-10-08T18:58:54.296Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:58:54.296Z",
-      "updatedAt": "2026-10-08T19:09:22.927Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-08T18:58:54.296Z",
       "preparedAt": "2026-10-08T18:58:54.296Z",
       "swappedAt": null,
@@ -1014,7 +1254,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132340",
       "analystId": "user_davi",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -1022,19 +1262,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 0
+        "1 FORMATAÇÃO E BIOS": 4143,
+        "2 WINDOWS UPDATE": 1857,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1393,
+        "4 DOMINIO E ARGUS": 922
       },
-      "totalElapsedSeconds": 0,
+      "totalElapsedSeconds": 8315,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.434Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_edited",
           "actorId": "user_davi",
@@ -1051,7 +1303,7 @@
       "currentStepStartedAt": "2026-10-08T18:58:54.296Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:58:54.296Z",
-      "updatedAt": "2026-10-08T19:03:00.543Z",
+      "updatedAt": "2026-10-09T04:36:18.434Z",
       "completedAt": "2026-10-08T18:58:54.296Z",
       "preparedAt": "2026-10-08T18:58:54.296Z",
       "swappedAt": null,
@@ -1062,7 +1314,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132339",
       "analystId": "user_davi",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -1070,19 +1322,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 0
+        "1 FORMATAÇÃO E BIOS": 3006,
+        "2 WINDOWS UPDATE": 1826,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1506,
+        "4 DOMINIO E ARGUS": 1007
       },
-      "totalElapsedSeconds": 0,
+      "totalElapsedSeconds": 7345,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.434Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_edited",
           "actorId": "user_davi",
@@ -1099,7 +1363,7 @@
       "currentStepStartedAt": "2026-10-08T18:58:54.295Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:58:54.295Z",
-      "updatedAt": "2026-10-08T19:01:17.239Z",
+      "updatedAt": "2026-10-09T04:36:18.434Z",
       "completedAt": "2026-10-08T18:58:54.295Z",
       "preparedAt": "2026-10-08T18:58:54.295Z",
       "swappedAt": null,
@@ -1110,7 +1374,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132324",
       "analystId": "user_davi",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -1118,19 +1382,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 0
+        "1 FORMATAÇÃO E BIOS": 3972,
+        "2 WINDOWS UPDATE": 1836,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1526,
+        "4 DOMINIO E ARGUS": 1042
       },
-      "totalElapsedSeconds": 0,
+      "totalElapsedSeconds": 8376,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.434Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_edited",
           "actorId": "user_davi",
@@ -1153,7 +1429,7 @@
       "currentStepStartedAt": "2026-10-08T18:58:54.295Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:58:54.295Z",
-      "updatedAt": "2026-10-08T19:02:12.127Z",
+      "updatedAt": "2026-10-09T04:36:18.434Z",
       "completedAt": "2026-10-08T18:58:54.295Z",
       "preparedAt": "2026-10-08T18:58:54.295Z",
       "swappedAt": null,
@@ -1164,7 +1440,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132263",
       "analystId": "user_davi",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -1172,19 +1448,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 2
+        "1 FORMATAÇÃO E BIOS": 3034,
+        "2 WINDOWS UPDATE": 2046,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1783,
+        "4 DOMINIO E ARGUS": 924
       },
-      "totalElapsedSeconds": 2,
+      "totalElapsedSeconds": 7787,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_edited",
           "actorId": "user_davi",
@@ -1207,7 +1495,7 @@
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T19:04:05.019Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-08T18:57:59.863Z",
       "preparedAt": "2026-10-08T18:57:59.863Z",
       "swappedAt": null,
@@ -1218,7 +1506,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132241",
       "analystId": "user_davi",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -1226,19 +1514,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 3
+        "1 FORMATAÇÃO E BIOS": 3891,
+        "2 WINDOWS UPDATE": 1832,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1483,
+        "4 DOMINIO E ARGUS": 967
       },
-      "totalElapsedSeconds": 3,
+      "totalElapsedSeconds": 8173,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_edited",
           "actorId": "user_davi",
@@ -1261,7 +1561,7 @@
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T19:03:55.097Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-08T18:58:00.904Z",
       "preparedAt": "2026-10-08T18:58:00.904Z",
       "swappedAt": null,
@@ -1272,7 +1572,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132238",
       "analystId": "user_davi",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -1280,19 +1580,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 4
+        "1 FORMATAÇÃO E BIOS": 4192,
+        "2 WINDOWS UPDATE": 1833,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1416,
+        "4 DOMINIO E ARGUS": 1070
       },
-      "totalElapsedSeconds": 4,
+      "totalElapsedSeconds": 8511,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_edited",
           "actorId": "user_davi",
@@ -1315,7 +1627,7 @@
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T19:03:46.574Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-08T18:58:02.304Z",
       "preparedAt": "2026-10-08T18:58:02.304Z",
       "swappedAt": null,
@@ -1326,7 +1638,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132242",
       "analystId": "user_davi",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -1334,19 +1646,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 5
+        "1 FORMATAÇÃO E BIOS": 3903,
+        "2 WINDOWS UPDATE": 2039,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1789,
+        "4 DOMINIO E ARGUS": 969
       },
-      "totalElapsedSeconds": 5,
+      "totalElapsedSeconds": 8700,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_edited",
           "actorId": "user_davi",
@@ -1369,7 +1693,7 @@
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T19:03:30.743Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-08T18:58:03.416Z",
       "preparedAt": "2026-10-08T18:58:03.416Z",
       "swappedAt": null,
@@ -1380,7 +1704,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132279",
       "analystId": "user_davi",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -1388,19 +1712,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 5
+        "1 FORMATAÇÃO E BIOS": 3174,
+        "2 WINDOWS UPDATE": 1885,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1419,
+        "4 DOMINIO E ARGUS": 942
       },
-      "totalElapsedSeconds": 5,
+      "totalElapsedSeconds": 7420,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_edited",
           "actorId": "user_davi",
@@ -1423,7 +1759,7 @@
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T19:03:19.024Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-08T18:58:04.015Z",
       "preparedAt": "2026-10-08T18:58:04.015Z",
       "swappedAt": null,
@@ -1434,7 +1770,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132254",
       "analystId": "user_davi",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -1442,19 +1778,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 8
+        "1 FORMATAÇÃO E BIOS": 4098,
+        "2 WINDOWS UPDATE": 1846,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1280,
+        "4 DOMINIO E ARGUS": 1155
       },
-      "totalElapsedSeconds": 8,
+      "totalElapsedSeconds": 8379,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_edited",
           "actorId": "user_davi",
@@ -1477,7 +1825,7 @@
       "currentStepStartedAt": "2026-10-08T18:57:57.011Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:57:57.011Z",
-      "updatedAt": "2026-10-08T19:03:09.120Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-08T18:58:06.600Z",
       "preparedAt": "2026-10-08T18:58:06.600Z",
       "swappedAt": null,
@@ -1488,7 +1836,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132240",
       "analystId": "user_guilherme",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -1496,19 +1844,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 2400,
-        "2 WINDOWS UPDATE": 1020,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1020,
-        "4 DOMINIO E ARGUS": 1080
+        "1 FORMATAÇÃO E BIOS": 3003,
+        "2 WINDOWS UPDATE": 1941,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1754,
+        "4 DOMINIO E ARGUS": 909
       },
-      "totalElapsedSeconds": 5520,
+      "totalElapsedSeconds": 7607,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
-      "manualEntryBy": "user_guilherme",
-      "manualEntryAt": "2026-10-08T19:10:47.601Z",
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -1525,7 +1885,7 @@
       "currentStepStartedAt": "2026-10-09T04:29:30.941Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:10:47.601Z",
-      "updatedAt": "2026-10-09T04:29:30.941Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-09T04:29:30.941Z",
       "preparedAt": "2026-10-09T04:29:30.941Z",
       "swappedAt": null,
@@ -1536,7 +1896,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132239",
       "analystId": "user_guilherme",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -1544,19 +1904,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 1440,
-        "2 WINDOWS UPDATE": 540,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1800,
-        "4 DOMINIO E ARGUS": 720
+        "1 FORMATAÇÃO E BIOS": 3083,
+        "2 WINDOWS UPDATE": 1919,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1493,
+        "4 DOMINIO E ARGUS": 962
       },
-      "totalElapsedSeconds": 4500,
+      "totalElapsedSeconds": 7457,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
-      "manualEntryBy": "user_guilherme",
-      "manualEntryAt": "2026-10-08T19:09:43.255Z",
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -1573,7 +1945,7 @@
       "currentStepStartedAt": "2026-10-09T04:29:30.941Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:09:43.255Z",
-      "updatedAt": "2026-10-09T04:29:30.942Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-09T04:29:30.942Z",
       "preparedAt": "2026-10-09T04:29:30.942Z",
       "swappedAt": null,
@@ -1584,7 +1956,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132303",
       "analystId": "user_isaque",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -1592,19 +1964,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 3000,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
-        "4 DOMINIO E ARGUS": 600
+        "1 FORMATAÇÃO E BIOS": 3030,
+        "2 WINDOWS UPDATE": 1896,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1449,
+        "4 DOMINIO E ARGUS": 977
       },
-      "totalElapsedSeconds": 6600,
+      "totalElapsedSeconds": 7352,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:30:29.608Z",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_updated_manual",
           "actorId": "user_manager",
@@ -1621,7 +2005,7 @@
       "currentStepStartedAt": "2026-10-08T19:10:16.749Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:10:16.749Z",
-      "updatedAt": "2026-10-09T04:30:29.609Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-08T19:10:16.749Z",
       "preparedAt": "2026-10-08T19:10:16.749Z",
       "swappedAt": null,
@@ -1632,7 +2016,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132337",
       "analystId": "user_davi",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-06",
       "currentStep": "CONCLUIDO",
@@ -1640,19 +2024,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 0
+        "1 FORMATAÇÃO E BIOS": 3464,
+        "2 WINDOWS UPDATE": 1874,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1703,
+        "4 DOMINIO E ARGUS": 1096
       },
-      "totalElapsedSeconds": 0,
+      "totalElapsedSeconds": 8137,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.434Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created",
           "actorId": "user_davi",
@@ -1663,7 +2059,7 @@
       "currentStepStartedAt": "2026-10-08T19:10:16.749Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:10:16.749Z",
-      "updatedAt": "2026-10-08T19:10:16.749Z",
+      "updatedAt": "2026-10-09T04:36:18.434Z",
       "completedAt": "2026-10-08T19:10:16.749Z",
       "preparedAt": "2026-10-08T19:10:16.749Z",
       "swappedAt": null,
@@ -1674,7 +2070,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132347",
       "analystId": "user_davi",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-06",
       "currentStep": "CONCLUIDO",
@@ -1682,19 +2078,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 0
+        "1 FORMATAÇÃO E BIOS": 2804,
+        "2 WINDOWS UPDATE": 1828,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1491,
+        "4 DOMINIO E ARGUS": 1074
       },
-      "totalElapsedSeconds": 0,
+      "totalElapsedSeconds": 7197,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.434Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created",
           "actorId": "user_davi",
@@ -1705,7 +2113,7 @@
       "currentStepStartedAt": "2026-10-08T19:10:16.749Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:10:16.749Z",
-      "updatedAt": "2026-10-08T19:10:16.749Z",
+      "updatedAt": "2026-10-09T04:36:18.434Z",
       "completedAt": "2026-10-08T19:10:16.749Z",
       "preparedAt": "2026-10-08T19:10:16.749Z",
       "swappedAt": null,
@@ -1716,7 +2124,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132336",
       "analystId": "user_davi",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-06",
       "currentStep": "CONCLUIDO",
@@ -1724,19 +2132,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 0
+        "1 FORMATAÇÃO E BIOS": 3778,
+        "2 WINDOWS UPDATE": 2002,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1285,
+        "4 DOMINIO E ARGUS": 1156
       },
-      "totalElapsedSeconds": 0,
+      "totalElapsedSeconds": 8221,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
-      "manualEntry": false,
-      "manualEntryBy": null,
-      "manualEntryAt": null,
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.434Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_created",
           "actorId": "user_davi",
@@ -1747,7 +2167,7 @@
       "currentStepStartedAt": "2026-10-08T19:10:16.749Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:10:16.749Z",
-      "updatedAt": "2026-10-08T19:10:16.749Z",
+      "updatedAt": "2026-10-09T04:36:18.434Z",
       "completedAt": "2026-10-08T19:10:16.749Z",
       "preparedAt": "2026-10-08T19:10:16.749Z",
       "swappedAt": null,
@@ -1758,7 +2178,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132297",
       "analystId": "user_guilherme",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -1766,19 +2186,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 60,
-        "2 WINDOWS UPDATE": 0,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 0
+        "1 FORMATAÇÃO E BIOS": 3809,
+        "2 WINDOWS UPDATE": 2025,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1781,
+        "4 DOMINIO E ARGUS": 1061
       },
-      "totalElapsedSeconds": 60,
+      "totalElapsedSeconds": 8676,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
-      "manualEntryBy": "user_guilherme",
-      "manualEntryAt": "2026-10-08T19:20:09.037Z",
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -1801,7 +2233,7 @@
       "currentStepStartedAt": "2026-10-09T04:29:30.940Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:19:14.357Z",
-      "updatedAt": "2026-10-09T04:29:30.941Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-09T04:29:30.941Z",
       "preparedAt": "2026-10-09T04:29:30.941Z",
       "swappedAt": null,
@@ -1812,7 +2244,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132346",
       "analystId": "user_guilherme",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -1820,19 +2252,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 1560,
-        "2 WINDOWS UPDATE": 2940,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 0
+        "1 FORMATAÇÃO E BIOS": 3354,
+        "2 WINDOWS UPDATE": 2099,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1638,
+        "4 DOMINIO E ARGUS": 1190
       },
-      "totalElapsedSeconds": 4500,
+      "totalElapsedSeconds": 8281,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
-      "manualEntryBy": "user_guilherme",
-      "manualEntryAt": "2026-10-08T19:18:54.651Z",
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.434Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -1849,7 +2293,7 @@
       "currentStepStartedAt": "2026-10-09T04:29:30.941Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:18:54.651Z",
-      "updatedAt": "2026-10-09T04:29:30.941Z",
+      "updatedAt": "2026-10-09T04:36:18.434Z",
       "completedAt": "2026-10-09T04:29:30.941Z",
       "preparedAt": "2026-10-09T04:29:30.941Z",
       "swappedAt": null,
@@ -1860,7 +2304,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON01012326",
       "analystId": "user_guilherme",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -1868,19 +2312,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 1800
+        "1 FORMATAÇÃO E BIOS": 2867,
+        "2 WINDOWS UPDATE": 1949,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1484,
+        "4 DOMINIO E ARGUS": 1174
       },
-      "totalElapsedSeconds": 3600,
+      "totalElapsedSeconds": 7474,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
-      "manualEntryBy": "user_guilherme",
-      "manualEntryAt": "2026-10-08T19:17:34.663Z",
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -1897,7 +2353,7 @@
       "currentStepStartedAt": "2026-10-09T04:29:30.941Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:17:34.663Z",
-      "updatedAt": "2026-10-09T04:29:30.941Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-09T04:29:30.941Z",
       "preparedAt": "2026-10-09T04:29:30.941Z",
       "swappedAt": null,
@@ -1908,7 +2364,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132307",
       "analystId": "user_guilherme",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-07",
       "currentStep": "CONCLUIDO",
@@ -1916,19 +2372,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1800,
-        "4 DOMINIO E ARGUS": 0
+        "1 FORMATAÇÃO E BIOS": 2833,
+        "2 WINDOWS UPDATE": 1872,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1276,
+        "4 DOMINIO E ARGUS": 1178
       },
-      "totalElapsedSeconds": 3600,
+      "totalElapsedSeconds": 7159,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
-      "manualEntryBy": "user_guilherme",
-      "manualEntryAt": "2026-10-08T19:17:01.059Z",
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -1945,7 +2413,7 @@
       "currentStepStartedAt": "2026-10-09T04:29:30.941Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:17:01.059Z",
-      "updatedAt": "2026-10-09T04:29:30.941Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-09T04:29:30.941Z",
       "preparedAt": "2026-10-09T04:29:30.941Z",
       "swappedAt": null,
@@ -1956,7 +2424,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132334",
       "analystId": "user_guilherme",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -1964,19 +2432,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 1620,
-        "2 WINDOWS UPDATE": 360,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 960,
-        "4 DOMINIO E ARGUS": 480
+        "1 FORMATAÇÃO E BIOS": 2825,
+        "2 WINDOWS UPDATE": 1966,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1466,
+        "4 DOMINIO E ARGUS": 1111
       },
-      "totalElapsedSeconds": 3420,
+      "totalElapsedSeconds": 7368,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
-      "manualEntryBy": "user_guilherme",
-      "manualEntryAt": "2026-10-08T19:14:22.342Z",
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.434Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -1993,7 +2473,7 @@
       "currentStepStartedAt": "2026-10-09T04:29:30.941Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:14:22.342Z",
-      "updatedAt": "2026-10-09T04:29:30.941Z",
+      "updatedAt": "2026-10-09T04:36:18.434Z",
       "completedAt": "2026-10-09T04:29:30.941Z",
       "preparedAt": "2026-10-09T04:29:30.941Z",
       "swappedAt": null,
@@ -2004,7 +2484,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132332",
       "analystId": "user_guilherme",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -2012,19 +2492,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 1440,
-        "2 WINDOWS UPDATE": 600,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 960,
-        "4 DOMINIO E ARGUS": 540
+        "1 FORMATAÇÃO E BIOS": 3215,
+        "2 WINDOWS UPDATE": 2070,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1749,
+        "4 DOMINIO E ARGUS": 959
       },
-      "totalElapsedSeconds": 3540,
+      "totalElapsedSeconds": 7993,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
-      "manualEntryBy": "user_guilherme",
-      "manualEntryAt": "2026-10-08T19:13:42.852Z",
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.434Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -2041,7 +2533,7 @@
       "currentStepStartedAt": "2026-10-09T04:29:30.941Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:13:42.852Z",
-      "updatedAt": "2026-10-09T04:29:30.941Z",
+      "updatedAt": "2026-10-09T04:36:18.434Z",
       "completedAt": "2026-10-09T04:29:30.941Z",
       "preparedAt": "2026-10-09T04:29:30.941Z",
       "swappedAt": null,
@@ -2052,7 +2544,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132280",
       "analystId": "user_guilherme",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -2060,19 +2552,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 1800,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 0,
-        "4 DOMINIO E ARGUS": 1800
+        "1 FORMATAÇÃO E BIOS": 3289,
+        "2 WINDOWS UPDATE": 1829,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1517,
+        "4 DOMINIO E ARGUS": 1007
       },
-      "totalElapsedSeconds": 3600,
+      "totalElapsedSeconds": 7642,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
-      "manualEntryBy": "user_guilherme",
-      "manualEntryAt": "2026-10-08T19:12:58.884Z",
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -2089,7 +2593,7 @@
       "currentStepStartedAt": "2026-10-09T04:29:30.941Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:12:58.884Z",
-      "updatedAt": "2026-10-09T04:29:30.941Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-09T04:29:30.941Z",
       "preparedAt": "2026-10-09T04:29:30.941Z",
       "swappedAt": null,
@@ -2100,7 +2604,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132278",
       "analystId": "user_guilherme",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -2108,19 +2612,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 360,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1140,
-        "4 DOMINIO E ARGUS": 420
+        "1 FORMATAÇÃO E BIOS": 3545,
+        "2 WINDOWS UPDATE": 1833,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1580,
+        "4 DOMINIO E ARGUS": 1057
       },
-      "totalElapsedSeconds": 1920,
+      "totalElapsedSeconds": 8015,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
-      "manualEntryBy": "user_guilherme",
-      "manualEntryAt": "2026-10-08T19:12:13.467Z",
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -2137,7 +2653,7 @@
       "currentStepStartedAt": "2026-10-09T04:29:30.941Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:12:13.467Z",
-      "updatedAt": "2026-10-09T04:29:30.941Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-09T04:29:30.941Z",
       "preparedAt": "2026-10-09T04:29:30.941Z",
       "swappedAt": null,
@@ -2148,7 +2664,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132253",
       "analystId": "user_guilherme",
-      "brand": "HP",
+      "brand": "Dell",
       "profile": "Local",
       "processDate": "2026-10-08",
       "currentStep": "CONCLUIDO",
@@ -2156,19 +2672,31 @@
       "status": "CONCLUIDO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 0,
-        "2 WINDOWS UPDATE": 960,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1080,
-        "4 DOMINIO E ARGUS": 360
+        "1 FORMATAÇÃO E BIOS": 4077,
+        "2 WINDOWS UPDATE": 2009,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1436,
+        "4 DOMINIO E ARGUS": 1186
       },
-      "totalElapsedSeconds": 2400,
+      "totalElapsedSeconds": 8708,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
-      "manualEntryBy": "user_guilherme",
-      "manualEntryAt": "2026-10-08T19:11:25.878Z",
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T04:36:18.433Z"
+        },
+        {
+          "action": "machine_edited_manual",
+          "actorId": "user_manager",
+          "note": "Tempos ajustados no lancamento manual",
+          "createdAt": "2026-10-09T04:32:24.428Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -2185,7 +2713,7 @@
       "currentStepStartedAt": "2026-10-09T04:29:30.941Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:11:25.878Z",
-      "updatedAt": "2026-10-09T04:29:30.941Z",
+      "updatedAt": "2026-10-09T04:36:18.433Z",
       "completedAt": "2026-10-09T04:29:30.941Z",
       "preparedAt": "2026-10-09T04:29:30.941Z",
       "swappedAt": null,
@@ -2200,7 +2728,7 @@
       "displayName": "Isaque",
       "file": "data/analistas/isaque.json",
       "records": 6,
-      "updatedAt": "2026-10-09T04:30:29.609Z"
+      "updatedAt": "2026-10-09T04:36:18.434Z"
     },
     {
       "id": "user_vinicius",
@@ -2208,7 +2736,7 @@
       "displayName": "Vinicius",
       "file": "data/analistas/vinicius.json",
       "records": 11,
-      "updatedAt": "2026-10-09T04:31:33.155Z"
+      "updatedAt": "2026-10-09T04:36:18.434Z"
     },
     {
       "id": "user_guilherme",
@@ -2216,7 +2744,7 @@
       "displayName": "Guilherme",
       "file": "data/analistas/guilherme.json",
       "records": 11,
-      "updatedAt": "2026-10-09T04:29:30.942Z"
+      "updatedAt": "2026-10-09T04:36:18.434Z"
     },
     {
       "id": "user_davi",
@@ -2224,7 +2752,7 @@
       "displayName": "Davi",
       "file": "data/analistas/davi.json",
       "records": 16,
-      "updatedAt": "2026-10-08T19:10:16.749Z"
+      "updatedAt": "2026-10-09T04:36:18.434Z"
     }
   ]
 }
