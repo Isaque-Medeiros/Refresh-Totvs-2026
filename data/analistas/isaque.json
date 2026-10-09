@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-09T13:14:01.839Z",
+  "exportedAt": "2026-10-09T13:24:53.094Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -14,36 +14,36 @@
   },
   "summary": {
     "total": 8,
-    "doneCount": 6,
-    "wipCount": 2,
+    "doneCount": 7,
+    "wipCount": 1,
     "pausedCount": 0,
     "errorCount": 0,
     "successRate": "100",
-    "globalPercent": "0.6",
-    "avgTimeString": "02h 11m 17s",
+    "globalPercent": "0.7",
+    "avgTimeString": "02h 04m 21s",
     "manualCount": 6,
     "stepAvgTimes": {
       "1 FORMATAÇÃO E BIOS": "52m 25s",
       "2 WINDOWS UPDATE": "28m 38s",
       "3 ATIVAR ADM E SUBIR DRIVERS": "22m 28s",
-      "4 DOMINIO E ARGUS": "14m 47s"
+      "4 DOMINIO E ARGUS": "15m 38s"
     },
     "stepAvgSeconds": {
       "1 FORMATAÇÃO E BIOS": 3145,
       "2 WINDOWS UPDATE": 1718,
       "3 ATIVAR ADM E SUBIR DRIVERS": 1348,
-      "4 DOMINIO E ARGUS": 887
+      "4 DOMINIO E ARGUS": 938
     },
     "analystStats": [
       {
         "analystId": "user_isaque",
         "name": "Isaque",
         "total": 8,
-        "done": 6,
-        "wip": 2,
+        "done": 7,
+        "wip": 1,
         "paused": 0,
         "errors": 0,
-        "goalPercent": "2.4"
+        "goalPercent": "2.8"
       },
       {
         "analystId": "user_vinicius",
@@ -87,17 +87,17 @@
       "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-09",
-      "currentStep": "3 ATIVAR ADM E SUBIR DRIVERS",
-      "currentStepIndex": 2,
-      "status": "EM_ANDAMENTO",
-      "timerRunning": true,
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 1853,
         "2 WINDOWS UPDATE": 1035,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1430,
-        "4 DOMINIO E ARGUS": 0
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1435,
+        "4 DOMINIO E ARGUS": 643
       },
-      "totalElapsedSeconds": 4318,
+      "totalElapsedSeconds": 4966,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -105,6 +105,18 @@
       "manualEntryBy": null,
       "manualEntryAt": null,
       "history": [
+        {
+          "action": "next_step",
+          "actorId": "user_isaque",
+          "note": "CONCLUIDO",
+          "createdAt": "2026-10-09T13:24:51.579Z"
+        },
+        {
+          "action": "next_step",
+          "actorId": "user_isaque",
+          "note": "4 DOMINIO E ARGUS",
+          "createdAt": "2026-10-09T13:14:07.678Z"
+        },
         {
           "action": "next_step",
           "actorId": "user_isaque",
@@ -124,12 +136,12 @@
           "createdAt": "2026-10-09T12:02:00.191Z"
         }
       ],
-      "currentStepStartedAt": "2026-10-09T12:50:10.705Z",
-      "lastTickAt": "2026-10-09T13:14:01.838Z",
+      "currentStepStartedAt": "2026-10-09T13:14:07.678Z",
+      "lastTickAt": null,
       "createdAt": "2026-10-09T12:02:00.191Z",
-      "updatedAt": "2026-10-09T13:14:01.838Z",
-      "completedAt": null,
-      "preparedAt": null,
+      "updatedAt": "2026-10-09T13:24:51.579Z",
+      "completedAt": "2026-10-09T13:24:51.579Z",
+      "preparedAt": "2026-10-09T13:24:51.579Z",
       "swappedAt": null,
       "swappedBy": null
     },
@@ -149,9 +161,9 @@
         "1 FORMATAÇÃO E BIOS": 1853,
         "2 WINDOWS UPDATE": 1033,
         "3 ATIVAR ADM E SUBIR DRIVERS": 1430,
-        "4 DOMINIO E ARGUS": 1
+        "4 DOMINIO E ARGUS": 650
       },
-      "totalElapsedSeconds": 4317,
+      "totalElapsedSeconds": 4966,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -185,9 +197,9 @@
         }
       ],
       "currentStepStartedAt": "2026-10-09T13:14:00.327Z",
-      "lastTickAt": "2026-10-09T13:14:01.838Z",
+      "lastTickAt": "2026-10-09T13:24:53.093Z",
       "createdAt": "2026-10-09T12:02:00.190Z",
-      "updatedAt": "2026-10-09T13:14:01.838Z",
+      "updatedAt": "2026-10-09T13:24:53.093Z",
       "completedAt": null,
       "preparedAt": null,
       "swappedAt": null,
