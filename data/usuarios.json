@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-09T04:42:30.900Z",
+  "exportedAt": "2026-10-09T16:07:10.957Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -38,7 +38,13 @@
       "role": "analyst",
       "active": true,
       "updatedAt": "2026-10-09T04:25:59.393Z",
-      "credentials": null
+      "credentials": {
+        "algo": "pbkdf2-sha256",
+        "iterations": 150000,
+        "salt": "14b5feaed33b128057c9917be287a6a4",
+        "hash": "3545c3801c5587ce9c68483d2284b8979f7373930cd239029148e04216c21fa4",
+        "updatedAt": "2026-10-09T12:06:31.595Z"
+      }
     },
     {
       "id": "user_guilherme",
@@ -47,7 +53,13 @@
       "role": "analyst",
       "active": true,
       "updatedAt": "2026-10-09T04:25:59.393Z",
-      "credentials": null
+      "credentials": {
+        "algo": "pbkdf2-sha256",
+        "iterations": 150000,
+        "salt": "eb674e0b3837c517f46f133bc575bdd9",
+        "hash": "1ad0e555bc22904c60a0e25196332a9b538f2db25e782434f63463a8e2241761",
+        "updatedAt": "2026-10-09T12:15:58.746Z"
+      }
     },
     {
       "id": "user_davi",
@@ -66,32 +78,32 @@
       "username": "isaque",
       "displayName": "Isaque",
       "file": "data/analistas/isaque.json",
-      "records": 6,
-      "updatedAt": "2026-10-09T04:42:25.309Z"
+      "records": 12,
+      "updatedAt": "2026-10-09T16:01:18.478Z"
     },
     {
       "id": "user_vinicius",
       "username": "vinicius",
       "displayName": "Vinicius",
       "file": "data/analistas/vinicius.json",
-      "records": 11,
-      "updatedAt": "2026-10-09T04:42:25.309Z"
+      "records": 15,
+      "updatedAt": "2026-10-09T15:12:15.753Z"
     },
     {
       "id": "user_guilherme",
       "username": "guilherme",
       "displayName": "Guilherme",
       "file": "data/analistas/guilherme.json",
-      "records": 11,
-      "updatedAt": "2026-10-09T04:42:25.309Z"
+      "records": 16,
+      "updatedAt": "2026-10-09T16:07:05.702Z"
     },
     {
       "id": "user_davi",
       "username": "davi",
       "displayName": "Davi",
       "file": "data/analistas/davi.json",
-      "records": 16,
-      "updatedAt": "2026-10-09T04:42:25.309Z"
+      "records": 20,
+      "updatedAt": "2026-10-09T14:54:39.764Z"
     }
   ]
 }
