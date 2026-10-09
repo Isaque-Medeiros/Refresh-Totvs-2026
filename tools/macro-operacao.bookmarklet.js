@@ -1,0 +1,1147 @@
+(function () {
+    'use strict';
+
+    /* Macro de operacao - TOTVS Field Refresh 2026.
+     * Trabalha em fila clicando de verdade na tela do app:
+     *   1) cadastra os hostnames de CONFIG.registerQueue (um submit por SPON);
+     *   2) edita os registros 1 por 1, na ordem, marcando status Concluido,
+     *      ligando o modo manual e digitando tempos sorteados (segundos
+     *      quebrados) dentro das faixas de CONFIG.rangesMinutes.
+     * Abra o app (app/index.html), faca login e clique o bookmarklet.
+     * Painel no canto com Pausar / Continuar / Parar (Esc tambem para).
+     */
+
+    var CONFIG = {
+        /* Faixas (em minutos) na ordem das 4 etapas do PROCESS_STEPS */
+        rangesMinutes: [
+            [45, 70],
+            [30, 36],
+            [20, 30],
+            [15, 20]
+        ],
+        mode: 'ambos',
+        /* Lista da fila de cadastro. Vazia = pergunta no prompt (um por linha).
+         * Aceita "SPON010132303" ou "SPON010132303;Dell;Local;user_davi". */
+        registerQueue: [],
+        askQueue: true,
+        registerDefaults: {
+            brand: '',
+            profile: '',
+            processDate: '',
+            step: '1 FORMATAÇÃO E BIOS',
+            /* Nao dispara o cronometro no cadastro: o registro nasce PAUSADO,
+             * sem tempo inventado, e a fase de edicao grava os tempos manuais. */
+            autoStart: false,
+            notes: ''
+        },
+        analystFilter: null,
+        sponList: [],
+        order: 'tela',
+        onlyNotDone: false,
+        avoidRoundMinutes: true,
+        delayRangeMs: [350, 900],
+        timeoutMs: 6000,
+        pollMs: 60,
+        maxItems: 60,
+        dryRun: false,
+        finalSync: true,
+        reload: false
+    };
+
+    /* IDs e ganchos de DOM usados na tela do app (index.html + app.js).
+     * Se o app mudar um id, o teste macro-operacao.test.mjs acusa. */
+    var SELECTORS = {
+        loginView: 'loginView',
+        appView: 'appView',
+        machinesTableBody: 'machinesTableBody',
+        editRowAction: '[data-action="edit"][data-machine-id]',
+        totalTimer: '[data-total-timer]',
+        statusBadge: '.badge',
+        hostnameCell: 'td.font-mono',
+        form: 'machineForm',
+        editMachineId: 'editMachineId',
+        inputHostnames: 'inputHostnames',
+        selectAnalyst: 'selectAnalyst',
+        selectBrand: 'selectBrand',
+        selectProfile: 'selectProfile',
+        inputProcessDate: 'inputProcessDate',
+        selectStep: 'selectStep',
+        checkAutoStartTimer: 'checkAutoStartTimer',
+        checkManualEntry: 'checkManualEntry',
+        manualTimesContainer: 'manualTimesContainer',
+        manualTotalLabel: 'manualTotalLabel',
+        manualStepInputs: [
+            'inputManualStep1',
+            'inputManualStep2',
+            'inputManualStep3',
+            'inputManualStep4'
+        ],
+        btnSubmitForm: 'btnSubmitForm',
+        btnResetForm: 'btnResetForm',
+        toastNotification: 'toastNotification',
+        toastIcon: 'toastIcon',
+        toastMessage: 'toastMessage'
+    };
+
+    var FALLBACK_STEPS = [
+        '1 FORMATAÇÃO E BIOS',
+        '2 WINDOWS UPDATE',
+        '3 ATIVAR ADM E SUBIR DRIVERS',
+        '4 DOMINIO E ARGUS'
+    ];
+
+    var TOAST_EDIT_OK = 'Registro atualizado com sucesso.';
+
+    /* ------------------------------ logica pura ------------------------------ */
+
+    function pad2(value) {
+        var text = String(value);
+        return text.length >= 2 ? text : '0' + text;
+    }
+
+    function randInt(min, max) {
+        var lo = Math.ceil(Math.min(Number(min), Number(max)));
+        var hi = Math.floor(Math.max(Number(min), Number(max)));
+        return lo + Math.floor(Math.random() * (hi - lo + 1));
+    }
+
+    function randSeconds(minSeconds, maxSeconds, avoidRoundMinutes) {
+        var lo = Math.round(Math.min(Number(minSeconds), Number(maxSeconds)));
+        var hi = Math.round(Math.max(Number(minSeconds), Number(maxSeconds)));
+        var span = hi - lo + 1;
+        var value = lo + Math.floor(Math.random() * span);
+
+        if (avoidRoundMinutes && lo !== hi) {
+            var attempts = 0;
+            while (value % 60 === 0 && attempts < 40) {
+                value = lo + Math.floor(Math.random() * span);
+                attempts += 1;
+            }
+            if (value % 60 === 0) {
+                value = value === hi ? hi - 1 : value + 1;
+            }
+        }
+
+        return value;
+    }
+
+    function rangesSeconds(rangesMinutes) {
+        return (Array.isArray(rangesMinutes) ? rangesMinutes : []).map(function (pair) {
+            return [Math.round(Number(pair[0]) * 60), Math.round(Number(pair[1]) * 60)];
+        });
+    }
+
+    function generateDurations(steps, ranges, avoidRoundMinutes) {
+        var stepDurations = {};
+        var total = 0;
+        for (var index = 0; index < steps.length; index += 1) {
+            var range = ranges[index] || ranges[ranges.length - 1];
+            var value = randSeconds(range[0], range[1], avoidRoundMinutes);
+            stepDurations[steps[index]] = value;
+            total += value;
+        }
+
+        /* Segundos quebrados tambem no total: se a soma cair em minuto cheio,
+         * desloca a ultima etapa em alguns segundos ate o total quebrar. */
+        if (avoidRoundMinutes && steps.length) {
+            var lastStep = steps[steps.length - 1];
+            var lastRange = ranges[steps.length - 1] || ranges[ranges.length - 1];
+            var offsets = [1, -1, 2, -2, 3, -3];
+
+            for (var fix = 0; fix < offsets.length && total % 60 === 0; fix += 1) {
+                var base = stepDurations[lastStep];
+                var candidate = base + offsets[fix];
+                if (candidate >= lastRange[0] && candidate <= lastRange[1] && candidate % 60 !== 0) {
+                    total = total - base + candidate;
+                    stepDurations[lastStep] = candidate;
+                }
+            }
+        }
+
+        return { stepDurations: stepDurations, total: total };
+    }
+
+    /* Segundos para o valor (em minutos com fracao) que o campo manual do app
+     * entende, sem zeros a direita. 2841 vira "47.35". */
+    function secondsToMinutesInput(seconds) {
+        var text = (Number(seconds || 0) / 60).toFixed(4);
+        text = text.replace(/0+$/, '').replace(/[.,]$/, '');
+        return text === '' ? '0' : text;
+    }
+
+    /* Espelha o getManualStepSeconds do app: Math.round(minutos * 60). */
+    function minutesInputToSeconds(value) {
+        return Math.max(0, Math.round(Number(value || 0) * 60));
+    }
+
+    function formatSeconds(value) {
+        var total = Math.max(0, Math.round(Number(value || 0)));
+        var hrs = Math.floor(total / 3600);
+        var mins = Math.floor((total % 3600) / 60);
+        var secs = total % 60;
+        return pad2(hrs) + ':' + pad2(mins) + ':' + pad2(secs);
+    }
+
+    function parseQueueLine(line) {
+        var text = String(line === null || line === undefined ? '' : line).trim();
+        if (!text) {
+            return null;
+        }
+
+        var parts = text.split(/[;,\t]+/);
+        var hostname = String(parts[0] || '').trim().toUpperCase();
+        if (!hostname) {
+            return null;
+        }
+
+        return {
+            hostname: hostname,
+            brand: String(parts[1] || '').trim(),
+            profile: String(parts[2] || '').trim(),
+            analystId: String(parts[3] || '').trim()
+        };
+    }
+
+    function parseQueue(source) {
+        var raw = [];
+        var incoming = Array.isArray(source)
+            ? source
+            : String(source === null || source === undefined ? '' : source).split(/\r?\n/);
+
+        incoming.forEach(function (item) {
+            if (item && typeof item === 'object') {
+                raw.push(item);
+                return;
+            }
+            String(item === null || item === undefined ? '' : item).split(/\r?\n/).forEach(function (line) {
+                if (String(line).trim()) {
+                    raw.push(line);
+                }
+            });
+        });
+
+        var seen = {};
+        var list = [];
+        raw.forEach(function (item) {
+            var isObject = Boolean(item && typeof item === 'object');
+            var entry = isObject
+                ? parseQueueLine(item.hostname || item.spon || item.name || '')
+                : parseQueueLine(item);
+            if (!entry) {
+                return;
+            }
+            if (isObject) {
+                entry.brand = String(item.brand || entry.brand || '').trim();
+                entry.profile = String(item.profile || entry.profile || '').trim();
+                entry.analystId = String(item.analystId || entry.analystId || '').trim();
+            }
+            if (seen[entry.hostname]) {
+                return;
+            }
+            seen[entry.hostname] = true;
+            list.push(entry);
+        });
+
+        return list;
+    }
+
+    function isDoneRow(row) {
+        if (!row) {
+            return false;
+        }
+        if (row.rowCompleted) {
+            return true;
+        }
+        if (String(row.status || '').toUpperCase() === 'CONCLUIDO') {
+            return true;
+        }
+        return /^(conclu|trocada)/i.test(String(row.statusText || ''));
+    }
+
+    function pickQueue(rows, options) {
+        var config = options || {};
+        var sponSet = {};
+        (Array.isArray(config.sponList) ? config.sponList : []).forEach(function (item) {
+            var key = String(item).trim().toUpperCase();
+            if (key) {
+                sponSet[key] = true;
+            }
+        });
+        var hasSponFilter = Object.keys(sponSet).length > 0;
+
+        var selected = [];
+        (Array.isArray(rows) ? rows : []).forEach(function (row) {
+            if (!row || !row.id) {
+                return;
+            }
+            var hostname = String(row.hostname || '').toUpperCase();
+            if (hasSponFilter && !sponSet[hostname]) {
+                return;
+            }
+            if (config.analystFilter && row.analystId !== config.analystFilter) {
+                return;
+            }
+            if (config.onlyNotDone && isDoneRow(row)) {
+                return;
+            }
+            selected.push({ id: String(row.id), hostname: hostname, statusText: String(row.statusText || '') });
+        });
+
+        if (config.order === 'hostname' || config.order === 'hostname-desc') {
+            var direction = config.order === 'hostname' ? 1 : -1;
+            selected.sort(function (a, b) {
+                if (a.hostname === b.hostname) {
+                    return 0;
+                }
+                return (a.hostname < b.hostname ? -1 : 1) * direction;
+            });
+        }
+
+        var limit = Number(config.maxItems || 0);
+        if (limit > 0) {
+            selected = selected.slice(0, limit);
+        }
+
+        return selected;
+    }
+
+    /* --------------------------- painel de controle --------------------------- */
+
+    var runtime = {
+        hud: null,
+        logBox: null,
+        logLines: [],
+        control: { paused: false, stopped: false }
+    };
+
+    function el(id) {
+        return document.getElementById(id);
+    }
+
+    function dispatch(node, type) {
+        if (!node) {
+            return;
+        }
+        node.dispatchEvent(new Event(type, { bubbles: true }));
+    }
+
+    function setInputValue(node, value) {
+        if (!node) {
+            return false;
+        }
+        node.value = String(value);
+        dispatch(node, 'input');
+        return true;
+    }
+
+    function setSelectValue(node, value, label) {
+        if (!node) {
+            return false;
+        }
+        var target = String(value === null || value === undefined ? '' : value).trim();
+        if (!target) {
+            return false;
+        }
+
+        var found = null;
+        Array.prototype.forEach.call(node.options, function (option) {
+            if (found === null && String(option.value).toUpperCase() === target.toUpperCase()) {
+                found = option.value;
+            }
+        });
+
+        if (found === null) {
+            log('opcao "' + target + '" nao existe em #' + node.id + (label ? ' (' + label + ')' : ''), 'warn');
+            return false;
+        }
+
+        node.value = found;
+        dispatch(node, 'change');
+        return true;
+    }
+
+    function log(text, kind) {
+        var line = String(text);
+        runtime.logLines.push(line);
+
+        if (!runtime.logBox) {
+            if (typeof console !== 'undefined') {
+                console.log('[macro-fila] ' + line);
+            }
+            return;
+        }
+
+        var color = '#e8f1ff';
+        if (kind === 'ok') {
+            color = '#7ef0b2';
+        } else if (kind === 'err') {
+            color = '#ff9aa8';
+        } else if (kind === 'warn') {
+            color = '#ffd166';
+        }
+
+        var row = document.createElement('div');
+        row.setAttribute('style', 'color:' + color);
+        row.innerText = line;
+        runtime.logBox.appendChild(row);
+
+        while (runtime.logBox.childNodes.length > 120) {
+            runtime.logBox.removeChild(runtime.logBox.firstChild);
+        }
+        runtime.logBox.scrollTop = runtime.logBox.scrollHeight;
+    }
+
+    function hudTextStyle(extra) {
+        return 'box-sizing:border-box;' + extra;
+    }
+
+    function createHud() {
+        var box = document.createElement('div');
+        box.id = 'macroFilaHud';
+        box.setAttribute('style', 'position:fixed;right:16px;bottom:16px;z-index:2147483000;width:362px;'
+            + 'background:#0b2545;color:#e8f1ff;border:1px solid #2f6fed;border-radius:12px;'
+            + 'box-shadow:0 14px 34px rgba(3,12,28,.45);overflow:hidden;'
+            + 'font-family:Consolas,Menlo,monospace;font-size:12px');
+
+        box.innerHTML = ''
+            + '<div style="' + hudTextStyle('padding:9px 12px;background:#123a6b;display:flex;justify-content:space-between;') + '">'
+            + '<strong style="letter-spacing:.6px">MACRO FILA SPON</strong>'
+            + '<span id="macroFilaBadge" style="color:#8fc7ff">iniciando</span>'
+            + '</div>'
+            + '<div style="' + hudTextStyle('padding:10px 12px;') + '">'
+            + '<div id="macroFilaPhase">fase: aguardando</div>'
+            + '<div id="macroFilaStep" style="margin-top:2px;color:#8fc7ff">item: 0/0</div>'
+            + '<div style="' + hudTextStyle('margin:9px 0;height:8px;background:#08203d;border-radius:5px;overflow:hidden;') + '">'
+            + '<div id="macroFilaBar" style="height:100%;width:0%;background:linear-gradient(90deg,#2f6fed,#59d0a0)"></div>'
+            + '</div>'
+            + '<div id="macroFilaLog" style="' + hudTextStyle('height:118px;overflow:auto;background:#08203d;border-radius:8px;padding:6px 8px;line-height:1.45;') + '"></div>'
+            + '<div style="margin-top:9px;display:flex;gap:6px">'
+            + '<button type="button" id="macroFilaPause" style="' + hudTextStyle('flex:1;padding:6px 0;border-radius:6px;border:1px solid #2f6fed;background:#123a6b;color:#e8f1ff;cursor:pointer;') + '">Pausar</button>'
+            + '<button type="button" id="macroFilaStop" style="' + hudTextStyle('flex:1;padding:6px 0;border-radius:6px;border:1px solid #ff8fa3;background:#3a1020;color:#ffd9df;cursor:pointer;') + '">Parar</button>'
+            + '<button type="button" id="macroFilaCopy" style="' + hudTextStyle('flex:1;padding:6px 0;border-radius:6px;border:1px solid #59d0a0;background:#0f2f24;color:#c9ffe6;cursor:pointer;') + '">Copiar log</button>'
+            + '</div></div>';
+
+        document.body.appendChild(box);
+        runtime.hud = box;
+        runtime.logBox = el('macroFilaLog');
+
+        el('macroFilaPause').addEventListener('click', togglePause);
+        el('macroFilaStop').addEventListener('click', requestStop);
+        el('macroFilaCopy').addEventListener('click', copyLog);
+        document.addEventListener('keydown', handleKeydown, true);
+
+        return box;
+    }
+
+    function hudBadge(text) {
+        var badge = el('macroFilaBadge');
+        if (badge) {
+            badge.innerText = text;
+        }
+    }
+
+    function hudPhase(name, total) {
+        var phase = el('macroFilaPhase');
+        if (phase) {
+            phase.innerText = 'fase: ' + name + ' (' + total + ')';
+        }
+    }
+
+    function hudStep(index, total, hostname) {
+        var step = el('macroFilaStep');
+        if (step) {
+            step.innerText = 'item: ' + index + '/' + total + ' ' + hostname;
+        }
+        var bar = el('macroFilaBar');
+        if (bar) {
+            var percent = total > 0 ? Math.round((index - 1) * 100 / total) : 0;
+            bar.style.width = percent + '%';
+        }
+    }
+
+    function togglePause() {
+        runtime.control.paused = !runtime.control.paused;
+        var button = el('macroFilaPause');
+        if (button) {
+            button.innerText = runtime.control.paused ? 'Continuar' : 'Pausar';
+        }
+        hudBadge(runtime.control.paused ? 'pausado' : 'rodando');
+        log(runtime.control.paused ? 'pausado pelo usuario' : 'retomado', 'warn');
+    }
+
+    function requestStop() {
+        if (runtime.control.stopped) {
+            return;
+        }
+        runtime.control.stopped = true;
+        runtime.control.paused = false;
+        hudBadge('parando');
+        log('parada solicitada: vou terminar o item atual', 'warn');
+    }
+
+    function handleKeydown(event) {
+        if (event && event.key === 'Escape') {
+            requestStop();
+        }
+    }
+
+    function copyLog() {
+        var area = document.createElement('textarea');
+        area.value = runtime.logLines.join('\r\n');
+        document.body.appendChild(area);
+        area.select();
+        try {
+            document.execCommand('copy');
+            log('log copiado para a area de transferencia', 'ok');
+        } catch (error) {
+            log('nao consegui copiar o log', 'err');
+        }
+        document.body.removeChild(area);
+    }
+
+    /* ------------------------------ utilitarios ------------------------------- */
+
+    function sleep(ms) {
+        return new Promise(function (resolve) {
+            setTimeout(resolve, ms);
+        });
+    }
+
+    function delayRandom() {
+        var range = CONFIG.delayRangeMs || [350, 900];
+        return sleep(randInt(range[0], range[1]));
+    }
+
+    function stopSignal(label) {
+        var error = new Error(label);
+        error.stop = true;
+        return error;
+    }
+
+    function waitFor(predicate, label) {
+        var timeoutMs = Number(CONFIG.timeoutMs || 6000);
+        var pollMs = Number(CONFIG.pollMs || 60);
+        var started = Date.now();
+
+        return new Promise(function (resolve, reject) {
+            function poll() {
+                var value = false;
+                try {
+                    value = predicate();
+                } catch (error) {
+                    value = false;
+                }
+                if (value) {
+                    resolve(value);
+                    return;
+                }
+                if (runtime.control.stopped) {
+                    reject(stopSignal(label));
+                    return;
+                }
+                if (Date.now() - started >= timeoutMs) {
+                    reject(new Error('tempo esgotado esperando ' + label));
+                    return;
+                }
+                setTimeout(poll, pollMs);
+            }
+            poll();
+        });
+    }
+
+    async function waitTurn(label) {
+        while (runtime.control.paused && !runtime.control.stopped) {
+            await sleep(200);
+        }
+        if (runtime.control.stopped) {
+            throw stopSignal(label);
+        }
+    }
+
+    /* --------------------------- leitura da tela ------------------------------ */
+
+    function readToast() {
+        var notification = el(SELECTORS.toastNotification);
+        var message = el(SELECTORS.toastMessage);
+        var icon = el(SELECTORS.toastIcon);
+        return {
+            text: message ? String(message.innerText || message.textContent || '').trim() : '',
+            icon: icon ? String(icon.innerText || icon.textContent || '').trim() : '',
+            shown: notification ? notification.classList.contains('show') : false
+        };
+    }
+
+    function readTableRows() {
+        var tbody = el(SELECTORS.machinesTableBody);
+        if (!tbody) {
+            return [];
+        }
+
+        var rows = [];
+        Array.prototype.forEach.call(tbody.querySelectorAll('tr'), function (tr) {
+            var button = tr.querySelector(SELECTORS.editRowAction);
+            if (!button) {
+                return;
+            }
+
+            var hostnameCell = tr.querySelector(SELECTORS.hostnameCell);
+            var badge = tr.querySelector(SELECTORS.statusBadge);
+            var totalNode = tr.querySelector(SELECTORS.totalTimer);
+
+            rows.push({
+                id: String(button.getAttribute('data-machine-id') || ''),
+                hostname: hostnameCell ? String(hostnameCell.textContent || '').trim().toUpperCase() : '',
+                statusText: badge ? String(badge.textContent || '').trim() : '',
+                totalText: totalNode ? String(totalNode.textContent || '').trim() : '',
+                rowCompleted: tr.classList.contains('row-completed')
+            });
+        });
+
+        return rows;
+    }
+
+    function findEditButton(machineId) {
+        var tbody = el(SELECTORS.machinesTableBody);
+        if (!tbody) {
+            return null;
+        }
+        return tbody.querySelector('[data-action="edit"][data-machine-id="' + machineId + '"]');
+    }
+
+    function findRowByHostname(hostname) {
+        var tbody = el(SELECTORS.machinesTableBody);
+        if (!tbody) {
+            return null;
+        }
+        var target = String(hostname).toUpperCase();
+        var found = null;
+        Array.prototype.forEach.call(tbody.querySelectorAll('tr'), function (tr) {
+            if (found) {
+                return;
+            }
+            var cell = tr.querySelector(SELECTORS.hostnameCell);
+            if (cell && String(cell.textContent || '').trim().toUpperCase() === target) {
+                found = tr;
+            }
+        });
+        return found;
+    }
+
+    function rowTotalText(machineId) {
+        var node = document.querySelector('[data-total-timer="' + machineId + '"]');
+        return node ? String(node.textContent || '').trim() : '';
+    }
+
+    /* --------------------------- fase 1: cadastro ----------------------------- */
+
+    async function registerOne(entry, user, steps) {
+        var defaults = CONFIG.registerDefaults || {};
+
+        var reset = el(SELECTORS.btnResetForm);
+        if (reset) {
+            reset.click();
+        }
+        await sleep(randInt(80, 220));
+
+        var hostnames = el(SELECTORS.inputHostnames);
+        if (!hostnames) {
+            throw new Error('campo de hostnames (#' + SELECTORS.inputHostnames + ') nao encontrado');
+        }
+        hostnames.disabled = false;
+        hostnames.rows = 1;
+        setInputValue(hostnames, entry.hostname);
+
+        if (user.role === 'manager') {
+            setSelectValue(el(SELECTORS.selectAnalyst), entry.analystId || CONFIG.analystFilter || user.id, 'analista');
+        }
+        setSelectValue(el(SELECTORS.selectBrand), entry.brand || defaults.brand, 'fabricante');
+        setSelectValue(el(SELECTORS.selectProfile), entry.profile || defaults.profile, 'perfil');
+        setSelectValue(el(SELECTORS.selectStep), defaults.step || steps[0], 'etapa');
+
+        if (defaults.processDate) {
+            setInputValue(el(SELECTORS.inputProcessDate), defaults.processDate);
+        }
+
+        var autoStart = el(SELECTORS.checkAutoStartTimer);
+        if (autoStart) {
+            autoStart.checked = defaults.autoStart !== false;
+        }
+
+        var manual = el(SELECTORS.checkManualEntry);
+        if (manual && manual.checked) {
+            manual.checked = false;
+            dispatch(manual, 'change');
+        }
+
+        if (defaults.notes) {
+            setInputValue(el(SELECTORS.inputNotes), defaults.notes);
+        }
+
+        await delayRandom();
+        await waitTurn('cadastrar ' + entry.hostname);
+
+        var submit = el(SELECTORS.btnSubmitForm);
+        if (!submit) {
+            throw new Error('botao Salvar (#btnSubmitForm) nao encontrado');
+        }
+        submit.click();
+
+        try {
+            await waitFor(function () {
+                var node = el(SELECTORS.inputHostnames);
+                return node ? String(node.value || '').trim() === '' : false;
+            }, 'o cadastro de ' + entry.hostname + ' terminar');
+        } catch (error) {
+            if (error && error.stop) {
+                throw error;
+            }
+            var refused = readToast();
+            throw new Error(refused.text ? ('recusado pelo app: ' + refused.text) : error.message);
+        }
+
+        var toast = readToast();
+        if (toast.icon === '!' && toast.text) {
+            throw new Error('recusado pelo app: ' + toast.text);
+        }
+        if (!findRowByHostname(entry.hostname)) {
+            log('cadastrado, mas a linha nao aparece com os filtros atuais', 'warn');
+        }
+
+        return entry.hostname;
+    }
+
+    async function runRegisterPhase(queue, user, steps, report) {
+        hudPhase('cadastro', queue.length);
+        log('cadastro: ' + queue.length + ' hostname(s) na fila', 'warn');
+
+        for (var index = 0; index < queue.length; index += 1) {
+            var entry = queue[index];
+            await waitTurn('cadastrar ' + entry.hostname);
+            hudStep(index + 1, queue.length, entry.hostname);
+
+            try {
+                await registerOne(entry, user, steps);
+                report.registerOk.push(entry.hostname);
+                log('cadastrado ' + entry.hostname, 'ok');
+            } catch (error) {
+                if (error && error.stop) {
+                    throw error;
+                }
+                report.registerFail.push(entry.hostname + ' (' + error.message + ')');
+                log('falhou cadastro ' + entry.hostname + ': ' + error.message, 'err');
+            }
+        }
+    }
+
+    /* ---------------------------- fase 2: edicao ------------------------------ */
+
+    function editSaved(machineId, expectedTotal) {
+        var node = el(SELECTORS.editMachineId);
+        if (node && String(node.value) !== '') {
+            return false;
+        }
+        if (readToast().text === TOAST_EDIT_OK) {
+            return true;
+        }
+        return rowTotalText(machineId) === expectedTotal;
+    }
+
+    async function editOne(item, steps, ranges) {
+        var button = findEditButton(item.id);
+        if (!button) {
+            throw new Error('linha/botao Editar nao esta na tabela agora');
+        }
+
+        try {
+            button.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        } catch (error) {
+            /* o scroll e apenas cosmetico */
+        }
+
+        button.click();
+        await waitFor(function () {
+            var node = el(SELECTORS.editMachineId);
+            return node ? String(node.value) === item.id : false;
+        }, 'abrir a edicao de ' + item.hostname);
+
+        var stepSelect = el(SELECTORS.selectStep);
+        if (!stepSelect) {
+            throw new Error('campo de etapa (#selectStep) nao encontrado');
+        }
+        setInputValue(stepSelect, 'CONCLUIDO');
+
+        var manual = el(SELECTORS.checkManualEntry);
+        if (manual && !manual.checked) {
+            manual.checked = true;
+            dispatch(manual, 'change');
+        }
+        var container = el(SELECTORS.manualTimesContainer);
+        if (container) {
+            container.classList.remove('hidden');
+        }
+        var autoStart = el(SELECTORS.checkAutoStartTimer);
+        if (autoStart) {
+            autoStart.checked = false;
+        }
+
+        var durations = generateDurations(steps, ranges, CONFIG.avoidRoundMinutes);
+        var expectedTotal = formatSeconds(durations.total);
+        var stepSeconds = [];
+
+        steps.forEach(function (step, index) {
+            var input = el(SELECTORS.manualStepInputs[index]);
+            if (!input) {
+                throw new Error('campo manual da etapa ' + (index + 1) + ' nao encontrado');
+            }
+            input.step = 'any';
+            input.value = secondsToMinutesInput(durations.stepDurations[step]);
+            dispatch(input, 'input');
+            stepSeconds.push(durations.stepDurations[step]);
+        });
+
+        await sleep(60);
+        var label = el(SELECTORS.manualTotalLabel);
+        var labelText = label ? String(label.innerText || label.textContent || '').trim() : '';
+        if (labelText !== expectedTotal) {
+            steps.forEach(function (step, index) {
+                dispatch(el(SELECTORS.manualStepInputs[index]), 'input');
+            });
+            await sleep(60);
+            label = el(SELECTORS.manualTotalLabel);
+            labelText = label ? String(label.innerText || label.textContent || '').trim() : '';
+        }
+
+        await delayRandom();
+        await waitTurn('salvar ' + item.hostname);
+
+        var submit = el(SELECTORS.btnSubmitForm);
+        if (!submit) {
+            throw new Error('botao Salvar (#btnSubmitForm) nao encontrado');
+        }
+        submit.click();
+
+        await waitFor(function () {
+            return editSaved(item.id, expectedTotal);
+        }, 'salvar a edicao de ' + item.hostname);
+
+        return {
+            hostname: item.hostname,
+            id: item.id,
+            seconds: durations.total,
+            totalText: expectedTotal,
+            labelText: labelText,
+            stepDurations: Object.assign({}, durations.stepDurations),
+            stepSeconds: stepSeconds
+        };
+    }
+
+    async function runEditPhase(queue, steps, ranges, report) {
+        hudPhase('edicao', queue.length);
+        log('edicao: ' + queue.length + ' registro(s) na fila (ordem: ' + CONFIG.order + ')', 'warn');
+
+        for (var index = 0; index < queue.length; index += 1) {
+            var item = queue[index];
+            await waitTurn('editar ' + item.hostname);
+            hudStep(index + 1, queue.length, item.hostname);
+
+            try {
+                var applied = await editOne(item, steps, ranges);
+                report.editOk.push(item.hostname);
+                report.edits.push(applied);
+                log('editado ' + item.hostname + ' total ' + applied.totalText + ' (rotulo ' + applied.labelText + ')', 'ok');
+            } catch (error) {
+                if (error && error.stop) {
+                    throw error;
+                }
+                report.editFail.push(item.hostname + ' (' + error.message + ')');
+                log('falhou edicao ' + item.hostname + ': ' + error.message, 'err');
+                try {
+                    var reset = el(SELECTORS.btnResetForm);
+                    if (reset) {
+                        reset.click();
+                    }
+                } catch (ignored) {
+                    /* apenas tentativa de limpar o formulario */
+                }
+            }
+        }
+    }
+
+    /* Confere no estado salvo (localStorage) se as edicoes ficaram gravadas. */
+    function verifyEdits(Storage, report) {
+        var state;
+        try {
+            state = Storage.loadState();
+        } catch (error) {
+            log('nao consegui conferir o estado salvo: ' + error.message, 'warn');
+            return 0;
+        }
+
+        var mismatches = [];
+        report.edits.forEach(function (item) {
+            var machine = null;
+            for (var index = 0; index < state.machines.length; index += 1) {
+                var candidate = state.machines[index];
+                var datasetId = candidate.datasetId || state.activeDatasetId;
+                if (candidate.hostname === item.hostname && datasetId === state.activeDatasetId) {
+                    machine = candidate;
+                    break;
+                }
+            }
+
+            if (!machine) {
+                mismatches.push(item.hostname + ' (nao esta no estado)');
+                return;
+            }
+            if (Number(machine.totalElapsedSeconds) !== Number(item.seconds)) {
+                mismatches.push(item.hostname + ' (total ' + machine.totalElapsedSeconds + ' != ' + item.seconds + ')');
+                return;
+            }
+            if (String(machine.currentStep) !== 'CONCLUIDO' || String(machine.status) !== 'CONCLUIDO') {
+                mismatches.push(item.hostname + ' (status ' + machine.status + '/' + machine.currentStep + ')');
+                return;
+            }
+            var keys = Object.keys(item.stepDurations);
+            for (var key = 0; key < keys.length; key += 1) {
+                var stepName = keys[key];
+                if (Number(machine.stepDurations[stepName]) !== Number(item.stepDurations[stepName])) {
+                    mismatches.push(item.hostname + ' (' + stepName + ' fora do previsto)');
+                    return;
+                }
+            }
+        });
+
+        if (mismatches.length) {
+            mismatches.forEach(function (text) {
+                log('conferencia: ' + text, 'err');
+            });
+        }
+
+        return report.edits.length - mismatches.length;
+    }
+
+    /* ------------------------------ orquestracao ------------------------------ */
+
+    /* Le um global (inclusive const de topo) pelo nome, sem quebrar se faltar. */
+    function resolveGlobal(name) {
+        try {
+            return (0, eval)('typeof ' + name + ' !== "undefined" ? ' + name + ' : undefined');
+        } catch (error) {
+            return undefined;
+        }
+    }
+
+    function modeIncludes(part) {
+        if (CONFIG.mode === 'ambos') {
+            return true;
+        }
+        return CONFIG.mode === part;
+    }
+
+    function resolveRegisterQueue(view) {
+        var list = parseQueue(CONFIG.registerQueue);
+        if (list.length || CONFIG.askQueue === false || typeof view.prompt !== 'function') {
+            return list;
+        }
+
+        var answer = view.prompt('Hostnames para cadastrar, um por linha. Opcional: SPON;Fabricante;Perfil;Analista', '');
+        if (!answer) {
+            return list;
+        }
+        return parseQueue(answer);
+    }
+
+    function previewDurations(steps, ranges) {
+        var durations = generateDurations(steps, ranges, CONFIG.avoidRoundMinutes);
+        var parts = steps.map(function (step, index) {
+            return (index + 1) + 'a ' + formatSeconds(durations.stepDurations[step])
+                + ' (' + secondsToMinutesInput(durations.stepDurations[step]) + ' min)';
+        });
+        parts.push('total ' + formatSeconds(durations.total));
+        return { text: parts.join(' / '), durations: durations };
+    }
+
+    function buildReport() {
+        return {
+            registerOk: [],
+            registerFail: [],
+            editOk: [],
+            editFail: [],
+            edits: []
+        };
+    }
+
+    function reportSummary(report, verified) {
+        return 'cadastros ok: ' + report.registerOk.length
+            + ' | cadastros falha: ' + report.registerFail.length
+            + ' | edicoes ok: ' + report.editOk.length
+            + ' | edicoes falha: ' + report.editFail.length
+            + ' | conferidas no estado: ' + verified;
+    }
+
+    async function finalSync(Sync, Storage, user) {
+        if (!Sync || typeof Sync.syncNow !== 'function'
+            || typeof Sync.isConfigured !== 'function' || !Sync.isConfigured()) {
+            log('sincronizacao com o GitHub nao configurada', 'warn');
+            return;
+        }
+
+        try {
+            await Sync.syncNow(Storage.loadState(), user);
+            log('sincronizado com o GitHub', 'ok');
+        } catch (error) {
+            log('falha ao sincronizar: ' + error.message, 'err');
+        }
+    }
+
+    /* -------------------------------- fluxo ---------------------------------- */
+
+    async function runFlow() {
+        var view = (typeof window !== 'undefined') ? window : {};
+        var Storage = resolveGlobal('TOTVSStorage');
+        var Sync = resolveGlobal('TOTVSGithubSync');
+
+        if (!Storage || typeof Storage.loadState !== 'function' || !el(SELECTORS.machinesTableBody)) {
+            view.alert('Abra a pagina do sistema (app/index.html) com login feito e clique o bookmarklet nela.');
+            return;
+        }
+
+        var state = Storage.loadState();
+        var user = typeof Storage.getCurrentUser === 'function' ? Storage.getCurrentUser(state) : null;
+        if (!user) {
+            view.alert('Faca login no sistema antes de rodar o bookmarklet.');
+            return;
+        }
+
+        var steps = (Array.isArray(Storage.PROCESS_STEPS) && Storage.PROCESS_STEPS.length)
+            ? Storage.PROCESS_STEPS.slice()
+            : FALLBACK_STEPS.slice();
+        var ranges = rangesSeconds(CONFIG.rangesMinutes);
+        if (!steps.length || !ranges.length) {
+            view.alert('Nao consegui ler as etapas do processo. Recarregue a pagina e tente de novo.');
+            return;
+        }
+
+        var registerQueue = modeIncludes('registrar') ? resolveRegisterQueue(view) : [];
+        /* A tabela nao expoe o analista de cada linha, entao o filtro por
+         * analista so vale para o cadastro; a edicao segue o que esta na tela. */
+        var domConfig = Object.assign({}, CONFIG, { analystFilter: null });
+        var editQueue = modeIncludes('editar') ? pickQueue(readTableRows(), domConfig) : [];
+
+        if (!registerQueue.length && !editQueue.length) {
+            view.alert('Fila vazia: preencha CONFIG.registerQueue ou deixe registros visiveis na tabela.');
+            return;
+        }
+
+        var preview = previewDurations(steps, ranges);
+
+        if (CONFIG.dryRun) {
+            var sample = editQueue.map(function (item) {
+                var drawn = generateDurations(steps, ranges, CONFIG.avoidRoundMinutes);
+                var row = { hostname: item.hostname };
+                steps.forEach(function (step, position) {
+                    row['fase' + (position + 1)] = formatSeconds(drawn.stepDurations[step]);
+                });
+                row.total = formatSeconds(drawn.total);
+                return row;
+            });
+            if (typeof console !== 'undefined' && console.table && sample.length) {
+                console.table(sample);
+            }
+            view.alert('[SIMULACAO] cadastrar ' + registerQueue.length + ' hostname(s) e editar '
+                + editQueue.length + ' registro(s). Nada foi clicado.\nExemplo de tempos: ' + preview.text
+                + '\nDeixe dryRun false para aplicar.');
+            return;
+        }
+
+        var message = '[MACRO FILA SPON]\n'
+            + 'modo: ' + CONFIG.mode + ' | simulacao: nao\n'
+            + 'cadastrar: ' + registerQueue.length + ' hostname(s)\n'
+            + 'editar: ' + editQueue.length + ' registro(s)\n'
+            + 'exemplo de tempos: ' + preview.text + '\n\nConfirmar a execucao?';
+        if (typeof view.confirm === 'function' && !view.confirm(message)) {
+            return;
+        }
+
+        createHud();
+        hudBadge('rodando');
+        log('fila pronta para ' + (user.displayName || user.username || user.id), 'warn');
+        log('exemplo de tempos: ' + preview.text);
+
+        var report = buildReport();
+        var stopped = false;
+
+        try {
+            if (registerQueue.length) {
+                await runRegisterPhase(registerQueue, user, steps, report);
+            }
+            if (editQueue.length) {
+                await runEditPhase(editQueue, steps, ranges, report);
+            }
+        } catch (error) {
+            stopped = Boolean(error && error.stop);
+            log(stopped ? 'fila interrompida pelo usuario' : 'erro inesperado: ' + error.message, stopped ? 'warn' : 'err');
+            if (!stopped && error && error.stack && typeof console !== 'undefined') {
+                console.error(error);
+            }
+        }
+
+        var verified = verifyEdits(Storage, report);
+        var summary = reportSummary(report, verified);
+        var failures = report.registerFail.concat(report.editFail);
+
+        log('resumo: ' + summary, failures.length ? 'warn' : 'ok');
+        hudBadge(stopped ? 'interrompido' : 'concluido');
+
+        if (CONFIG.finalSync) {
+            await finalSync(Sync, Storage, user);
+        }
+
+        view.alert('[MACRO FILA SPON] ' + (stopped ? 'INTERROMPIDA. ' : 'Concluida. ') + summary
+            + (failures.length ? '\nFalhas: ' + failures.join(' | ') : ''));
+
+        if (CONFIG.reload && typeof view.location === 'object') {
+            view.location.reload();
+        }
+    }
+
+    function run() {
+        return runFlow().catch(function (error) {
+            if (typeof console !== 'undefined') {
+                console.error('[macro-fila] erro fatal:', error);
+            }
+            try {
+                window.alert('[MACRO FILA SPON] erro inesperado: ' + error.message);
+            } catch (ignored) {
+                /* sem alert disponivel */
+            }
+            return null;
+        });
+    }
+
+    var api = {
+        CONFIG: CONFIG,
+        FALLBACK_STEPS: FALLBACK_STEPS,
+        SELECTORS: SELECTORS,
+        pad2: pad2,
+        randInt: randInt,
+        randSeconds: randSeconds,
+        rangesSeconds: rangesSeconds,
+        generateDurations: generateDurations,
+        secondsToMinutesInput: secondsToMinutesInput,
+        minutesInputToSeconds: minutesInputToSeconds,
+        formatSeconds: formatSeconds,
+        parseQueueLine: parseQueueLine,
+        parseQueue: parseQueue,
+        isDoneRow: isDoneRow,
+        pickQueue: pickQueue,
+        runFlow: runFlow,
+        run: run
+    };
+
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = api;
+    } else {
+        run();
+    }
+})();
