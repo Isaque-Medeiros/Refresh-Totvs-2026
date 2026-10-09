@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-09T16:26:27.892Z",
+  "exportedAt": "2026-10-09T16:28:40.305Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -14,36 +14,36 @@
   },
   "summary": {
     "total": 12,
-    "doneCount": 12,
+    "doneCount": 8,
     "wipCount": 0,
-    "pausedCount": 0,
+    "pausedCount": 4,
     "errorCount": 0,
     "successRate": "100",
-    "globalPercent": "1.2",
-    "avgTimeString": "01h 44m 39s",
+    "globalPercent": "0.8",
+    "avgTimeString": "01h 29m 00s",
     "manualCount": 6,
     "stepAvgTimes": {
-      "1 FORMATAÇÃO E BIOS": "45m 56s",
-      "2 WINDOWS UPDATE": "21m 49s",
-      "3 ATIVAR ADM E SUBIR DRIVERS": "21m 01s",
-      "4 DOMINIO E ARGUS": "15m 53s"
+      "1 FORMATAÇÃO E BIOS": "37m 40s",
+      "2 WINDOWS UPDATE": "19m 03s",
+      "3 ATIVAR ADM E SUBIR DRIVERS": "20m 28s",
+      "4 DOMINIO E ARGUS": "15m 14s"
     },
     "stepAvgSeconds": {
-      "1 FORMATAÇÃO E BIOS": 2756,
-      "2 WINDOWS UPDATE": 1309,
-      "3 ATIVAR ADM E SUBIR DRIVERS": 1261,
-      "4 DOMINIO E ARGUS": 953
+      "1 FORMATAÇÃO E BIOS": 2260,
+      "2 WINDOWS UPDATE": 1143,
+      "3 ATIVAR ADM E SUBIR DRIVERS": 1228,
+      "4 DOMINIO E ARGUS": 914
     },
     "analystStats": [
       {
         "analystId": "user_isaque",
         "name": "Isaque",
         "total": 12,
-        "done": 12,
+        "done": 8,
         "wip": 0,
-        "paused": 0,
+        "paused": 4,
         "errors": 0,
-        "goalPercent": "4.8"
+        "goalPercent": "3.2"
       },
       {
         "analystId": "user_vinicius",
@@ -482,25 +482,31 @@
       "analystId": "user_isaque",
       "brand": "HP",
       "profile": "Local",
-      "processDate": "2026-10-07",
-      "currentStep": "CONCLUIDO",
-      "currentStepIndex": 4,
-      "status": "CONCLUIDO",
+      "processDate": "2026-10-09",
+      "currentStep": "3 ATIVAR ADM E SUBIR DRIVERS",
+      "currentStepIndex": 2,
+      "status": "PAUSADO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 3030,
-        "2 WINDOWS UPDATE": 1896,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1449,
-        "4 DOMINIO E ARGUS": 977
+        "1 FORMATAÇÃO E BIOS": 2340,
+        "2 WINDOWS UPDATE": 1440,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1260,
+        "4 DOMINIO E ARGUS": 0
       },
-      "totalElapsedSeconds": 7352,
+      "totalElapsedSeconds": 5040,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:32:24.428Z",
+      "manualEntryAt": "2026-10-09T16:28:38.799Z",
       "history": [
+        {
+          "action": "machine_updated_manual",
+          "actorId": "user_manager",
+          "note": "Lançamento manual reaproveitado por hostname.",
+          "createdAt": "2026-10-09T16:28:38.799Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -532,12 +538,12 @@
           "createdAt": "2026-10-08T19:10:16.749Z"
         }
       ],
-      "currentStepStartedAt": "2026-10-08T19:10:16.749Z",
+      "currentStepStartedAt": "2026-10-09T16:28:38.799Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:10:16.749Z",
-      "updatedAt": "2026-10-09T04:42:25.309Z",
-      "completedAt": "2026-10-08T19:10:16.749Z",
-      "preparedAt": "2026-10-08T19:10:16.749Z",
+      "updatedAt": "2026-10-09T16:28:38.799Z",
+      "completedAt": null,
+      "preparedAt": null,
       "swappedAt": null,
       "swappedBy": null
     },
@@ -548,25 +554,31 @@
       "analystId": "user_isaque",
       "brand": "HP",
       "profile": "Local",
-      "processDate": "2026-10-07",
-      "currentStep": "CONCLUIDO",
-      "currentStepIndex": 4,
-      "status": "CONCLUIDO",
+      "processDate": "2026-10-09",
+      "currentStep": "3 ATIVAR ADM E SUBIR DRIVERS",
+      "currentStepIndex": 2,
+      "status": "PAUSADO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 4016,
-        "2 WINDOWS UPDATE": 1948,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1303,
-        "4 DOMINIO E ARGUS": 1025
+        "1 FORMATAÇÃO E BIOS": 2340,
+        "2 WINDOWS UPDATE": 1440,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1260,
+        "4 DOMINIO E ARGUS": 0
       },
-      "totalElapsedSeconds": 8292,
+      "totalElapsedSeconds": 5040,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:32:24.428Z",
+      "manualEntryAt": "2026-10-09T16:28:38.799Z",
       "history": [
+        {
+          "action": "machine_updated_manual",
+          "actorId": "user_manager",
+          "note": "Lançamento manual reaproveitado por hostname.",
+          "createdAt": "2026-10-09T16:28:38.799Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -592,12 +604,12 @@
           "createdAt": "2026-10-09T04:30:29.608Z"
         }
       ],
-      "currentStepStartedAt": "2026-10-09T04:30:29.608Z",
+      "currentStepStartedAt": "2026-10-09T16:28:38.799Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:30:29.608Z",
-      "updatedAt": "2026-10-09T04:42:25.307Z",
-      "completedAt": "2026-10-09T04:30:29.608Z",
-      "preparedAt": "2026-10-09T04:30:29.608Z",
+      "updatedAt": "2026-10-09T16:28:38.799Z",
+      "completedAt": null,
+      "preparedAt": null,
       "swappedAt": null,
       "swappedBy": null
     },
@@ -608,25 +620,31 @@
       "analystId": "user_isaque",
       "brand": "HP",
       "profile": "Local",
-      "processDate": "2026-10-07",
-      "currentStep": "CONCLUIDO",
-      "currentStepIndex": 4,
-      "status": "CONCLUIDO",
+      "processDate": "2026-10-09",
+      "currentStep": "3 ATIVAR ADM E SUBIR DRIVERS",
+      "currentStepIndex": 2,
+      "status": "PAUSADO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 4087,
-        "2 WINDOWS UPDATE": 1883,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1297,
-        "4 DOMINIO E ARGUS": 1100
+        "1 FORMATAÇÃO E BIOS": 2340,
+        "2 WINDOWS UPDATE": 1440,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1260,
+        "4 DOMINIO E ARGUS": 0
       },
-      "totalElapsedSeconds": 8367,
+      "totalElapsedSeconds": 5040,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:32:24.428Z",
+      "manualEntryAt": "2026-10-09T16:28:38.799Z",
       "history": [
+        {
+          "action": "machine_updated_manual",
+          "actorId": "user_manager",
+          "note": "Lançamento manual reaproveitado por hostname.",
+          "createdAt": "2026-10-09T16:28:38.799Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -652,12 +670,12 @@
           "createdAt": "2026-10-09T04:30:29.608Z"
         }
       ],
-      "currentStepStartedAt": "2026-10-09T04:30:29.608Z",
+      "currentStepStartedAt": "2026-10-09T16:28:38.799Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:30:29.608Z",
-      "updatedAt": "2026-10-09T04:42:25.309Z",
-      "completedAt": "2026-10-09T04:30:29.608Z",
-      "preparedAt": "2026-10-09T04:30:29.608Z",
+      "updatedAt": "2026-10-09T16:28:38.799Z",
+      "completedAt": null,
+      "preparedAt": null,
       "swappedAt": null,
       "swappedBy": null
     },
@@ -668,25 +686,31 @@
       "analystId": "user_isaque",
       "brand": "HP",
       "profile": "Local",
-      "processDate": "2026-10-07",
-      "currentStep": "CONCLUIDO",
-      "currentStepIndex": 4,
-      "status": "CONCLUIDO",
+      "processDate": "2026-10-09",
+      "currentStep": "3 ATIVAR ADM E SUBIR DRIVERS",
+      "currentStepIndex": 2,
+      "status": "PAUSADO",
       "timerRunning": false,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 4178,
-        "2 WINDOWS UPDATE": 2027,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1386,
-        "4 DOMINIO E ARGUS": 1025
+        "1 FORMATAÇÃO E BIOS": 2340,
+        "2 WINDOWS UPDATE": 1440,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1260,
+        "4 DOMINIO E ARGUS": 0
       },
-      "totalElapsedSeconds": 8616,
+      "totalElapsedSeconds": 5040,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
       "manualEntry": true,
       "manualEntryBy": "user_manager",
-      "manualEntryAt": "2026-10-09T04:32:24.428Z",
+      "manualEntryAt": "2026-10-09T16:28:38.799Z",
       "history": [
+        {
+          "action": "machine_updated_manual",
+          "actorId": "user_manager",
+          "note": "Lançamento manual reaproveitado por hostname.",
+          "createdAt": "2026-10-09T16:28:38.799Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -712,12 +736,12 @@
           "createdAt": "2026-10-09T04:30:29.608Z"
         }
       ],
-      "currentStepStartedAt": "2026-10-09T04:30:29.608Z",
+      "currentStepStartedAt": "2026-10-09T16:28:38.799Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T04:30:29.608Z",
-      "updatedAt": "2026-10-09T04:42:25.308Z",
-      "completedAt": "2026-10-09T04:30:29.608Z",
-      "preparedAt": "2026-10-09T04:30:29.608Z",
+      "updatedAt": "2026-10-09T16:28:38.799Z",
+      "completedAt": null,
+      "preparedAt": null,
       "swappedAt": null,
       "swappedBy": null
     },
