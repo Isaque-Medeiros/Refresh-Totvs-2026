@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-08T19:12:50.214Z",
+  "exportedAt": "2026-10-09T04:29:32.472Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -82,5 +82,12 @@
   "kind": "analyst",
   "username": "gerente",
   "analystId": "user_manager",
+  "credentials": {
+    "algo": "pbkdf2-sha256",
+    "iterations": 150000,
+    "salt": "cd5813dfcc521aa2e4229a2581102426",
+    "hash": "9f91c751c52870563ac5f32fdc57c2d43af51814c381aac31f98b8841b1c56a0",
+    "updatedAt": "2026-10-09T04:26:05.885Z"
+  },
   "deletedMachines": {}
 }
