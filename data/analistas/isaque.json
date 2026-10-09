@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-09T14:23:36.725Z",
+  "exportedAt": "2026-10-09T14:41:08.479Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -14,36 +14,36 @@
   },
   "summary": {
     "total": 10,
-    "doneCount": 8,
-    "wipCount": 2,
+    "doneCount": 10,
+    "wipCount": 0,
     "pausedCount": 0,
     "errorCount": 0,
     "successRate": "100",
-    "globalPercent": "0.8",
-    "avgTimeString": "01h 59m 09s",
+    "globalPercent": "1.0",
+    "avgTimeString": "01h 49m 49s",
     "manualCount": 6,
     "stepAvgTimes": {
       "1 FORMATAÇÃO E BIOS": "47m 36s",
       "2 WINDOWS UPDATE": "24m 26s",
-      "3 ATIVAR ADM E SUBIR DRIVERS": "21m 47s",
-      "4 DOMINIO E ARGUS": "13m 54s"
+      "3 ATIVAR ADM E SUBIR DRIVERS": "21m 49s",
+      "4 DOMINIO E ARGUS": "15m 59s"
     },
     "stepAvgSeconds": {
       "1 FORMATAÇÃO E BIOS": 2856,
       "2 WINDOWS UPDATE": 1466,
-      "3 ATIVAR ADM E SUBIR DRIVERS": 1307,
-      "4 DOMINIO E ARGUS": 834
+      "3 ATIVAR ADM E SUBIR DRIVERS": 1309,
+      "4 DOMINIO E ARGUS": 959
     },
     "analystStats": [
       {
         "analystId": "user_isaque",
         "name": "Isaque",
         "total": 10,
-        "done": 8,
-        "wip": 2,
+        "done": 10,
+        "wip": 0,
         "paused": 0,
         "errors": 0,
-        "goalPercent": "3.2"
+        "goalPercent": "4.0"
       },
       {
         "analystId": "user_vinicius",
@@ -87,17 +87,17 @@
       "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-09",
-      "currentStep": "3 ATIVAR ADM E SUBIR DRIVERS",
-      "currentStepIndex": 2,
-      "status": "EM_ANDAMENTO",
-      "timerRunning": true,
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 1700,
         "2 WINDOWS UPDATE": 549,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 1051,
-        "4 DOMINIO E ARGUS": 0
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1066,
+        "4 DOMINIO E ARGUS": 1033
       },
-      "totalElapsedSeconds": 3300,
+      "totalElapsedSeconds": 4348,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -105,6 +105,18 @@
       "manualEntryBy": null,
       "manualEntryAt": null,
       "history": [
+        {
+          "action": "next_step",
+          "actorId": "user_isaque",
+          "note": "CONCLUIDO",
+          "createdAt": "2026-10-09T14:41:06.086Z"
+        },
+        {
+          "action": "next_step",
+          "actorId": "user_isaque",
+          "note": "4 DOMINIO E ARGUS",
+          "createdAt": "2026-10-09T14:23:51.862Z"
+        },
         {
           "action": "next_step",
           "actorId": "user_isaque",
@@ -124,12 +136,12 @@
           "createdAt": "2026-10-09T13:28:32.302Z"
         }
       ],
-      "currentStepStartedAt": "2026-10-09T14:06:04.284Z",
-      "lastTickAt": "2026-10-09T14:23:36.724Z",
+      "currentStepStartedAt": "2026-10-09T14:23:51.862Z",
+      "lastTickAt": null,
       "createdAt": "2026-10-09T13:28:32.302Z",
-      "updatedAt": "2026-10-09T14:23:36.724Z",
-      "completedAt": null,
-      "preparedAt": null,
+      "updatedAt": "2026-10-09T14:41:06.086Z",
+      "completedAt": "2026-10-09T14:41:06.086Z",
+      "preparedAt": "2026-10-09T14:41:06.086Z",
       "swappedAt": null,
       "swappedBy": null
     },
@@ -141,17 +153,17 @@
       "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-09",
-      "currentStep": "4 DOMINIO E ARGUS",
-      "currentStepIndex": 3,
-      "status": "EM_ANDAMENTO",
-      "timerRunning": true,
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 1700,
         "2 WINDOWS UPDATE": 365,
         "3 ATIVAR ADM E SUBIR DRIVERS": 1233,
-        "4 DOMINIO E ARGUS": 1
+        "4 DOMINIO E ARGUS": 1049
       },
-      "totalElapsedSeconds": 3299,
+      "totalElapsedSeconds": 4347,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -159,6 +171,12 @@
       "manualEntryBy": null,
       "manualEntryAt": null,
       "history": [
+        {
+          "action": "next_step",
+          "actorId": "user_isaque",
+          "note": "CONCLUIDO",
+          "createdAt": "2026-10-09T14:41:06.967Z"
+        },
         {
           "action": "next_step",
           "actorId": "user_isaque",
@@ -185,11 +203,11 @@
         }
       ],
       "currentStepStartedAt": "2026-10-09T14:23:35.208Z",
-      "lastTickAt": "2026-10-09T14:23:36.724Z",
+      "lastTickAt": null,
       "createdAt": "2026-10-09T13:28:32.302Z",
-      "updatedAt": "2026-10-09T14:23:36.724Z",
-      "completedAt": null,
-      "preparedAt": null,
+      "updatedAt": "2026-10-09T14:41:06.967Z",
+      "completedAt": "2026-10-09T14:41:06.967Z",
+      "preparedAt": "2026-10-09T14:41:06.967Z",
       "swappedAt": null,
       "swappedBy": null
     },
