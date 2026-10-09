@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-09T15:20:01.736Z",
+  "exportedAt": "2026-10-09T17:02:18.716Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -15,8 +15,8 @@
   "summary": {
     "total": 15,
     "doneCount": 13,
-    "wipCount": 0,
-    "pausedCount": 2,
+    "wipCount": 1,
+    "pausedCount": 1,
     "errorCount": 0,
     "successRate": "100",
     "globalPercent": "1.3",
@@ -60,8 +60,8 @@
         "name": "Guilherme",
         "total": 15,
         "done": 13,
-        "wip": 0,
-        "paused": 2,
+        "wip": 1,
+        "paused": 1,
         "errors": 0,
         "goalPercent": "5.2"
       },
@@ -89,15 +89,15 @@
       "processDate": "2026-10-09",
       "currentStep": "3 ATIVAR ADM E SUBIR DRIVERS",
       "currentStepIndex": 2,
-      "status": "PAUSADO",
-      "timerRunning": false,
+      "status": "EM_ANDAMENTO",
+      "timerRunning": true,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 2097,
         "2 WINDOWS UPDATE": 1674,
-        "3 ATIVAR ADM E SUBIR DRIVERS": 559,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 560,
         "4 DOMINIO E ARGUS": 0
       },
-      "totalElapsedSeconds": 4330,
+      "totalElapsedSeconds": 4331,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -105,6 +105,12 @@
       "manualEntryBy": null,
       "manualEntryAt": null,
       "history": [
+        {
+          "action": "start_timer",
+          "actorId": "user_guilherme",
+          "note": "3 ATIVAR ADM E SUBIR DRIVERS",
+          "createdAt": "2026-10-09T17:02:17.197Z"
+        },
         {
           "action": "pause_timer",
           "actorId": "user_guilherme",
@@ -143,9 +149,9 @@
         }
       ],
       "currentStepStartedAt": "2026-10-09T15:10:39.676Z",
-      "lastTickAt": null,
+      "lastTickAt": "2026-10-09T17:02:18.716Z",
       "createdAt": "2026-10-09T14:07:41.470Z",
-      "updatedAt": "2026-10-09T15:20:00.221Z",
+      "updatedAt": "2026-10-09T17:02:18.716Z",
       "completedAt": null,
       "preparedAt": null,
       "swappedAt": null,
