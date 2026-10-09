@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-09T16:24:32.118Z",
+  "exportedAt": "2026-10-09T19:14:37.690Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -29,7 +29,13 @@
       "role": "analyst",
       "active": true,
       "updatedAt": "2026-10-09T04:25:59.393Z",
-      "credentials": null
+      "credentials": {
+        "algo": "pbkdf2-sha256",
+        "iterations": 150000,
+        "salt": "c790b55da91cdf7db6f03ab674ab2703",
+        "hash": "b9bc3d65ea99cabaa34e7aea4e9b812377489011ebb52836e0bd2d7a4a66068e",
+        "updatedAt": "2026-10-09T16:26:26.382Z"
+      }
     },
     {
       "id": "user_vinicius",
@@ -78,8 +84,8 @@
       "username": "isaque",
       "displayName": "Isaque",
       "file": "data/analistas/isaque.json",
-      "records": 12,
-      "updatedAt": "2026-10-09T16:01:18.478Z"
+      "records": 17,
+      "updatedAt": "2026-10-09T19:14:33.218Z"
     },
     {
       "id": "user_vinicius",
@@ -94,8 +100,8 @@
       "username": "guilherme",
       "displayName": "Guilherme",
       "file": "data/analistas/guilherme.json",
-      "records": 17,
-      "updatedAt": "2026-10-09T16:11:47.910Z"
+      "records": 19,
+      "updatedAt": "2026-10-09T19:14:33.218Z"
     },
     {
       "id": "user_davi",
