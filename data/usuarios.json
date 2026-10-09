@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-09T04:36:23.026Z",
+  "exportedAt": "2026-10-09T04:42:30.900Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -67,7 +67,7 @@
       "displayName": "Isaque",
       "file": "data/analistas/isaque.json",
       "records": 6,
-      "updatedAt": "2026-10-09T04:36:18.434Z"
+      "updatedAt": "2026-10-09T04:42:25.309Z"
     },
     {
       "id": "user_vinicius",
@@ -75,7 +75,7 @@
       "displayName": "Vinicius",
       "file": "data/analistas/vinicius.json",
       "records": 11,
-      "updatedAt": "2026-10-09T04:36:18.434Z"
+      "updatedAt": "2026-10-09T04:42:25.309Z"
     },
     {
       "id": "user_guilherme",
@@ -83,7 +83,7 @@
       "displayName": "Guilherme",
       "file": "data/analistas/guilherme.json",
       "records": 11,
-      "updatedAt": "2026-10-09T04:36:18.434Z"
+      "updatedAt": "2026-10-09T04:42:25.309Z"
     },
     {
       "id": "user_davi",
@@ -91,7 +91,7 @@
       "displayName": "Davi",
       "file": "data/analistas/davi.json",
       "records": 16,
-      "updatedAt": "2026-10-09T04:36:18.434Z"
+      "updatedAt": "2026-10-09T04:42:25.309Z"
     }
   ]
 }
