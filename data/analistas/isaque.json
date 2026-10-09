@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-09T13:28:33.805Z",
+  "exportedAt": "2026-10-09T13:56:56.265Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -23,14 +23,14 @@
     "avgTimeString": "01h 59m 09s",
     "manualCount": 6,
     "stepAvgTimes": {
-      "1 FORMATAÇÃO E BIOS": "41m 56s",
-      "2 WINDOWS UPDATE": "28m 38s",
+      "1 FORMATAÇÃO E BIOS": "47m 36s",
+      "2 WINDOWS UPDATE": "22m 55s",
       "3 ATIVAR ADM E SUBIR DRIVERS": "22m 28s",
       "4 DOMINIO E ARGUS": "15m 38s"
     },
     "stepAvgSeconds": {
-      "1 FORMATAÇÃO E BIOS": 2516,
-      "2 WINDOWS UPDATE": 1718,
+      "1 FORMATAÇÃO E BIOS": 2856,
+      "2 WINDOWS UPDATE": 1375,
       "3 ATIVAR ADM E SUBIR DRIVERS": 1348,
       "4 DOMINIO E ARGUS": 938
     },
@@ -87,17 +87,17 @@
       "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-09",
-      "currentStep": "1 FORMATAÇÃO E BIOS",
-      "currentStepIndex": 0,
+      "currentStep": "2 WINDOWS UPDATE",
+      "currentStepIndex": 1,
       "status": "EM_ANDAMENTO",
       "timerRunning": true,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 1,
-        "2 WINDOWS UPDATE": 0,
+        "1 FORMATAÇÃO E BIOS": 1700,
+        "2 WINDOWS UPDATE": 2,
         "3 ATIVAR ADM E SUBIR DRIVERS": 0,
         "4 DOMINIO E ARGUS": 0
       },
-      "totalElapsedSeconds": 1,
+      "totalElapsedSeconds": 1702,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -106,16 +106,22 @@
       "manualEntryAt": null,
       "history": [
         {
+          "action": "next_step",
+          "actorId": "user_isaque",
+          "note": "2 WINDOWS UPDATE",
+          "createdAt": "2026-10-09T13:56:53.775Z"
+        },
+        {
           "action": "machine_created",
           "actorId": "user_isaque",
           "note": "Cadastro inicial",
           "createdAt": "2026-10-09T13:28:32.302Z"
         }
       ],
-      "currentStepStartedAt": "2026-10-09T13:28:32.302Z",
-      "lastTickAt": "2026-10-09T13:28:33.805Z",
+      "currentStepStartedAt": "2026-10-09T13:56:53.775Z",
+      "lastTickAt": "2026-10-09T13:56:56.265Z",
       "createdAt": "2026-10-09T13:28:32.302Z",
-      "updatedAt": "2026-10-09T13:28:33.805Z",
+      "updatedAt": "2026-10-09T13:56:56.265Z",
       "completedAt": null,
       "preparedAt": null,
       "swappedAt": null,
@@ -129,17 +135,17 @@
       "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-09",
-      "currentStep": "1 FORMATAÇÃO E BIOS",
-      "currentStepIndex": 0,
+      "currentStep": "2 WINDOWS UPDATE",
+      "currentStepIndex": 1,
       "status": "EM_ANDAMENTO",
       "timerRunning": true,
       "stepDurations": {
-        "1 FORMATAÇÃO E BIOS": 1,
-        "2 WINDOWS UPDATE": 0,
+        "1 FORMATAÇÃO E BIOS": 1700,
+        "2 WINDOWS UPDATE": 1,
         "3 ATIVAR ADM E SUBIR DRIVERS": 0,
         "4 DOMINIO E ARGUS": 0
       },
-      "totalElapsedSeconds": 1,
+      "totalElapsedSeconds": 1701,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -148,16 +154,22 @@
       "manualEntryAt": null,
       "history": [
         {
+          "action": "next_step",
+          "actorId": "user_isaque",
+          "note": "2 WINDOWS UPDATE",
+          "createdAt": "2026-10-09T13:56:54.758Z"
+        },
+        {
           "action": "machine_created",
           "actorId": "user_isaque",
           "note": "Cadastro inicial",
           "createdAt": "2026-10-09T13:28:32.301Z"
         }
       ],
-      "currentStepStartedAt": "2026-10-09T13:28:32.301Z",
-      "lastTickAt": "2026-10-09T13:28:33.805Z",
+      "currentStepStartedAt": "2026-10-09T13:56:54.758Z",
+      "lastTickAt": "2026-10-09T13:56:56.265Z",
       "createdAt": "2026-10-09T13:28:32.302Z",
-      "updatedAt": "2026-10-09T13:28:33.805Z",
+      "updatedAt": "2026-10-09T13:56:56.265Z",
       "completedAt": null,
       "preparedAt": null,
       "swappedAt": null,
