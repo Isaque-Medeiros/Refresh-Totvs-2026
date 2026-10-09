@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-09T16:11:53.098Z",
+  "exportedAt": "2026-10-09T16:24:32.118Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -103,7 +103,7 @@
       "displayName": "Davi",
       "file": "data/analistas/davi.json",
       "records": 20,
-      "updatedAt": "2026-10-09T14:54:39.764Z"
+      "updatedAt": "2026-10-09T16:24:26.564Z"
     }
   ]
 }
