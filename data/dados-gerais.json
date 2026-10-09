@@ -1,6 +1,6 @@
 {
   "version": "3.0.0",
-  "exportedAt": "2026-10-09T16:11:50.885Z",
+  "exportedAt": "2026-10-09T16:24:29.649Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -51,13 +51,13 @@
   },
   "summary": {
     "total": 64,
-    "doneCount": 62,
+    "doneCount": 58,
     "wipCount": 0,
-    "pausedCount": 2,
+    "pausedCount": 6,
     "errorCount": 0,
     "successRate": "100",
-    "globalPercent": "6.2",
-    "avgTimeString": "01h 59m 10s",
+    "globalPercent": "5.8",
+    "avgTimeString": "01h 58m 27s",
     "manualCount": 48,
     "stepAvgTimes": {
       "1 FORMATAÇÃO E BIOS": "49m 53s",
@@ -106,11 +106,11 @@
         "analystId": "user_davi",
         "name": "Davi",
         "total": 20,
-        "done": 20,
+        "done": 16,
         "wip": 0,
-        "paused": 0,
+        "paused": 4,
         "errors": 0,
-        "goalPercent": "8.0"
+        "goalPercent": "6.4"
       }
     ],
     "errorList": []
@@ -826,9 +826,9 @@
       "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-06",
-      "currentStep": "CONCLUIDO",
-      "currentStepIndex": 4,
-      "status": "CONCLUIDO",
+      "currentStep": "3 ATIVAR ADM E SUBIR DRIVERS",
+      "currentStepIndex": 2,
+      "status": "PAUSADO",
       "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 2900,
@@ -844,6 +844,12 @@
       "manualEntryBy": "user_manager",
       "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: etapa",
+          "createdAt": "2026-10-09T16:24:26.564Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -887,12 +893,12 @@
           "createdAt": "2026-10-08T18:58:54.296Z"
         }
       ],
-      "currentStepStartedAt": "2026-10-08T18:58:54.296Z",
+      "currentStepStartedAt": "2026-10-09T16:24:26.564Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T18:58:54.296Z",
-      "updatedAt": "2026-10-09T04:42:25.309Z",
-      "completedAt": "2026-10-08T18:58:54.296Z",
-      "preparedAt": "2026-10-08T18:58:54.296Z",
+      "updatedAt": "2026-10-09T16:24:26.564Z",
+      "completedAt": null,
+      "preparedAt": null,
       "swappedAt": null,
       "swappedBy": null
     },
@@ -1738,9 +1744,9 @@
       "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-06",
-      "currentStep": "CONCLUIDO",
-      "currentStepIndex": 4,
-      "status": "CONCLUIDO",
+      "currentStep": "3 ATIVAR ADM E SUBIR DRIVERS",
+      "currentStepIndex": 2,
+      "status": "PAUSADO",
       "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 3464,
@@ -1756,6 +1762,12 @@
       "manualEntryBy": "user_manager",
       "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: etapa",
+          "createdAt": "2026-10-09T16:24:26.564Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -1781,12 +1793,12 @@
           "createdAt": "2026-10-08T19:10:16.749Z"
         }
       ],
-      "currentStepStartedAt": "2026-10-08T19:10:16.749Z",
+      "currentStepStartedAt": "2026-10-09T16:24:26.564Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:10:16.749Z",
-      "updatedAt": "2026-10-09T04:42:25.307Z",
-      "completedAt": "2026-10-08T19:10:16.749Z",
-      "preparedAt": "2026-10-08T19:10:16.749Z",
+      "updatedAt": "2026-10-09T16:24:26.564Z",
+      "completedAt": null,
+      "preparedAt": null,
       "swappedAt": null,
       "swappedBy": null
     },
@@ -1798,9 +1810,9 @@
       "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-06",
-      "currentStep": "CONCLUIDO",
-      "currentStepIndex": 4,
-      "status": "CONCLUIDO",
+      "currentStep": "3 ATIVAR ADM E SUBIR DRIVERS",
+      "currentStepIndex": 2,
+      "status": "PAUSADO",
       "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 2804,
@@ -1816,6 +1828,12 @@
       "manualEntryBy": "user_manager",
       "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: etapa",
+          "createdAt": "2026-10-09T16:24:26.564Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -1841,12 +1859,12 @@
           "createdAt": "2026-10-08T19:10:16.749Z"
         }
       ],
-      "currentStepStartedAt": "2026-10-08T19:10:16.749Z",
+      "currentStepStartedAt": "2026-10-09T16:24:26.564Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:10:16.749Z",
-      "updatedAt": "2026-10-09T04:42:25.308Z",
-      "completedAt": "2026-10-08T19:10:16.749Z",
-      "preparedAt": "2026-10-08T19:10:16.749Z",
+      "updatedAt": "2026-10-09T16:24:26.564Z",
+      "completedAt": null,
+      "preparedAt": null,
       "swappedAt": null,
       "swappedBy": null
     },
@@ -1858,9 +1876,9 @@
       "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-06",
-      "currentStep": "CONCLUIDO",
-      "currentStepIndex": 4,
-      "status": "CONCLUIDO",
+      "currentStep": "3 ATIVAR ADM E SUBIR DRIVERS",
+      "currentStepIndex": 2,
+      "status": "PAUSADO",
       "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 3778,
@@ -1876,6 +1894,12 @@
       "manualEntryBy": "user_manager",
       "manualEntryAt": "2026-10-09T04:32:24.428Z",
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_manager",
+          "note": "Lote: etapa",
+          "createdAt": "2026-10-09T16:24:26.564Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_manager",
@@ -1901,12 +1925,12 @@
           "createdAt": "2026-10-08T19:10:16.749Z"
         }
       ],
-      "currentStepStartedAt": "2026-10-08T19:10:16.749Z",
+      "currentStepStartedAt": "2026-10-09T16:24:26.564Z",
       "lastTickAt": null,
       "createdAt": "2026-10-08T19:10:16.749Z",
-      "updatedAt": "2026-10-09T04:42:25.307Z",
-      "completedAt": "2026-10-08T19:10:16.749Z",
-      "preparedAt": "2026-10-08T19:10:16.749Z",
+      "updatedAt": "2026-10-09T16:24:26.564Z",
+      "completedAt": null,
+      "preparedAt": null,
       "swappedAt": null,
       "swappedBy": null
     },
@@ -4451,7 +4475,7 @@
       "displayName": "Davi",
       "file": "data/analistas/davi.json",
       "records": 20,
-      "updatedAt": "2026-10-09T14:54:39.764Z"
+      "updatedAt": "2026-10-09T16:24:26.564Z"
     }
   ]
 }
