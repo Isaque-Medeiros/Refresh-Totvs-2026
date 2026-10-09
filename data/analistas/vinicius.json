@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-09T15:11:15.960Z",
+  "exportedAt": "2026-10-09T15:12:17.267Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -84,7 +84,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132236",
       "analystId": "user_vinicius",
-      "brand": "Dell",
+      "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-09",
       "currentStep": "CONCLUIDO",
@@ -105,6 +105,24 @@
       "manualEntryBy": null,
       "manualEntryAt": null,
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_vinicius",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T15:12:15.753Z"
+        },
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_vinicius",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T15:11:58.345Z"
+        },
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_vinicius",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T15:11:24.873Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_vinicius",
@@ -145,7 +163,7 @@
       "currentStepStartedAt": "2026-10-09T14:33:30.220Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T13:42:07.776Z",
-      "updatedAt": "2026-10-09T15:11:14.453Z",
+      "updatedAt": "2026-10-09T15:12:15.753Z",
       "completedAt": "2026-10-09T14:55:36.922Z",
       "preparedAt": "2026-10-09T14:55:36.922Z",
       "swappedAt": null,
@@ -156,7 +174,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132234",
       "analystId": "user_vinicius",
-      "brand": "Dell",
+      "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-09",
       "currentStep": "CONCLUIDO",
@@ -177,6 +195,24 @@
       "manualEntryBy": null,
       "manualEntryAt": null,
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_vinicius",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T15:12:15.753Z"
+        },
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_vinicius",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T15:11:58.345Z"
+        },
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_vinicius",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T15:11:24.873Z"
+        },
         {
           "action": "machine_bulk_updated",
           "actorId": "user_vinicius",
@@ -217,7 +253,7 @@
       "currentStepStartedAt": "2026-10-09T14:33:22.366Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T13:42:07.776Z",
-      "updatedAt": "2026-10-09T15:11:14.453Z",
+      "updatedAt": "2026-10-09T15:12:15.753Z",
       "completedAt": "2026-10-09T14:55:35.499Z",
       "preparedAt": "2026-10-09T14:55:35.499Z",
       "swappedAt": null,
@@ -228,7 +264,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132395",
       "analystId": "user_vinicius",
-      "brand": "Dell",
+      "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-09",
       "currentStep": "CONCLUIDO",
@@ -249,6 +285,24 @@
       "manualEntryBy": null,
       "manualEntryAt": null,
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_vinicius",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T15:12:15.753Z"
+        },
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_vinicius",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T15:11:58.345Z"
+        },
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_vinicius",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T15:11:24.873Z"
+        },
         {
           "action": "next_step",
           "actorId": "user_vinicius",
@@ -283,7 +337,7 @@
       "currentStepStartedAt": "2026-10-09T13:21:04.548Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T12:07:50.794Z",
-      "updatedAt": "2026-10-09T13:31:02.433Z",
+      "updatedAt": "2026-10-09T15:12:15.753Z",
       "completedAt": "2026-10-09T13:31:02.433Z",
       "preparedAt": "2026-10-09T13:31:02.433Z",
       "swappedAt": null,
@@ -294,7 +348,7 @@
       "datasetId": "dataset_principal",
       "hostname": "SPON010132394",
       "analystId": "user_vinicius",
-      "brand": "Dell",
+      "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-09",
       "currentStep": "CONCLUIDO",
@@ -315,6 +369,24 @@
       "manualEntryBy": null,
       "manualEntryAt": null,
       "history": [
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_vinicius",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T15:12:15.753Z"
+        },
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_vinicius",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T15:11:58.345Z"
+        },
+        {
+          "action": "machine_bulk_updated",
+          "actorId": "user_vinicius",
+          "note": "Lote: fabricante",
+          "createdAt": "2026-10-09T15:11:24.873Z"
+        },
         {
           "action": "next_step",
           "actorId": "user_vinicius",
@@ -349,7 +421,7 @@
       "currentStepStartedAt": "2026-10-09T13:21:03.382Z",
       "lastTickAt": null,
       "createdAt": "2026-10-09T12:07:50.794Z",
-      "updatedAt": "2026-10-09T13:31:01.225Z",
+      "updatedAt": "2026-10-09T15:12:15.753Z",
       "completedAt": "2026-10-09T13:31:01.225Z",
       "preparedAt": "2026-10-09T13:31:01.225Z",
       "swappedAt": null,
