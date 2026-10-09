@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-08T19:12:52.762Z",
+  "exportedAt": "2026-10-09T04:29:36.179Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -13,7 +13,14 @@
       "displayName": "Gerente de Projeto",
       "role": "manager",
       "active": true,
-      "updatedAt": "2026-10-08T19:12:48.709Z"
+      "updatedAt": "2026-10-09T04:26:05.885Z",
+      "credentials": {
+        "algo": "pbkdf2-sha256",
+        "iterations": 150000,
+        "salt": "cd5813dfcc521aa2e4229a2581102426",
+        "hash": "9f91c751c52870563ac5f32fdc57c2d43af51814c381aac31f98b8841b1c56a0",
+        "updatedAt": "2026-10-09T04:26:05.885Z"
+      }
     },
     {
       "id": "user_isaque",
@@ -21,7 +28,8 @@
       "displayName": "Isaque",
       "role": "analyst",
       "active": true,
-      "updatedAt": "2026-10-08T19:11:05.222Z"
+      "updatedAt": "2026-10-09T04:25:59.393Z",
+      "credentials": null
     },
     {
       "id": "user_vinicius",
@@ -29,7 +37,8 @@
       "displayName": "Vinicius",
       "role": "analyst",
       "active": true,
-      "updatedAt": "2026-10-08T19:11:05.222Z"
+      "updatedAt": "2026-10-09T04:25:59.393Z",
+      "credentials": null
     },
     {
       "id": "user_guilherme",
@@ -37,7 +46,8 @@
       "displayName": "Guilherme",
       "role": "analyst",
       "active": true,
-      "updatedAt": "2026-10-08T19:11:05.222Z"
+      "updatedAt": "2026-10-09T04:25:59.393Z",
+      "credentials": null
     },
     {
       "id": "user_davi",
@@ -45,7 +55,8 @@
       "displayName": "Davi",
       "role": "analyst",
       "active": true,
-      "updatedAt": "2026-10-08T19:11:05.222Z"
+      "updatedAt": "2026-10-09T04:25:59.393Z",
+      "credentials": null
     }
   ],
   "kind": "users",
@@ -71,8 +82,8 @@
       "username": "guilherme",
       "displayName": "Guilherme",
       "file": "data/analistas/guilherme.json",
-      "records": 2,
-      "updatedAt": "2026-10-08T19:10:47.601Z"
+      "records": 11,
+      "updatedAt": "2026-10-09T04:29:30.942Z"
     },
     {
       "id": "user_davi",
