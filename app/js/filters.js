@@ -21,15 +21,17 @@ const TOTVSFilters = (() => {
 
     const STATUS_OPTIONS = [
         { value: 'ALL', label: 'Todos os status' },
+        { value: 'AGUARDANDO_CHECKLIST', label: 'Aguardando checklist final' },
         { value: 'PREPARADA', label: 'Preparada (aguardando troca)' },
         { value: 'TROCADA', label: 'Trocada' },
         { value: 'EM_ANDAMENTO', label: 'Em andamento' },
         { value: 'PAUSADO', label: 'Pausado' },
-        { value: 'CONCLUIDO', label: 'Concluída (preparada)' },
+        { value: 'CONCLUIDO', label: 'Concluída (checklist aprovado)' },
         { value: 'ERRO', label: 'Incidente' }
     ];
 
     const STATUS_LABELS = {
+        AGUARDANDO_CHECKLIST: 'Aguardando checklist',
         PREPARADA: 'Preparada',
         TROCADA: 'Trocada',
         EM_ANDAMENTO: 'Em andamento',
@@ -62,7 +64,11 @@ const TOTVSFilters = (() => {
     }
 
     function isPrepared(machine) {
-        return Boolean(machine) && (machine.status === 'CONCLUIDO' || Boolean(machine.preparedAt));
+        return Boolean(machine) && (
+            machine.status === 'CONCLUIDO'
+            || machine.status === 'AGUARDANDO_CHECKLIST'
+            || Boolean(machine.preparedAt)
+        );
     }
 
     // Chave unica de status, usada tanto no filtro quanto na ordenacao.
@@ -70,6 +76,7 @@ const TOTVSFilters = (() => {
         if (!machine) return 'PAUSADO';
         if (machine.swappedAt) return 'TROCADA';
         if (machine.hasError || machine.status === 'ERRO') return 'ERRO';
+        if (machine.status === 'AGUARDANDO_CHECKLIST') return 'AGUARDANDO_CHECKLIST';
         if (machine.status === 'CONCLUIDO') return 'PREPARADA';
         if (machine.status === 'EM_ANDAMENTO') return 'EM_ANDAMENTO';
         return 'PAUSADO';
@@ -114,6 +121,9 @@ const TOTVSFilters = (() => {
         }
         if (statusFilter === 'CONCLUIDO') {
             return machine.status === 'CONCLUIDO';
+        }
+        if (statusFilter === 'AGUARDANDO_CHECKLIST') {
+            return machine.status === 'AGUARDANDO_CHECKLIST';
         }
         return statusKey(machine) === statusFilter;
     }
@@ -230,6 +240,7 @@ const TOTVSFilters = (() => {
             prepared: 0,
             swapped: 0,
             waitingSwap: 0,
+            awaitingChecklist: 0,
             inProgress: 0,
             paused: 0,
             errors: 0,
@@ -247,6 +258,9 @@ const TOTVSFilters = (() => {
                 summary.swapped += 1;
             } else if (isPrepared(machine)) {
                 summary.waitingSwap += 1;
+            }
+            if (machine.status === 'AGUARDANDO_CHECKLIST') {
+                summary.awaitingChecklist += 1;
             }
             if (machine.hasError || machine.status === 'ERRO') {
                 summary.errors += 1;

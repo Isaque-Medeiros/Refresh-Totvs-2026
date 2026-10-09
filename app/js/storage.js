@@ -14,6 +14,27 @@ const TOTVSStorage = (() => {
         '4 DOMINIO E ARGUS'
     ];
 
+    // Fluxo atualizado: ao terminar as 4 etapas de bancada a maquina NAO vai mais
+    // direto para CONCLUIDO. Ela fica AGUARDANDO_CHECKLIST ate um analista revisar
+    // os 4 itens finais (Certificado Microsoft, Trellix, Drivers HP, Windows Update).
+    const STATUS_AWAITING_CHECKLIST = 'AGUARDANDO_CHECKLIST';
+
+    // Sentinelas de etapa final:
+    //   AGUARDANDO_CHECKLIST -> bancada concluida, aguardando a revisao final
+    //   CONCLUIDO            -> revisao aprovada (fim real do fluxo)
+    const FINAL_STEPS = ['AGUARDANDO_CHECKLIST', 'CONCLUIDO'];
+
+    const CHECKLIST_ITEMS = [
+        { key: 'microsoftCert', label: 'Certificado Microsoft' },
+        { key: 'trellix', label: 'Trellix' },
+        { key: 'hpDrivers', label: 'Drivers HP' },
+        { key: 'windowsUpdate', label: 'Windows Update' }
+    ];
+
+    function isStepFinished(step) {
+        return FINAL_STEPS.indexOf(step) !== -1;
+    }
+
     function sha256(ascii) {
         const mathPow = Math.pow;
         const maxWord = mathPow(2, 32);
@@ -614,11 +635,25 @@ const TOTVSStorage = (() => {
         return user ? user.displayName : 'Sem analista';
     }
 
+    function normalizeChecklist(value) {
+        if (!value || typeof value !== 'object') {
+            return null;
+        }
+        const normalized = {};
+        CHECKLIST_ITEMS.forEach((item) => {
+            normalized[item.key] = Boolean(value[item.key]);
+        });
+        normalized.doneAt = value.doneAt || null;
+        normalized.doneBy = value.doneBy || null;
+        return normalized;
+    }
+
     function normalizeMachine(state, machine) {
-        const currentStep = machine.currentStep && machine.currentStep !== 'CONCLUIDO'
+        const finished = isStepFinished(machine.currentStep);
+        const currentStep = machine.currentStep && !finished
             ? machine.currentStep
             : PROCESS_STEPS[Math.max(0, Math.min(PROCESS_STEPS.length - 1, machine.currentStepIndex || 0))];
-        const currentStepIndex = machine.currentStep === 'CONCLUIDO'
+        const currentStepIndex = finished
             ? PROCESS_STEPS.length
             : Math.max(0, PROCESS_STEPS.indexOf(currentStep));
         const stepDurations = machine.stepDurations || {};
@@ -630,12 +665,16 @@ const TOTVSStorage = (() => {
         const analystId = machine.analystId || (getAnalystUsers(state)[0] ? getAnalystUsers(state)[0].id : 'user_isaque');
 
         // Status e datas derivadas.
-        // "Preparada" = concluiu as 4 etapas da bancada (data automatica).
-        // "Trocada"   = acao separada, com data propria escolhida pelo analista.
-        const status = machine.status || 'PAUSADO';
+        // "Preparada"            = concluiu as 4 etapas da bancada (data automatica).
+        // "Aguardando checklist" = preparada, faltando a revisao final dos 4 itens.
+        // "Trocada"              = acao separada, com data propria escolhida pelo analista.
+        let status = machine.status || 'PAUSADO';
+        if (finished) {
+            status = machine.currentStep;
+        }
         const completedAt = machine.completedAt || null;
         const preparedAt = machine.preparedAt
-            || (status === 'CONCLUIDO' ? (completedAt || machine.updatedAt || null) : null);
+            || (finished ? (completedAt || machine.updatedAt || null) : null);
 
         return {
             id: machine.id || uid('nb'),
@@ -647,7 +686,7 @@ const TOTVSStorage = (() => {
             processDate: machine.processDate
                 || isoToDateKey(machine.preparedAt || machine.createdAt)
                 || todayBrInput(),
-            currentStep: machine.currentStep === 'CONCLUIDO' ? 'CONCLUIDO' : currentStep,
+            currentStep: finished ? machine.currentStep : currentStep,
             currentStepIndex,
             status,
             timerRunning: Boolean(machine.timerRunning),
@@ -656,6 +695,7 @@ const TOTVSStorage = (() => {
             hasError: Boolean(machine.hasError),
             errorDetails: machine.errorDetails || null,
             notes: machine.notes || '',
+            checklist: normalizeChecklist(machine.checklist),
             manualEntry: Boolean(machine.manualEntry),
             manualEntryBy: machine.manualEntryBy || null,
             manualEntryAt: machine.manualEntryAt || null,
@@ -683,6 +723,98 @@ const TOTVSStorage = (() => {
     function getAllMachinesByDataset(state, datasetId = null) {
         const targetDatasetId = datasetId || state.activeDatasetId;
         return state.machines.filter((machine) => machine.datasetId === targetDatasetId);
+    }
+
+    /* --------------------- Consulta de SPON (somente leitura) ---------------------
+     * Le os registros vindos do repositorio (arquivo geral + arquivos dos analistas)
+     * SEM misturar no estado operacional. Serve a tela de consulta de SPON, aberta
+     * para analistas e gerente. Para o analista escondemos QUEM fez; o gerente ve.
+     * -------------------------------------------------------------------------- */
+
+    function collectBundleMachines(bundle) {
+        const map = new Map();
+        const sources = [];
+
+        if (bundle && bundle.general && Array.isArray(bundle.general.records)) {
+            sources.push(bundle.general.records);
+        }
+        if (bundle && Array.isArray(bundle.analysts)) {
+            bundle.analysts.forEach((entry) => {
+                const records = entry && entry.data && Array.isArray(entry.data.records) ? entry.data.records : null;
+                if (records) {
+                    sources.push(records);
+                }
+            });
+        }
+
+        sources.forEach((list) => {
+            list.forEach((machine) => {
+                if (!machine || !machine.id) {
+                    return;
+                }
+                const current = map.get(machine.id);
+                if (!current) {
+                    map.set(machine.id, machine);
+                    return;
+                }
+                const currentTime = new Date(current.updatedAt || current.createdAt || 0).getTime();
+                const nextTime = new Date(machine.updatedAt || machine.createdAt || 0).getTime();
+                if (nextTime >= currentTime) {
+                    map.set(machine.id, machine);
+                }
+            });
+        });
+
+        return Array.from(map.values());
+    }
+
+    function findMachinesInBundle(bundle, hostnameFragment) {
+        const needle = String(hostnameFragment || '').trim().toUpperCase();
+        if (!needle) {
+            return [];
+        }
+        return collectBundleMachines(bundle)
+            .filter((machine) => String(machine.hostname || '').toUpperCase().includes(needle))
+            .sort((left, right) => String(left.hostname || '')
+                .localeCompare(String(right.hostname || ''), 'pt-BR', { numeric: true }));
+    }
+
+    // Ficha completa da maquina para um "viewer" (analista ou gerente).
+    // Esconde o responsavel e o autor de cada acao quando o viewer nao e gerente.
+    function getMachineDetailsForViewer(state, machine, viewer) {
+        if (!machine) {
+            return null;
+        }
+        const isManager = Boolean(viewer && viewer.role === 'manager');
+        const history = Array.isArray(machine.history) ? machine.history : [];
+
+        return {
+            id: machine.id,
+            hostname: machine.hostname,
+            brand: machine.brand,
+            profile: machine.profile,
+            processDate: machine.processDate,
+            status: machine.status,
+            currentStep: machine.currentStep,
+            stepDurations: machine.stepDurations || {},
+            totalElapsedSeconds: Number(machine.totalElapsedSeconds || 0),
+            hasError: Boolean(machine.hasError),
+            errorDetails: machine.errorDetails || null,
+            notes: machine.notes || '',
+            checklist: machine.checklist || null,
+            completedAt: machine.completedAt || null,
+            preparedAt: machine.preparedAt || null,
+            updatedAt: machine.updatedAt || null,
+            analystId: isManager ? machine.analystId : null,
+            analystName: isManager ? getAnalystName(state, machine.analystId) : null,
+            timeline: history.map((entry) => ({
+                action: entry.action,
+                note: entry.note,
+                createdAt: entry.createdAt,
+                actorId: isManager ? entry.actorId : null,
+                actorName: isManager ? getAnalystName(state, entry.actorId) : null
+            }))
+        };
     }
 
     /* --------------------- Merge com o repositorio (GitHub) --------------------- */
@@ -1224,8 +1356,9 @@ const TOTVSStorage = (() => {
     }
 
     function resolveMachineStatus(step, timerRunning, hasError) {
-        if (step === 'CONCLUIDO') {
-            return 'CONCLUIDO';
+        if (isStepFinished(step)) {
+            // AGUARDANDO_CHECKLIST -> pendente de revisao; CONCLUIDO -> aprovada.
+            return step;
         }
         if (timerRunning) {
             return 'EM_ANDAMENTO';
@@ -1253,7 +1386,7 @@ const TOTVSStorage = (() => {
             history: Array.isArray(machine.history) ? machine.history.slice() : []
         };
         const currentStep = updatedMachine.currentStep;
-        if (currentStep !== 'CONCLUIDO') {
+        if (!isStepFinished(currentStep)) {
             updatedMachine.stepDurations[currentStep] = (updatedMachine.stepDurations[currentStep] || 0) + deltaSeconds;
         }
         updatedMachine.totalElapsedSeconds += deltaSeconds;
@@ -1332,7 +1465,7 @@ const TOTVSStorage = (() => {
             const existing = state.machines.find((machine) => machine.datasetId === datasetId && machine.hostname === hostname);
             if (existing) {
                 const nextStep = payload.step || existing.currentStep;
-                const nextTimerRunning = !isManual && nextStep !== 'CONCLUIDO' && payload.autoStart;
+                const nextTimerRunning = !isManual && !isStepFinished(nextStep) && payload.autoStart;
                 if (manualTimes) {
                     existing.stepDurations = { ...manualTimes.stepDurations };
                     existing.totalElapsedSeconds = manualTimes.total;
@@ -1350,15 +1483,21 @@ const TOTVSStorage = (() => {
                 existing.hasError = payload.hasError;
                 existing.errorDetails = payload.hasError ? { description: payload.errorDescription || 'Incidente registrado' } : null;
                 existing.currentStep = nextStep;
-                existing.currentStepIndex = nextStep === 'CONCLUIDO' ? PROCESS_STEPS.length : PROCESS_STEPS.indexOf(nextStep);
+                existing.currentStepIndex = isStepFinished(nextStep) ? PROCESS_STEPS.length : PROCESS_STEPS.indexOf(nextStep);
                 existing.timerRunning = nextTimerRunning;
                 existing.status = resolveMachineStatus(nextStep, nextTimerRunning, payload.hasError);
                 existing.currentStepStartedAt = stepChanged ? nowIso() : existing.currentStepStartedAt;
                 existing.lastTickAt = nextTimerRunning ? nowIso() : null;
-                existing.completedAt = nextStep === 'CONCLUIDO' ? (existing.completedAt || nowIso()) : null;
-                existing.preparedAt = nextStep === 'CONCLUIDO'
-                    ? (existing.preparedAt || existing.completedAt)
-                    : null;
+                if (nextStep === 'CONCLUIDO') {
+                    existing.completedAt = existing.completedAt || nowIso();
+                    existing.preparedAt = existing.preparedAt || existing.completedAt;
+                } else if (nextStep === STATUS_AWAITING_CHECKLIST) {
+                    existing.completedAt = null;
+                    existing.preparedAt = existing.preparedAt || nowIso();
+                } else {
+                    existing.completedAt = null;
+                    existing.preparedAt = null;
+                }
                 existing.updatedAt = nowIso();
                 existing.history.unshift(createHistoryEntry(
                     isManual ? 'machine_updated_manual' : 'machine_updated',
@@ -1370,7 +1509,7 @@ const TOTVSStorage = (() => {
             }
 
             const currentStep = payload.step;
-            const isDone = currentStep === 'CONCLUIDO';
+            const isFinal = isStepFinished(currentStep);
             const machine = normalizeMachine(state, {
                 id: uid('nb'),
                 datasetId,
@@ -1380,28 +1519,30 @@ const TOTVSStorage = (() => {
                 profile: payload.profile,
                 processDate: payload.processDate,
                 currentStep,
-                currentStepIndex: isDone ? PROCESS_STEPS.length : PROCESS_STEPS.indexOf(currentStep),
-                status: resolveMachineStatus(currentStep, !isManual && !isDone && payload.autoStart, payload.hasError),
+                currentStepIndex: isFinal ? PROCESS_STEPS.length : PROCESS_STEPS.indexOf(currentStep),
+                status: resolveMachineStatus(currentStep, !isManual && !isFinal && payload.autoStart, payload.hasError),
                 stepDurations: manualTimes ? manualTimes.stepDurations : undefined,
                 totalElapsedSeconds: manualTimes ? manualTimes.total : 0,
                 manualEntry: isManual,
                 manualEntryBy: isManual ? actorId : null,
                 manualEntryAt: isManual ? nowIso() : null,
-                timerRunning: !isManual && !isDone && payload.autoStart,
+                timerRunning: !isManual && !isFinal && payload.autoStart,
                 hasError: payload.hasError,
                 errorDetails: payload.hasError ? { description: payload.errorDescription || 'Incidente registrado' } : null,
                 notes: payload.notes,
                 currentStepStartedAt: nowIso(),
-                lastTickAt: !isManual && !isDone && payload.autoStart ? nowIso() : null,
+                lastTickAt: !isManual && !isFinal && payload.autoStart ? nowIso() : null,
                 history: [createHistoryEntry(
                     isManual ? 'machine_created_manual' : 'machine_created',
                     actorId,
                     isManual ? 'Lançamento manual com tempo digitado' : 'Cadastro inicial'
                 )]
             });
-            if (isDone) {
+            if (currentStep === 'CONCLUIDO') {
                 machine.completedAt = nowIso();
                 machine.preparedAt = machine.completedAt;
+            } else if (currentStep === STATUS_AWAITING_CHECKLIST) {
+                machine.preparedAt = nowIso();
             }
             state.machines.unshift(machine);
             createdItems.push(machine);
@@ -1441,8 +1582,12 @@ const TOTVSStorage = (() => {
 
         if (payload.step !== machine.currentStep) {
             machine.currentStep = payload.step;
-            machine.currentStepIndex = payload.step === 'CONCLUIDO' ? PROCESS_STEPS.length : PROCESS_STEPS.indexOf(payload.step);
+            machine.currentStepIndex = isStepFinished(payload.step) ? PROCESS_STEPS.length : PROCESS_STEPS.indexOf(payload.step);
             machine.currentStepStartedAt = nowIso();
+            if (payload.step === STATUS_AWAITING_CHECKLIST) {
+                // Reabertura da etapa final: o checklist anterior deixa de valer.
+                machine.checklist = null;
+            }
         }
 
         if (payload.manualEntry) {
@@ -1457,11 +1602,19 @@ const TOTVSStorage = (() => {
             machine.manualEntryAt = nowIso();
         }
 
-        machine.timerRunning = (payload.step === 'CONCLUIDO' || payload.manualEntry) ? false : machine.timerRunning;
+        machine.timerRunning = (isStepFinished(payload.step) || payload.manualEntry) ? false : machine.timerRunning;
         machine.status = resolveMachineStatus(payload.step, machine.timerRunning, payload.hasError);
         machine.lastTickAt = machine.timerRunning ? nowIso() : null;
-        machine.completedAt = payload.step === 'CONCLUIDO' ? (machine.completedAt || nowIso()) : null;
-        machine.preparedAt = payload.step === 'CONCLUIDO' ? (machine.preparedAt || machine.completedAt) : null;
+        if (payload.step === 'CONCLUIDO') {
+            machine.completedAt = machine.completedAt || nowIso();
+            machine.preparedAt = machine.preparedAt || machine.completedAt;
+        } else if (payload.step === STATUS_AWAITING_CHECKLIST) {
+            machine.completedAt = null;
+            machine.preparedAt = machine.preparedAt || nowIso();
+        } else {
+            machine.completedAt = null;
+            machine.preparedAt = null;
+        }
 
         machine.updatedAt = nowIso();
         machine.history.unshift(createHistoryEntry(
@@ -1615,12 +1768,21 @@ const TOTVSStorage = (() => {
             if (source.step && source.step !== machine.currentStep) {
                 const step = source.step;
                 machine.currentStep = step;
-                machine.currentStepIndex = step === 'CONCLUIDO' ? PROCESS_STEPS.length : PROCESS_STEPS.indexOf(step);
+                machine.currentStepIndex = isStepFinished(step) ? PROCESS_STEPS.length : PROCESS_STEPS.indexOf(step);
                 machine.currentStepStartedAt = nowIso();
-                machine.timerRunning = step === 'CONCLUIDO' ? false : machine.timerRunning;
+                machine.timerRunning = isStepFinished(step) ? false : machine.timerRunning;
                 machine.status = resolveMachineStatus(step, machine.timerRunning, machine.hasError);
-                machine.completedAt = step === 'CONCLUIDO' ? (machine.completedAt || nowIso()) : null;
-                machine.preparedAt = step === 'CONCLUIDO' ? (machine.preparedAt || machine.completedAt) : null;
+                if (step === 'CONCLUIDO') {
+                    machine.completedAt = machine.completedAt || nowIso();
+                    machine.preparedAt = machine.preparedAt || machine.completedAt;
+                } else if (step === STATUS_AWAITING_CHECKLIST) {
+                    machine.completedAt = null;
+                    machine.preparedAt = machine.preparedAt || nowIso();
+                    machine.checklist = null;
+                } else {
+                    machine.completedAt = null;
+                    machine.preparedAt = null;
+                }
                 machine.lastTickAt = machine.timerRunning ? nowIso() : null;
                 changes.push('etapa');
             }
@@ -1697,7 +1859,7 @@ const TOTVSStorage = (() => {
         const machine = state.machines.find((item) => item.id === machineId);
         if (!machine) throw new Error('Máquina não encontrada.');
         if (!canEditMachine(actor, machine)) throw new Error('Permissão insuficiente.');
-        if (machine.currentStep === 'CONCLUIDO') throw new Error('Máquina já concluída.');
+        if (isStepFinished(machine.currentStep)) throw new Error('Máquina já concluída.');
 
         machine.timerRunning = true;
         machine.status = 'EM_ANDAMENTO';
@@ -1733,19 +1895,20 @@ const TOTVSStorage = (() => {
         if (!machine) throw new Error('Máquina não encontrada.');
         if (!canEditMachine(actor, machine)) throw new Error('Permissão insuficiente.');
 
-        if (machine.currentStep === 'CONCLUIDO') {
+        if (isStepFinished(machine.currentStep)) {
             return machine;
         }
 
         const currentIndex = PROCESS_STEPS.indexOf(machine.currentStep);
         if (currentIndex >= PROCESS_STEPS.length - 1) {
-            machine.currentStep = 'CONCLUIDO';
+            // Fim da bancada: agora aguarda o checklist final (nao conclui direto).
+            machine.currentStep = STATUS_AWAITING_CHECKLIST;
             machine.currentStepIndex = PROCESS_STEPS.length;
-            machine.status = 'CONCLUIDO';
+            machine.status = STATUS_AWAITING_CHECKLIST;
             machine.timerRunning = false;
             machine.lastTickAt = null;
-            machine.completedAt = nowIso();
-            machine.preparedAt = machine.completedAt;
+            machine.completedAt = null;
+            machine.preparedAt = machine.preparedAt || nowIso();
         } else {
             machine.currentStep = PROCESS_STEPS[currentIndex + 1];
             machine.currentStepIndex = currentIndex + 1;
@@ -1758,6 +1921,46 @@ const TOTVSStorage = (() => {
         machine.updatedAt = nowIso();
         machine.history.unshift(createHistoryEntry('next_step', actorId, machine.currentStep));
         audit(state, 'next_step', actorId, { machineId, nextStep: machine.currentStep });
+        saveState(state);
+        return machine;
+    }
+
+    // Checklist final. Exige os 4 itens marcados e so entao conclui a maquina.
+    function completeMachineChecklist(machineId, checks, actorId) {
+        const state = processRunningTimers();
+        const actor = getUserById(state, actorId);
+        const machine = state.machines.find((item) => item.id === machineId);
+        if (!machine) throw new Error('Máquina não encontrada.');
+        if (!canEditMachine(actor, machine)) throw new Error('Permissão insuficiente.');
+        if (machine.status !== STATUS_AWAITING_CHECKLIST) {
+            throw new Error('Esta máquina não está aguardando checklist final.');
+        }
+
+        const payload = checks || {};
+        const missing = CHECKLIST_ITEMS.filter((item) => !payload[item.key]);
+        if (missing.length) {
+            throw new Error(`Marque todos os itens do checklist: ${missing.map((item) => item.label).join(', ')}.`);
+        }
+
+        const doneAt = nowIso();
+        const checklist = {};
+        CHECKLIST_ITEMS.forEach((item) => {
+            checklist[item.key] = true;
+        });
+        checklist.doneAt = doneAt;
+        checklist.doneBy = actorId;
+
+        machine.checklist = checklist;
+        machine.currentStep = 'CONCLUIDO';
+        machine.currentStepIndex = PROCESS_STEPS.length;
+        machine.status = 'CONCLUIDO';
+        machine.timerRunning = false;
+        machine.lastTickAt = null;
+        machine.completedAt = doneAt;
+        machine.preparedAt = machine.preparedAt || doneAt;
+        machine.updatedAt = doneAt;
+        machine.history.unshift(createHistoryEntry('checklist_done', actorId, 'Checklist final aprovado'));
+        audit(state, 'checklist_done', actorId, { machineId });
         saveState(state);
         return machine;
     }
@@ -1814,20 +2017,27 @@ const TOTVSStorage = (() => {
 
     return {
         ANALYST_GOAL,
+        CHECKLIST_ITEMS,
         MASTER_RESET_SECRET,
         PROCESS_STEPS,
+        STATUS_AWAITING_CHECKLIST,
         TOTAL_PROJECT_GOAL,
         bulkDeleteMachines,
         bulkUpdateMachines,
         changeOwnPassword,
+        collectBundleMachines,
+        completeMachineChecklist,
         createDataset,
         createMachines,
         deleteDataset,
         deleteMachine,
+        findMachinesInBundle,
         formatDateTime,
         getAllMachinesByDataset,
         getAnalystName,
         getAnalystUsers,
+        getMachineDetailsForViewer,
+        isStepFinished,
         getCredentialsSnapshot,
         getCurrentUser,
         getDatasetById,

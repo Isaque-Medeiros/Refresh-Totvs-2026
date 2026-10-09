@@ -16,7 +16,7 @@ Registrar, em formato resumido, a evolucao da atualizacao da interface e da logi
 6. Adequacao do cadastro em lote de hostnames com suporte a reaproveitamento de registros por hostname.
 7. Inclusao de data de cronometragem, incidentes tecnicos e observacoes por maquina.
 8. Implementacao dos cronometros por etapa e do tempo total por registro.
-9. Criacao dos relatÃ³rios geral e individual com modo de impressao para PDF.
+9. Criacao dos relatórios geral e individual com modo de impressao para PDF.
 10. Inclusao das exportacoes `dados-gerais.json`, arquivo individual do usuario, `usuarios.json` e snapshot completo.
 11. Inclusao da troca de senha criptografada por hash e reset de senha com chave mestra.
 12. Reescrita do `app.js` para integrar layout, storage, relatorios, exportacao e permissoes reais.
@@ -45,7 +45,7 @@ Registrar, em formato resumido, a evolucao da atualizacao da interface e da logi
     clonar `stepDurations` e `history`.
 22. **Novo modulo `app/js/github-sync.js`**: sincronizacao automatica com o GitHub via
     Contents API, com leitura do `sha` antes do `PUT`, retry automatico em 409/422,
-    base64 UTF-8 correto (preserva acentos como *FORMATAÃ‡ÃƒO*) e fila serializada com
+    base64 UTF-8 correto (preserva acentos como *FORMATAÇÃO*) e fila serializada com
     *debounce* de 1,5 s.
 23. **Regra anti-conflito**: cada analista grava somente
     `data/analistas/<usuario>.json`; o gerente grava `data/dados-gerais.json` e
@@ -94,7 +94,7 @@ Registrar, em formato resumido, a evolucao da atualizacao da interface e da logi
     analista, expondo a base inteira com todos os usuarios. Agora e `manager-only`,
     junto com a aba *Visao geral*, os graficos gerais e o *Imprimir visao geral*.
 38. **Guarda nas funcoes**: `downloadSnapshot`, `printGeneralReport`, `printGeneralCharts`
-    e `printAnalystCharts` recusam perfil de analista â€” esconder o botao sozinho nao bastava.
+    e `printAnalystCharts` recusam perfil de analista — esconder o botao sozinho nao bastava.
 39. **Graficos em HTML/CSS puro** (zero dependencia, imprime com qualidade):
     progresso da meta global, distribuicao por status, tempo medio por etapa e
     comparativo de atingimento por analista; mais o conjunto individual (meta 250).
@@ -123,7 +123,7 @@ Registrar, em formato resumido, a evolucao da atualizacao da interface e da logi
 47. **Identificados os HTML originais do cliente** na raiz do projeto
     (`ImplementarAuto.html` = formulario do analista; `status-report-rollout-totvs-local.html`
     = painel do gestor). A analise revelou que o processo real conta
-    **preparadas e trocadas por dia**, como eventos independentes â€” diferente das
+    **preparadas e trocadas por dia**, como eventos independentes — diferente das
     4 etapas cronometradas que vieram do `GuiaDev.md`.
     Decisao: manter as duas visoes, com preparada/trocada **derivadas** das etapas.
 48. **Modelo de troca**: `preparedAt` gravado automaticamente ao concluir as 4 etapas
@@ -132,10 +132,10 @@ Registrar, em formato resumido, a evolucao da atualizacao da interface e da logi
 49. **Marcacao em lote**: `markMachinesSwapped` marca varias maquinas de uma vez,
     valida elegibilidade (so concluidas, nao trocadas, respeitando permissao) e devolve
     quantas foram ignoradas e o motivo. `unmarkMachineSwapped` desfaz a troca.
-50. **Novo modulo `rollout.js`**: calendario Ãºtil com feriados, metas mensais,
+50. **Novo modulo `rollout.js`**: calendario útil com feriados, metas mensais,
     plano de trocas acumulado, consolidacao por dia e por analista, KPIs
-    (ritmo medio dos Ãºltimos 5 dias Ãºteis, projecao de termino, desvio vs plano,
-    dias Ãºteis restantes) e serie de burndown. Conversao de data imune a fuso horario.
+    (ritmo medio dos últimos 5 dias úteis, projecao de termino, desvio vs plano,
+    dias úteis restantes) e serie de burndown. Conversao de data imune a fuso horario.
 51. **Tela nova `app/gestao.html` + `gestao.js`**: painel do gerente nas cores deste
     projeto, com burndown em **SVG** e demais graficos em **CSS puro** (nenhuma
     biblioteca ou CDN), historico diario, impressao e backup. Acesso bloqueado para analista.
@@ -150,7 +150,7 @@ Registrar, em formato resumido, a evolucao da atualizacao da interface e da logi
     E o `validate.ps1` passou a gravar o relatorio **incrementalmente**, para que uma
     execucao interrompida nao perca o resultado.
 55. **Testes**: o smoke test subiu de **74 para 105** verificacoes, cobrindo troca em lote,
-    elegibilidade, desfazer troca, calendario Ãºtil, plano acumulado, consolidacao por
+    elegibilidade, desfazer troca, calendario útil, plano acumulado, consolidacao por
     analista, KPIs de gestao e serie de burndown.
 56. **README**: novas secoes de rollout (preparadas x trocadas), painel de gestao e as
     regras do plano, alem da matriz de permissoes atualizada.
@@ -160,7 +160,7 @@ Registrar, em formato resumido, a evolucao da atualizacao da interface e da logi
 ### Sessao 5 - Painel de gestao completo, com o layout do status-report e ao vivo
 
 57. **Modelo definido**: os numeros de preparadas/trocadas continuam **derivados das
-    maquinas** e o lancamento manual do gestor entra como **ajuste somado** â€” permite
+    maquinas** e o lancamento manual do gestor entra como **ajuste somado** — permite
     corrigir divergencia sem risco de contagem dobrada.
 58. **`rollout.js` alinhado a referencia**: ritmo medio passa a ser a media dos ultimos
     5 dias lancados **que tiveram troca**, projecao vira `DD/MM` ou
@@ -251,6 +251,55 @@ Registrar, em formato resumido, a evolucao da atualizacao da interface e da logi
     controles reais da tela (`filterStatus`, `filterSpon`, `sortMachines` e os
     atalhos de data), que agora sao montados pelo JS.
 
+### Sessao 8 - Auto-vinculo, Checklist Final, Consulta de SPON e remaster de UI
+
+79. **Auto-vinculo com o GitHub**: `github-sync.js` ganhou `DEFAULT_CONFIG`,
+    `getDefaultConfig()` e `ensureConfigured()`. Ao abrir o painel, se a maquina
+    ainda nao estiver vinculada, o sistema aplica a configuracao padrao
+    (`isaque-medeiros/Refresh-Totvs-2026`, branch `main`) sozinho, sem o analista
+    digitar nada. A validacao da conexao roda em segundo plano e nao bloqueia a tela.
+80. **Chip de sincronizacao ("quadradinho")**: novo indicador no topo das duas telas
+    (`syncChip`) com estados *Vinculado*, *Verificando vinculo*, *Sincronizando* e
+    *Falha na sincronizacao*. Quando nao esta vinculado aparece o botao
+    **Clique para sincronizar**; se ele falhar de novo, abre a configuracao manual
+    (modal) que ja existia.
+81. **`fetch` com timeout**: `apiRequest()` passou a usar `AbortController` (12 s)
+    para nunca deixar a interface presa quando o GitHub nao responde.
+82. **Novo status `AGUARDANDO_CHECKLIST`**: ao terminar as 4 etapas de bancada a
+    maquina nao vai mais direto para `CONCLUIDO`; ela fica **Aguardando checklist
+    final** (`preparedAt` marcado, `completedAt` nulo). Somente as maquinas antigas
+    permanecem `CONCLUIDO` (o historico nao retroage, por decisao do projeto).
+83. **Checklist final**: novo modal com busca por SPON, botao *Realizar checklist
+    final* e 4 itens obrigatorios (**Certificado Microsoft, Trellix, Drivers HP,
+    Windows Update**). So com os 4 marcados o envio e liberado; a conclusao ocorre em
+    `completeMachineChecklist()`, que grava `checklist`, `completedAt`, historico
+    (`checklist_done`) e auditoria.
+84. **Filtros, KPIs e gestao**: `filters.js` ganhou o status no filtro/rotulo/resumo;
+    o painel operacional ganhou o KPI *Aguardando checklist*; o painel de gestao
+    ganhou o bloco *Aguardando checklist final*; `reports.js` e as exportacoes
+    (TSV/WhatsApp) passaram a contar e exibir o novo estado e o checklist.
+85. **Consulta de SPON (todos os perfis)**: novo modal *Consultar SPON* nas duas
+    telas. Le os dados do repositorio (conexao autenticada ou dados publicados) e
+    mostra **procedimento por etapa, problemas encontrados, tempo por etapa, tempo
+    total, checklist e linha do tempo**. Para o **analista** o responsavel e o autor
+    de cada acao sao **ocultados** (`getMachineDetailsForViewer`); o **gerente** ve.
+86. **Remaster de UI (v4)**: camada aditiva no `styles.css` com icones SVG inline
+    (sprite offline), chip de status, badges do novo estado, telas de checklist e de
+    consulta de SPON, anel de foco visivel e `prefers-reduced-motion`. Paleta e estilo
+    soft/futurista mantidos, com contraste AA.
+87. **Testes**: `tests/smoke.html` passou a cobrir o novo status, o checklist
+    (incompleto recusado, completo conclui, checklist repetido recusado), os filtros
+    do novo estado, a visibilidade da consulta de SPON e os defaults de auto-vinculo.
+    `tools/validate.ps1` ganhou as checagens dos novos IDs nas duas telas.
+88. **Identidade visual (logos)**: as imagens da raiz foram organizadas em
+    `app/assets/`. O icone do app (`totvs-app-icon.png`, 512x512, fundo `#00E5FF`)
+    virou favicon e marca do cabecalho (40 px); o wordmark claro
+    (`totvs-logo-light.png`) entrou no login e na tela de acesso restrito; e a logo
+    recortada (`totvs-logo-print.png`) entrou no cabecalho dos relatorios em PDF.
+    Novo utilitario `tools/prepare-logos.ps1` gera as versoes *print* (recorte justo,
+    azul sobre branco) e *light* (branca com fundo transparente) a partir da logo
+    completa, mantendo as duas telas legiveis no tema escuro e no papel.
+
 ---
 
 
@@ -260,18 +309,20 @@ Executado por `tools/validate.ps1` (Edge headless sobre servidor local):
 
 | Etapa | Resultado |
 |---|---|
-| Verificacao de IDs (por pagina) | 2 paginas, 315 referencias no JS, todas validas |
-| Smoke test de logica | **147/147 testes aprovados** |
-| Carregamento da aplicacao real | 30/30 verificacoes aprovadas |
-| Painel de gestao do gerente | 26/26 verificacoes aprovadas |
+| Verificacao de IDs (por pagina) | 2 paginas, 363 referencias no JS, todas validas |
+| Smoke test de logica | **167/167 testes aprovados** |
+| Carregamento da aplicacao real | 42/42 verificacoes aprovadas |
+| Painel de gestao do gerente | 30/30 verificacoes aprovadas |
+
+Ultima execucao (Sessao 8): `RESULTADO FINAL: TUDO OK`.
 
 ---
 
 ## Pendente / observacoes
 
 **Painel de gestao entregue** com o layout do status report do gestor, nas cores deste
-projeto e alimentado automaticamente pelos mesmos dados. O fluxo antigo â€” cada analista
-preenchia o formulario e enviava o JSON para o gestor consolidar â€” deixa de ser
+projeto e alimentado automaticamente pelos mesmos dados. O fluxo antigo — cada analista
+preenchia o formulario e enviava o JSON para o gestor consolidar — deixa de ser
 necessario, mas os arquivos originais ficaram na raiz como referencia.
 
 Ponto de atencao aberto: **as 4 etapas de bancada nao existem no processo atual do

@@ -4,15 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Status Report · Rollout TOTVS | Painel de Gestão</title>
+    <link rel="icon" type="image/png" href="assets/totvs-app-icon.png">
+    <link rel="apple-touch-icon" href="assets/totvs-app-icon.png">
+    <link rel="preload" as="image" href="assets/totvs-logo-print.png">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="totvs-theme">
     <div class="background-glow"></div>
 
+    <svg class="icon-sprite" aria-hidden="true" focusable="false">
+        <symbol id="ico-cloud" viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6 9.5A3.5 3.5 0 0 0 7 18Z"/></symbol>
+        <symbol id="ico-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14-4L4 9"/><path d="M4 5v4h4"/><path d="M4 13a8 8 0 0 0 14 4l2-2"/><path d="M20 19v-4h-4"/></symbol>
+        <symbol id="ico-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></symbol>
+        <symbol id="ico-clipboard" viewBox="0 0 24 24"><path d="M9 4h6v3H9z"/><path d="M8 6H6v14h12V6h-2"/><path d="M9 12l2 2 4-4"/></symbol>
+    </svg>
+
     <section class="login-shell hidden" id="deniedView">
         <div class="login-panel">
-            <div class="brand-logo-badge">
-                <span class="logo-totvs">TOTVS</span>
+            <div class="brand-logo-badge brand-logo-badge-hero">
+                <img class="brand-logo-wordmark" src="assets/totvs-logo-light.png" alt="TOTVS" width="220" height="52">
                 <span class="logo-tag">GESTÃO</span>
             </div>
             <div class="login-copy">
@@ -33,8 +43,11 @@
         <header class="app-header">
             <div class="header-brand">
                 <div class="brand-logo-badge">
-                    <span class="logo-totvs">TOTVS</span>
-                    <span class="logo-tag">STATUS REPORT</span>
+                    <img class="brand-logo-img" src="assets/totvs-app-icon.png" alt="TOTVS" width="40" height="40">
+                    <div class="brand-logo-text">
+                        <span class="logo-totvs">TOTVS</span>
+                        <span class="logo-tag">STATUS REPORT</span>
+                    </div>
                 </div>
                 <div class="brand-meta">
                     <h1>Status Report · Rollout de máquinas TOTVS</h1>
@@ -43,6 +56,15 @@
             </div>
 
             <div class="header-widgets">
+                <div class="sync-chip is-pending" id="syncChip" role="status" aria-live="polite">
+                    <span class="sync-chip-dot" aria-hidden="true"></span>
+                    <div class="sync-chip-copy">
+                        <strong data-sync-label>Verificando vínculo...</strong>
+                        <span data-sync-detail>Nenhum envio ainda</span>
+                    </div>
+                    <button type="button" class="btn btn-outline btn-xs hidden" id="btnSyncRetry">Clique para sincronizar</button>
+                </div>
+
                 <div class="live-card" id="liveCard">
                     <span class="live-dot" id="liveDot"></span>
                     <div class="live-copy">
@@ -65,6 +87,9 @@
                 </div>
 
                 <div class="header-actions">
+                    <button class="btn btn-secondary" id="btnOpenSponLookup">
+                        <svg class="ico" aria-hidden="true"><use href="#ico-search"></use></svg>Consultar SPON
+                    </button>
                     <button class="btn btn-secondary" id="btnPrintDashboard">Imprimir painel</button>
                     <button class="btn btn-secondary" id="btnExportBackup">Exportar backup</button>
                     <label class="btn btn-secondary file-trigger">
@@ -336,6 +361,18 @@
                     </div>
 
                     <div class="ops-block">
+                        <h4>Aguardando checklist final <span class="ops-count" id="awaitingChecklistCount">0</span></h4>
+                        <div class="table-responsive table-scroll">
+                            <table class="totvs-table table-sm">
+                                <thead>
+                                    <tr><th>Hostname</th><th>Analista</th><th>Preparada em</th><th>Status</th></tr>
+                                </thead>
+                                <tbody id="awaitingChecklistBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="ops-block">
                         <h4>Incidentes abertos <span class="ops-count" id="incidentCount">0</span></h4>
                         <div class="table-responsive table-scroll">
                             <table class="totvs-table table-sm">
@@ -373,6 +410,35 @@
                 </div>
             </section>
         </main>
+    </div>
+
+    <div class="modal-backdrop" id="modalSponLookup">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h3>Consultar SPON</h3>
+                </div>
+                <button class="btn-close" data-close-modal="modalSponLookup">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="helper-text">
+                    Procedimento realizado, problemas encontrados e tempo por etapa. Como gerente,
+                    você também vê o responsável por cada registro.
+                </p>
+                <div class="search-box checklist-search">
+                    <svg class="ico" aria-hidden="true"><use href="#ico-search"></use></svg>
+                    <input type="text" id="sponLookupInput" class="form-control font-mono text-uppercase" placeholder="Digite o SPON (ex: SPON010132303)" aria-label="SPON para consulta">
+                    <button type="button" class="btn btn-primary" id="btnSponLookup">Consultar</button>
+                </div>
+
+                <div class="spon-result" id="sponLookupResult">
+                    <p class="helper-text">Digite o SPON e clique em Consultar.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-close-modal="modalSponLookup">Fechar</button>
+            </div>
+        </div>
     </div>
 
     <section id="printArea" class="print-area"></section>

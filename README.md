@@ -13,36 +13,65 @@ GitHub, com sincronizacao automatica.
 
 ```
 TOTVS_Refresh_2026/
-â”œâ”€ start.bat                 -> abre o sistema no navegador (modo aplicacao + PDF silencioso)
-â”œâ”€ README.md
-â”œâ”€ TIMELAPSE_ATUALIZACAO.md  -> registro do processo de atualizacao
-â”œâ”€ app/
-â”‚  â”œâ”€ index.html             -> painel operacional (analistas + gerente)
-â”‚  â”œâ”€ gestao.html            -> painel de gestao (status report do gerente)
-â”‚  â”œâ”€ css/styles.css         -> tema TOTVS azul escuro soft
-â”‚  â””â”€ js/
-â”‚     â”œâ”€ storage.js          -> estado, usuarios, lotes, maquinas, permissoes, senhas
-â”‚     â”œâ”€ rollout.js          -> calendario util, plano de trocas, ajustes e KPIs do rollout
-â”‚     â”œâ”€ filters.js          -> filtros por SPON/status/data e ordenacao (duas telas)
-â”‚     â”œâ”€ reports.js          -> metricas, dashboard e relatorios imprimiveis
-â”‚     â”œâ”€ importer-exporter.js-> exportacoes TSV / WhatsApp / JSON
-â”‚     â”œâ”€ github-sync.js      -> sincronizacao com o GitHub (Contents API)
-â”‚     â”œâ”€ print-layout.js     -> layout A4 dos relatorios (PDF profissional)
-â”‚     â”œâ”€ app.js              -> integracao do painel operacional
-â”‚     â”œâ”€ gestao.js           -> integracao do painel de gestao
-â”‚     â””â”€ vendor/chart.umd.js -> Chart.js 4.4.1 (graficos, uso offline)
-â”œâ”€ data/                     -> banco de dados versionado no repositorio
-â”‚  â”œâ”€ dados-gerais.json      -> indice geral (gerente)
-â”‚  â”œâ”€ usuarios.json          -> usuarios sem hash de senha (gerente)
-â”‚  â”œâ”€ gestao.json            -> ajustes, observacoes e frentes (gerente)
-â”‚  â””â”€ analistas/<usuario>.json
-â”œâ”€ tests/smoke.html          -> auto-teste de logica (146 verificacoes)
-â””â”€ tools/
-   â”œâ”€ check-ids.ps1          -> confere se todo ID usado no JS existe no HTML
-   â”œâ”€ serve.ps1              -> servidor local (necessario para o fetch dos JSON)
-   â”œâ”€ timelapse.ps1          -> gravacao de tela / timelapse do processo
-   â””â”€ validate.ps1           -> roda toda a validacao e gera last-validation.txt
+|
++- start.bat                  -> abre o sistema no navegador (modo aplicacao + PDF silencioso)
++- README.md
++- TIMELAPSE_ATUALIZACAO.md   -> registro do processo de atualizacao
++- app/
+|  +- index.html              -> painel operacional (analistas + gerente)
+|  +- gestao.html             -> painel de gestao (status report do gerente)
+|  +- css/styles.css          -> tema TOTVS azul escuro soft
+|  +- assets/                 -> identidade visual (logos)
+|  |  +- totvs-app-icon.png   -> icone do app (1:1, #00E5FF) - favicon e cabecalho
+|  |  +- totvs-logo-light.png -> wordmark branco - login (tema escuro)
+|  |  +- totvs-logo-print.png -> logo recortada - relatorios impressos
+|  |  +- totvs-logo.jpg       -> logo completa de origem (backup)
+|  +- js/
+|     +- storage.js           -> estado, usuarios, lotes, maquinas, permissoes, senhas
+|     +- rollout.js           -> calendario util, plano de trocas, ajustes e KPIs do rollout
+|     +- filters.js           -> filtros por SPON/status/data e ordenacao (duas telas)
+|     +- reports.js           -> metricas, dashboard e relatorios imprimiveis
+|     +- importer-exporter.js -> exportacoes TSV / WhatsApp / JSON
+|     +- github-sync.js       -> sincronizacao com o GitHub (Contents API)
+|     +- print-layout.js      -> layout A4 dos relatorios (PDF profissional)
+|     +- app.js               -> integracao do painel operacional
+|     +- gestao.js            -> integracao do painel de gestao
+|     +- vendor/chart.umd.js  -> Chart.js 4.4.1 (graficos, uso offline)
++- data/                      -> banco de dados versionado no repositorio
+|  +- dados-gerais.json       -> indice geral (gerente)
+|  +- usuarios.json           -> usuarios sem hash de senha (gerente)
+|  +- gestao.json             -> ajustes, observacoes e frentes (gerente)
+|  +- analistas/<usuario>.json
++- tests/smoke.html           -> auto-teste de logica (167 verificacoes)
++- tools/
+   +- check-ids.ps1           -> confere se todo ID usado no JS existe no HTML
+   +- prepare-logos.ps1       -> prepara as logos (recorte + versao clara)
+   +- serve.ps1               -> servidor local (necessario para o fetch dos JSON)
+   +- timelapse.ps1           -> gravacao de tela / timelapse do processo
+   +- validate.ps1            -> roda toda a validacao e gera last-validation.txt
 ```
+
+---
+
+## Identidade visual (logos)
+
+As logos ficam em `app/assets/`:
+
+| Arquivo | Onde aparece | Como |
+|---|---|---|
+| `totvs-app-icon.png` | Favicon e cabecalho das duas telas | Icone 1:1 (fundo `#00E5FF`, simbolo `#001E32`) em 40 px, com brilho ciano |
+| `totvs-logo-light.png` | Login e tela de acesso restrito | Wordmark branco com fundo transparente (versao para tema escuro) |
+| `totvs-logo-print.png` | Cabecalho dos relatorios em PDF | Logo recortada (azul `#001E32` sobre branco) |
+| `totvs-logo.jpg` | Referencia | Logo completa de origem (backup) |
+
+As duas ultimas (**light** e **print**) sao geradas a partir da logo completa por:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\prepare-logos.ps1
+```
+
+O script remove as sobras brancas (recorte justo) e cria a versao clara convertendo
+a luminancia em transparencia, deixando a marca legivel sobre o tema azul escuro.
 
 ---
 
@@ -327,7 +356,11 @@ Fine-grained tokens -> Generate new token**.
 - **Permissions -> Repository permissions -> Contents: Read and write.**
 - Copie o token (`github_pat_...`).
 
-### 2. Configure no app (uma vez por maquina)
+### 2. Configure no app (opcional - o sistema se vincula sozinho)
+
+O sistema ja tenta se vincular automaticamente (veja *Vinculacao automatica e
+indicador de sincronizacao*). Use o modal **Sync / Exportar** apenas para trocar o
+token/parametros manualmente ou quando o botao **Clique para sincronizar** pedir.
 
 No sistema, botao **Sync / Exportar**, card *Sincronizacao automatica (GitHub)*:
 
@@ -421,9 +454,11 @@ Veja tambem `TIMELAPSE_ATUALIZACAO.md`.
 
 ## Limitacoes conhecidas (transparencia)
 
-1. **O token fica no navegador de cada maquina** (`localStorage`), nunca no
-   repositorio. Use um token fine-grained limitado a este repositorio e revogue-o
-   se a maquina for compartilhada.
+1. **O token nunca fica no repositorio.** Ele e resolvido na propria maquina:
+   `localStorage` (modal **Sync / Exportar**) ou o arquivo nao versionado
+   `app/assets/github-token.local.js` (veja o `.example.js`). O GitHub bloqueia o
+   envio de segredos no push e o repositorio e publico, entao commitar o token
+   exporia o acesso de escrita a qualquer pessoa.
 2. Um token com `Contents: Read and write` tecnicamente pode escrever qualquer
    arquivo do repositorio. A separacao gerente/analista e garantida **pelo app**,
    nao pelo GitHub. Bloqueio real exigiria um backend ou um GitHub App.
@@ -442,8 +477,71 @@ Veja tambem `TIMELAPSE_ATUALIZACAO.md`.
 
 ## Etapas do processo
 
-1. `1 FORMATAÃ‡ÃƒO E BIOS`
+1. `1 FORMATAÇÃO E BIOS`
 2. `2 WINDOWS UPDATE`
 3. `3 ATIVAR ADM E SUBIR DRIVERS`
 4. `4 DOMINIO E ARGUS`
-5. `CONCLUIDO`
+5. `AGUARDANDO_CHECKLIST` -> **Aguardando checklist final** (bancada pronta, revisao pendente)
+6. `CONCLUIDO` -> **Concluída** (checklist aprovado)
+
+> Ao terminar as 4 etapas da bancada a máquina **não** vai mais direto para
+> concluída: ela fica em **Aguardando checklist final**. A conclusão só acontece
+> depois do checklist. As máquinas antigas que já estavam `CONCLUIDO` permanecem
+> como estão (o histórico não retroage).
+
+## Checklist final
+
+No painel operacional, botão **Checklist Final** (ou a ação *Checklist* na linha da
+máquina):
+
+1. Pesquise o **SPON** da máquina.
+2. Clique em **Realizar checklist final**.
+3. Marque os **4 itens obrigatórios**: Certificado Microsoft, Trellix, Drivers HP e
+   Windows Update. O botão **Concluir máquina** só libera com os 4 marcados.
+4. Ao confirmar, a máquina passa para `CONCLUIDO` (com `completedAt`, histórico e
+   auditoria registrados).
+
+## Consulta de SPON
+
+Botão **Consultar SPON** (painel operacional e painel de gestão). Mostra, por máquina:
+procedimento por etapa (com tempo de cada uma), problemas encontrados, tempo total,
+checklist e linha do tempo. **Analistas** não veem o responsável/autor das ações —
+apenas o **gerente** vê quem fez.
+
+---
+
+## Vinculação automática e indicador de sincronização
+
+O sistema tenta se vincular sozinho ao GitHub na abertura do painel. Usuario,
+repositorio e branch ja vem preenchidos (`isaque-medeiros / Refresh-Totvs-2026`,
+`main`); falta apenas o **token**, que por seguranca **nao fica no repositorio**.
+
+- O **chip no topo** mostra o estado: *Vinculado*, *Verificando vínculo*,
+  *Sincronizando* ou *Falha na sincronização*.
+- Se não estiver vinculado, aparece o botão **Clique para sincronizar**. Se ele
+  falhar novamente, abre a configuração manual (modal **Sync / Exportar**), que
+  continua existindo como reserva.
+- A validação da conexão roda em segundo plano e nunca trava a tela (timeout de 12s).
+
+### Onde fica o token (ele nao vai para o repositorio)
+
+O GitHub **bloqueia o envio de segredos** (push protection) e o repositorio e
+publico, entao o token nao pode ficar no codigo. Ele e resolvido nesta ordem:
+
+1. Configuracao salva NESTA maquina (`localStorage`), pelo modal **Sync / Exportar**;
+2. `window.TOTVS_GITHUB_TOKEN`, definido por um arquivo **nao versionado**:
+   `app/assets/github-token.local.js`;
+3. Chave dedicada no `localStorage`.
+
+Para vincular sozinho, sem pedir nada ao analista, copie uma vez por maquina o
+exemplo (que pode ser versionado) e cole o token:
+
+```powershell
+copy app\assets\github-token.local.example.js app\assets\github-token.local.js
+```
+
+O arquivo real `github-token.local.js` ja esta no `.gitignore`.
+
+> AVISO: use um token **fine-grained** limitado a este repositorio, com
+> `Contents: Read and write`, e **rotacione-o** periodicamente. Se um token for
+> compartilhado por engano (print, chat, commit), revogue-o imediatamente.

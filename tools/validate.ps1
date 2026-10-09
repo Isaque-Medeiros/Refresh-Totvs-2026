@@ -174,7 +174,20 @@ $checks = @(
     @{ Name = 'Filtro por SPON presente';                 Pattern = 'id="filterSpon"' },
     @{ Name = 'Ordenacao de maquinas presente';           Pattern = 'id="sortMachines"' },
     @{ Name = 'Atalhos de data presentes';                Pattern = 'id="chipLast7"' },
-    @{ Name = 'Login com seletor de usuario';             Pattern = 'id="loginUsername"' }
+    @{ Name = 'Login com seletor de usuario';             Pattern = 'id="loginUsername"' },
+    @{ Name = 'Chip de sincronizacao no topo';            Pattern = 'id="syncChip"' },
+    @{ Name = 'Botao Clique para sincronizar';            Pattern = 'id="btnSyncRetry"' },
+    @{ Name = 'Botao de checklist final';                 Pattern = 'id="btnOpenChecklist"' },
+    @{ Name = 'Modal de checklist presente';              Pattern = 'id="modalChecklist"' },
+    @{ Name = 'Checklist: Certificado Microsoft';         Pattern = 'id="chkCertMicrosoft"' },
+    @{ Name = 'Checklist: Trellix';                       Pattern = 'id="chkTreillix"' },
+    @{ Name = 'Checklist: Drivers HP';                    Pattern = 'id="chkHpDrivers"' },
+    @{ Name = 'Checklist: Windows Update';                Pattern = 'id="chkWindowsUpdate"' },
+    @{ Name = 'Botao de concluir maquina (checklist)';    Pattern = 'id="btnSubmitChecklist"' },
+    @{ Name = 'Botao de consultar SPON';                  Pattern = 'id="btnOpenSponLookup"' },
+    @{ Name = 'Modal de consulta de SPON';                Pattern = 'id="modalSponLookup"' },
+    @{ Name = 'Campo de busca de SPON';                   Pattern = 'id="sponLookupInput"' },
+    @{ Name = 'KPI aguardando checklist';                 Pattern = 'id="kpiAwaitingMachines"' }
 )
 
 $appFailures = 0
@@ -212,6 +225,10 @@ $mgmtChecks = @(
     @{ Name = 'Historico diario';                   Pattern = 'id="historyTableBody"' },
     @{ Name = 'Operacao: em andamento';             Pattern = 'id="inProgressBody"' },
     @{ Name = 'Operacao: aguardando troca';         Pattern = 'id="waitingSwapBody"' },
+    @{ Name = 'Operacao: aguardando checklist';     Pattern = 'id="awaitingChecklistBody"' },
+    @{ Name = 'Chip de sincronizacao no topo';      Pattern = 'id="syncChip"' },
+    @{ Name = 'Botao de consultar SPON';            Pattern = 'id="btnOpenSponLookup"' },
+    @{ Name = 'Modal de consulta de SPON';          Pattern = 'id="modalSponLookup"' },
     @{ Name = 'Operacao: incidentes';               Pattern = 'id="incidentsBody"' },
     @{ Name = 'Operacao: tempo por etapa';          Pattern = 'id="stepTimesBody"' },
     @{ Name = 'Operacao: atingimento por analista'; Pattern = 'id="analystOpsBody"' },

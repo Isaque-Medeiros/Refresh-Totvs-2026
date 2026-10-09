@@ -22,6 +22,28 @@ const TOTVSGithubSync = (() => {
     const AUTO_SYNC_DEBOUNCE_MS = 1500;
     const MAX_CONFLICT_RETRIES = 3;
 
+    // Vinculacao automatica: owner/repo/branch ja vem preenchidos, entao o analista
+    // nao precisa digitar nada disso. Falta apenas o TOKEN.
+    //
+    // ATENCAO (seguranca): o token NAO pode ficar neste arquivo. Como o site e
+    // estatico e o repositorio e publico, o GitHub bloqueia o envio (protecao a
+    // segredos) e qualquer pessoa poderia usa-lo. O token e resolvido, nesta ordem:
+    //   1. configuracao salva NESTA maquina (localStorage) pelo modal Sync / Exportar;
+    //   2. window.TOTVS_GITHUB_TOKEN, definido por um arquivo local NAO versionado
+    //      (app/assets/github-token.local.js) - permite pre-configurar a maquina;
+    //   3. chave dedicada no localStorage (LOCAL_TOKEN_KEY).
+    const DEFAULT_CONFIG = {
+        owner: 'isaque-medeiros',
+        repo: 'Refresh-Totvs-2026',
+        branch: 'main',
+        token: '',
+        autoSync: true
+    };
+
+    const LOCAL_TOKEN_KEY = 'TOTVS_REFRESH_2026_GITHUB_TOKEN_V1';
+    const LOCAL_TOKEN_SCRIPT = 'assets/github-token.local.js';
+    let localTokenScriptTried = false;
+
     const PATH_GENERAL = 'data/dados-gerais.json';
     const PATH_USERS = 'data/usuarios.json';
     const PATH_MANAGEMENT = 'data/gestao.json';
@@ -35,6 +57,7 @@ const TOTVSGithubSync = (() => {
         message: 'Sincronizacao nao configurada.',
         lastSyncAt: null,
         pending: 0,
+        verified: false,
         listeners: [],
         queue: Promise.resolve(),
         debounceTimer: null
@@ -86,6 +109,40 @@ const TOTVSGithubSync = (() => {
 
     /* -------------------------------- Config --------------------------------- */
 
+    function getRuntimeToken() {
+        if (typeof window !== 'undefined' && window.TOTVS_GITHUB_TOKEN) {
+            return String(window.TOTVS_GITHUB_TOKEN).trim();
+        }
+        try {
+            return String(localStorage.getItem(LOCAL_TOKEN_KEY) || '').trim();
+        } catch (error) {
+            return '';
+        }
+    }
+
+    // Token efetivo: o da config da maquina tem prioridade; se nao houver, usa o
+    // token local (arquivo nao versionado) ou a chave dedicada do localStorage.
+    function resolveToken(config) {
+        const fromConfig = config && config.token ? String(config.token).trim() : '';
+        return fromConfig || getRuntimeToken();
+    }
+
+    // Carrega, uma unica vez, o arquivo local opcional com o token.
+    // Se o arquivo nao existir, o erro e ignorado de proposito.
+    function loadLocalTokenScript() {
+        if (localTokenScriptTried || typeof document === 'undefined') {
+            return Promise.resolve();
+        }
+        localTokenScriptTried = true;
+        return new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = LOCAL_TOKEN_SCRIPT;
+            script.onload = () => resolve();
+            script.onerror = () => resolve();
+            document.head.appendChild(script);
+        });
+    }
+
     function getConfig() {
         if (state.config) {
             return state.config;
@@ -109,14 +166,44 @@ const TOTVSGithubSync = (() => {
             autoSync: Boolean(config.autoSync)
         };
         state.config = normalized;
+        // Configuracao nova ainda nao foi validada: o selo "Vinculado" so aparece
+        // depois de um testConnection bem-sucedido.
+        state.verified = false;
         localStorage.setItem(CONFIG_KEY, JSON.stringify(normalized));
         writeLocalStatus('idle', 'Configuracao salva. Use "Testar conexao" para validar.');
         return normalized;
     }
 
+    function getDefaultConfig() {
+        return { ...DEFAULT_CONFIG };
+    }
+
+    // Se a maquina ainda nao tem configuracao, aplica a padrao automaticamente.
+    // Retorna true quando (passou a) esta configurada e pronta para enviar.
+    async function ensureConfigured() {
+        await loadLocalTokenScript();
+
+        if (isConfigured()) {
+            return true;
+        }
+
+        const defaults = getDefaultConfig();
+        const token = resolveToken(defaults);
+        if (!defaults.owner || !defaults.repo || !token) {
+            // Sem token nao ha como vincular sozinho: o usuario usa o chip
+            // "Clique para sincronizar" ou o modal Sync / Exportar.
+            writeLocalStatus('idle', 'Informe o token do GitHub para vincular esta maquina.');
+            return false;
+        }
+
+        saveConfig({ ...defaults, token });
+        writeLocalStatus('idle', 'Vinculacao automatica aplicada. Validando conexao...');
+        return true;
+    }
+
     function isConfigured() {
         const config = getConfig();
-        return Boolean(config && config.owner && config.repo && config.token);
+        return Boolean(config && config.owner && config.repo && resolveToken(config));
     }
 
     /* -------------------------------- Status --------------------------------- */
@@ -137,6 +224,10 @@ const TOTVSGithubSync = (() => {
     function writeLocalStatus(status, message, lastSyncAt) {
         state.status = status;
         state.message = message;
+        if (status === 'error') {
+            // Qualquer falha derruba o selo "Vinculado" ate nova validacao.
+            state.verified = false;
+        }
         if (lastSyncAt) {
             state.lastSyncAt = lastSyncAt;
         }
@@ -160,6 +251,7 @@ const TOTVSGithubSync = (() => {
         const config = getConfig();
         return {
             configured: isConfigured(),
+            verified: Boolean(state.verified),
             status: state.status,
             message: state.message,
             lastSyncAt: state.lastSyncAt,
@@ -204,11 +296,24 @@ const TOTVSGithubSync = (() => {
     }
 
     async function apiRequest(config, method, path, body) {
-        const response = await fetch(`${API_BASE}${path}`, {
-            method,
-            headers: buildHeaders(config),
-            body: body ? JSON.stringify(body) : undefined
-        });
+        // Timeout curto: sem isso, uma rede indisponivel deixaria a interface
+        // "presa" esperando o GitHub indefinidamente.
+        const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+        const timer = controller ? setTimeout(() => controller.abort(), 12000) : null;
+
+        let response;
+        try {
+            response = await fetch(`${API_BASE}${path}`, {
+                method,
+                headers: buildHeaders(config),
+                body: body ? JSON.stringify(body) : undefined,
+                signal: controller ? controller.signal : undefined
+            });
+        } catch (error) {
+            if (timer) clearTimeout(timer);
+            throw new Error('Nao foi possivel falar com o GitHub (sem conexao ou tempo esgotado).');
+        }
+        if (timer) clearTimeout(timer);
 
         const text = await response.text();
         let data = null;
@@ -366,10 +471,13 @@ const TOTVSGithubSync = (() => {
     /* ------------------------------- Operacoes ------------------------------- */
 
     function requireConfig() {
-        if (!isConfigured()) {
-            throw new Error('Sincronizacao nao configurada. Informe usuario, repositorio e token.');
+        const config = getConfig();
+        const token = resolveToken(config);
+        if (!config || !config.owner || !config.repo || !token) {
+            throw new Error('Sincronizacao nao configurada. Informe o token do GitHub.');
         }
-        return getConfig();
+        // Devolve sempre um token efetivo (config da maquina ou arquivo local).
+        return { ...config, token };
     }
 
     async function testConnection() {
@@ -377,14 +485,17 @@ const TOTVSGithubSync = (() => {
         const path = `/repos/${encodeURIComponent(config.owner)}/${encodeURIComponent(config.repo)}`;
         const result = await apiRequest(config, 'GET', path);
         if (!result.ok) {
+            markVerified(false);
             throw new Error(describeError(result));
         }
 
         const canWrite = Boolean(result.data.permissions && result.data.permissions.push);
         if (!canWrite) {
+            markVerified(false);
             throw new Error('Token valido, porem sem permissao de escrita. Gere o token com "Contents: Read and write".');
         }
 
+        markVerified(true);
         return {
             fullName: result.data.full_name,
             defaultBranch: result.data.default_branch,
@@ -577,6 +688,12 @@ const TOTVSGithubSync = (() => {
         writeLocalStatus('idle', message);
     }
 
+    function markVerified(verified) {
+        state.verified = Boolean(verified);
+        writeLocalStatus(state.status, state.message);
+        return state.verified;
+    }
+
     function init() {
         readLocalStatus();
         if (isConfigured()) {
@@ -587,6 +704,7 @@ const TOTVSGithubSync = (() => {
     return {
         ANALYST_DIR,
         AUTO_SYNC_DEBOUNCE_MS,
+        DEFAULT_CONFIG,
         PATH_GENERAL,
         PATH_MANAGEMENT,
         PATH_USERS,
@@ -598,9 +716,11 @@ const TOTVSGithubSync = (() => {
         decodeBase64,
         encodeBase64,
         enqueue,
+        ensureConfigured,
         fetchBundle,
         fetchPublishedBundle,
         getConfig,
+        getDefaultConfig,
         getQueue,
         getStatus,
         init,
@@ -609,6 +729,7 @@ const TOTVSGithubSync = (() => {
         markError,
         markIdle,
         markSuccess,
+        markVerified,
         onStatus,
         pushGeneralFile,
         pushManagementFile,

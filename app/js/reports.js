@@ -2,6 +2,7 @@ const TOTVSReports = (() => {
     function calculateMetrics(state, machines) {
         const total = machines.length;
         const doneList = machines.filter((machine) => machine.status === 'CONCLUIDO');
+        const awaitingChecklistList = machines.filter((machine) => machine.status === 'AGUARDANDO_CHECKLIST');
         const wipList = machines.filter((machine) => machine.status === 'EM_ANDAMENTO');
         const pausedList = machines.filter((machine) => machine.status === 'PAUSADO');
         const errorList = machines.filter((machine) => machine.hasError || machine.status === 'ERRO');
@@ -31,6 +32,7 @@ const TOTVSReports = (() => {
                 name: analyst.displayName,
                 total: analystMachines.length,
                 done: analystDone,
+                awaitingChecklist: analystMachines.filter((machine) => machine.status === 'AGUARDANDO_CHECKLIST').length,
                 wip: analystMachines.filter((machine) => machine.status === 'EM_ANDAMENTO').length,
                 paused: analystMachines.filter((machine) => machine.status === 'PAUSADO').length,
                 errors: analystErrors,
@@ -43,6 +45,7 @@ const TOTVSReports = (() => {
         return {
             total,
             doneCount: doneList.length,
+            awaitingChecklistCount: awaitingChecklistList.length,
             wipCount: wipList.length,
             pausedCount: pausedList.length,
             errorCount: errorList.length,
@@ -75,6 +78,11 @@ const TOTVSReports = (() => {
                 title: 'Taxa de eficiência',
                 value: `${metrics.successRate}%`,
                 sub: `${metrics.errorCount} registros com incidente`
+            },
+            {
+                title: 'Aguardando checklist',
+                value: `${metrics.awaitingChecklistCount}`,
+                sub: 'Preparadas pendentes de revisão final'
             },
             {
                 title: 'Pausadas',

@@ -1,0 +1,7 @@
+# Token local de sincronizacao - NUNCA versionar
+app/assets/github-token.local.js
+
+# Arquivos temporarios de trabalho
+tools/_pub*.txt
+tools/_chk.ps1
+tools/_chk*.txt

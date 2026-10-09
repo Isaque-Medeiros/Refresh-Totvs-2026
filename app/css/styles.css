@@ -2199,3 +2199,378 @@ body.totvs-theme {
         page-break-after: avoid;
     }
 }
+
+/* ============================================================================
+   V4 - REFINAMENTO (sincronizacao, checklist, consulta de SPON e polimento)
+   Camada aditiva: nao substitui as regras acima, apenas complementa o tema.
+   ============================================================================ */
+
+.icon-sprite {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.ico {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex: 0 0 auto;
+}
+
+.text-cyan { color: var(--cyan) !important; }
+.bg-cyan { background: var(--cyan) !important; }
+
+.btn { gap: 8px; }
+
+.btn-ghost {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-soft);
+}
+
+.btn-ghost:hover {
+    background: rgba(103, 215, 255, 0.08);
+    border-color: var(--border);
+    color: var(--text);
+}
+
+/* ------------------------------ Chip de sincronizacao ----------------------------- */
+
+.sync-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(9, 26, 44, 0.72);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    min-width: 190px;
+}
+
+.sync-chip-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    box-shadow: 0 0 0 4px rgba(120, 145, 173, 0.14);
+    flex: 0 0 auto;
+}
+
+.sync-chip-copy {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+    min-width: 0;
+}
+
+.sync-chip-copy strong { font-size: 0.82rem; }
+
+.sync-chip-copy span {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sync-chip.is-on { border-color: rgba(35, 209, 139, 0.5); }
+.sync-chip.is-on .sync-chip-dot {
+    background: var(--green);
+    box-shadow: 0 0 0 4px rgba(35, 209, 139, 0.18);
+}
+
+.sync-chip.is-off,
+.sync-chip.is-error { border-color: rgba(255, 99, 136, 0.5); }
+.sync-chip.is-off .sync-chip-dot,
+.sync-chip.is-error .sync-chip-dot {
+    background: var(--red);
+    box-shadow: 0 0 0 4px rgba(255, 99, 136, 0.18);
+}
+
+.sync-chip.is-syncing,
+.sync-chip.is-pending { border-color: rgba(103, 215, 255, 0.5); }
+.sync-chip.is-syncing .sync-chip-dot,
+.sync-chip.is-pending .sync-chip-dot {
+    background: var(--cyan);
+    box-shadow: 0 0 0 4px rgba(103, 215, 255, 0.18);
+    animation: sync-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes sync-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* ------------------------------- Status e linhas -------------------------------- */
+
+.badge-status-check {
+    background: rgba(103, 215, 255, 0.14);
+    color: var(--cyan);
+    border-color: rgba(103, 215, 255, 0.4);
+}
+
+.totvs-table tbody tr.row-awaiting {
+    background: rgba(103, 215, 255, 0.05);
+}
+
+.timer-pill.awaiting {
+    color: var(--cyan);
+    border-color: rgba(103, 215, 255, 0.4);
+}
+
+/* --------------------------------- Checklist ---------------------------------- */
+
+.checklist-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 6px 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(9, 26, 44, 0.7);
+    margin-bottom: 16px;
+}
+
+.checklist-search .ico {
+    color: var(--cyan);
+    width: 18px;
+    height: 18px;
+}
+
+.checklist-search .form-control {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+}
+
+.checklist-result {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.checklist-hit {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(11, 30, 50, 0.62);
+}
+
+.checklist-hit-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-right: auto;
+}
+
+.checklist-panel {
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    padding: 18px;
+    background: rgba(11, 34, 56, 0.6);
+}
+
+.checklist-panel-head {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 10px;
+}
+
+.checklist-items {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    margin: 14px 0;
+}
+
+.checklist-items .checkbox-container {
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(9, 26, 44, 0.6);
+}
+
+/* ----------------------------- Consulta de SPON -------------------------------- */
+
+.spon-result {
+    display: grid;
+    gap: 16px;
+}
+
+.spon-card {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    background: rgba(11, 30, 50, 0.62);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+}
+
+.spon-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.spon-card-head strong {
+    font-size: 1.05rem;
+    display: block;
+}
+
+.spon-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    padding: 12px 0;
+    color: var(--text-soft);
+    font-size: 0.86rem;
+}
+
+.spon-card h5 {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--cyan);
+    margin: 14px 0 8px;
+}
+
+.spon-steps,
+.spon-timeline {
+    list-style: none;
+    display: grid;
+    gap: 8px;
+}
+
+.spon-step {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: rgba(9, 26, 44, 0.54);
+    border: 1px solid rgba(98, 165, 255, 0.14);
+    font-size: 0.86rem;
+}
+
+.spon-timeline li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 4px 0;
+    font-size: 0.82rem;
+    color: var(--text-soft);
+}
+
+.spon-alert {
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(255, 99, 136, 0.1);
+    border: 1px solid rgba(255, 99, 136, 0.36);
+    color: var(--red);
+    font-size: 0.86rem;
+}
+
+.spon-owner strong { color: var(--text); }
+
+/* ------------------------- Acessibilidade e polimento -------------------------- */
+
+:where(.form-control, .btn, .chip, .tab-btn):focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+button:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+}
+
+.app-header {
+    backdrop-filter: blur(16px);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.32);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sync-chip-dot {
+        animation: none !important;
+    }
+    * {
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* --------------------------------- Marcas --------------------------------------
+   Logo oficial: icone do app (totvs-app-icon.png) no cabecalho, wordmark claro
+   (totvs-logo-light.png) nas telas de login e logo recortado
+   (totvs-logo-print.png) nos relatorios impressos.
+   ----------------------------------------------------------------------------- */
+
+.brand-logo-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-logo-text {
+    display: grid;
+    gap: 2px;
+}
+
+.brand-logo-text .logo-totvs {
+    line-height: 1.05;
+}
+
+.brand-logo-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    object-fit: contain;
+    background: #00e5ff;
+    box-shadow: 0 0 0 1px rgba(103, 215, 255, 0.35), 0 0 18px rgba(0, 229, 255, 0.28);
+}
+
+/* Selo "hero" usado no login e na tela de acesso restrito. */
+.brand-logo-badge-hero {
+    display: grid;
+    justify-items: start;
+    gap: 8px;
+}
+
+.brand-logo-wordmark {
+    width: auto;
+    max-width: 230px;
+    height: 46px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 18px rgba(103, 215, 255, 0.22));
+}
+
+@media print {
+    .print-brand {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 3px;
+    }
+
+    .print-logo-img {
+        height: 19px;
+        width: auto;
+        display: block;
+    }
+}
+

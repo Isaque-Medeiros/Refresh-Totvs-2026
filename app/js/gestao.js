@@ -957,7 +957,7 @@
         el('inProgressBody').innerHTML = inProgress.length
             ? inProgress.map((machine) => {
                 const delta = Math.max(0, Math.floor((nowMs - new Date(machine.lastTickAt || nowMs).getTime()) / 1000));
-                const elapsed = machine.currentStep === 'CONCLUIDO'
+                const elapsed = TOTVSStorage.isStepFinished(machine.currentStep)
                     ? 0
                     : Number(machine.stepDurations[machine.currentStep] || 0) + delta;
 
@@ -975,7 +975,9 @@
         // Preparadas aguardando troca: lista COMPLETA (antes ficava limitada a 12
         // linhas, o que escondia maquinas de outros analistas).
         const waiting = TOTVSFilters.sortMachines(
-            allMachines.filter((machine) => TOTVSRollout.isPrepared(machine) && !machine.swappedAt),
+            allMachines.filter((machine) => TOTVSRollout.isPrepared(machine)
+                && !machine.swappedAt
+                && machine.status !== 'AGUARDANDO_CHECKLIST'),
             options.sortKey === 'updatedAt' ? 'preparedAt' : options.sortKey,
             options.sortDirection === 'desc' ? 'asc' : 'desc',
             filterContext()
@@ -999,6 +1001,26 @@
             : emptyRow(5, 'Nada aguardando troca.');
 
         updateWaitingSelection();
+
+        // Aguardando checklist final: bancada concluida, revisao final pendente.
+        const awaiting = TOTVSFilters.sortMachines(
+            allMachines.filter((machine) => machine.status === 'AGUARDANDO_CHECKLIST'),
+            options.sortKey === 'updatedAt' ? 'preparedAt' : options.sortKey,
+            options.sortDirection,
+            filterContext()
+        );
+
+        el('awaitingChecklistCount').innerText = String(awaiting.length);
+        el('awaitingChecklistBody').innerHTML = awaiting.length
+            ? awaiting.map((machine) => `
+                <tr>
+                    <td class="font-mono">${machine.hostname}</td>
+                    <td>${TOTVSStorage.getAnalystName(runtime.state, machine.analystId)}</td>
+                    <td>${TOTVSRollout.brDate(TOTVSRollout.officialPrepDateKey(machine))}</td>
+                    <td><span class="badge badge-status-check">Aguardando checklist</span></td>
+                </tr>
+            `).join('')
+            : emptyRow(4, 'Nenhuma máquina aguardando checklist.');
 
         // Incidentes.
         const incidents = TOTVSFilters.sortMachines(
@@ -1575,6 +1597,18 @@
         el('btnPullGh').addEventListener('click', () => pullNow(false));
         el('btnToggleLive').addEventListener('click', toggleLiveInterval);
 
+        // Consulta de SPON e chip de sincronizacao.
+        el('btnOpenSponLookup').addEventListener('click', openSponLookup);
+        el('btnSponLookup').addEventListener('click', lookupSpon);
+        el('sponLookupInput').addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                lookupSpon();
+            }
+        });
+        el('btnSyncRetry').addEventListener('click', retryAutoLink);
+        bindModalClose();
+
         el('bSaveDay').addEventListener('click', saveAdjustDay);
         el('bDeleteDay').addEventListener('click', deleteAdjustDay);
         el('bCopyDaily').addEventListener('click', copyDailySummary);
@@ -1632,6 +1666,211 @@
         el('btnClearHistFilters').addEventListener('click', clearHistoryFilters);
     }
 
+    /* -------------------- Vinculo com o GitHub (chip no topo) -------------------- */
+
+    function syncChipState(status) {
+        if (!status.configured) return { cls: 'is-off', label: 'Não vinculado' };
+        if (status.status === 'syncing') return { cls: 'is-syncing', label: 'Sincronizando...' };
+        if (status.status === 'error') return { cls: 'is-error', label: 'Falha na sincronização' };
+        if (status.verified) return { cls: 'is-on', label: 'Vinculado' };
+        return { cls: 'is-pending', label: 'Verificando vínculo...' };
+    }
+
+    function renderSyncChip(status) {
+        const chip = el('syncChip');
+        if (!chip) return;
+        const info = syncChipState(status);
+        chip.classList.remove('is-on', 'is-off', 'is-error', 'is-syncing', 'is-pending');
+        chip.classList.add(info.cls);
+
+        const label = chip.querySelector('[data-sync-label]');
+        if (label) label.innerText = info.label;
+        const detail = chip.querySelector('[data-sync-detail]');
+        if (detail) {
+            detail.innerText = status.lastSyncAt
+                ? `Último envio: ${TOTVSStorage.formatDateTime(status.lastSyncAt)}`
+                : 'Nenhum envio ainda';
+        }
+        const retry = el('btnSyncRetry');
+        if (retry) {
+            const show = info.cls === 'is-error' || info.cls === 'is-off' || info.cls === 'is-pending';
+            retry.classList.toggle('hidden', !show);
+        }
+    }
+
+    async function bootstrapAutoLink() {
+        try {
+            const applied = await TOTVSGithubSync.ensureConfigured();
+            if (!applied || !TOTVSGithubSync.isConfigured()) {
+                renderSyncChip(TOTVSGithubSync.getStatus());
+                return;
+            }
+            await TOTVSGithubSync.testConnection();
+            TOTVSGithubSync.markSuccess('Vinculado automaticamente ao repositório do GitHub.');
+        } catch (error) {
+            TOTVSGithubSync.markError(error.message || 'Falha ao vincular automaticamente.');
+        }
+        renderSyncChip(TOTVSGithubSync.getStatus());
+    }
+
+    async function retryAutoLink() {
+        try {
+            if (!TOTVSGithubSync.isConfigured()) {
+                await TOTVSGithubSync.ensureConfigured();
+            }
+            await TOTVSGithubSync.testConnection();
+            TOTVSGithubSync.markSuccess('Vinculado ao repositório do GitHub.');
+            renderSyncChip(TOTVSGithubSync.getStatus());
+            showToast('Sincronização vinculada.', 'ok');
+            await pullNow(true);
+        } catch (error) {
+            TOTVSGithubSync.markError(error.message);
+            renderSyncChip(TOTVSGithubSync.getStatus());
+            showToast(error.message, '!');
+        }
+    }
+
+    /* ------------------------------- Modais ---------------------------------- */
+
+    function openModal(modalId) {
+        const modal = el(modalId);
+        if (modal) modal.classList.add('active');
+    }
+
+    function closeModal(modalId) {
+        const modal = el(modalId);
+        if (modal) modal.classList.remove('active');
+    }
+
+    function bindModalClose() {
+        document.querySelectorAll('[data-close-modal]').forEach((button) => {
+            button.addEventListener('click', () => closeModal(button.getAttribute('data-close-modal')));
+        });
+        document.querySelectorAll('.modal-backdrop').forEach((backdrop) => {
+            backdrop.addEventListener('click', (event) => {
+                if (event.target === backdrop) {
+                    backdrop.classList.remove('active');
+                }
+            });
+        });
+    }
+
+    /* ------------------------------ Consulta de SPON ------------------------------
+     * Le os dados do repositorio (fonte publica ou autenticada) sem misturar no estado
+     * operacional. Como o painel de gestao e do gerente, aqui o responsavel APARECE.
+     * --------------------------------------------------------------------------- */
+
+    function openSponLookup() {
+        el('sponLookupInput').value = '';
+        el('sponLookupResult').innerHTML = '<p class="helper-text">Digite o SPON e clique em Consultar.</p>';
+        openModal('modalSponLookup');
+    }
+
+    async function lookupSpon() {
+        const box = el('sponLookupResult');
+        const needle = String(el('sponLookupInput').value || '').trim();
+
+        if (!needle) {
+            box.innerHTML = '<p class="helper-text">Informe o SPON da máquina.</p>';
+            return;
+        }
+
+        box.innerHTML = '<p class="helper-text">Consultando o repositório...</p>';
+
+        try {
+            const bundle = TOTVSGithubSync.isConfigured()
+                ? await TOTVSGithubSync.fetchBundle()
+                : await TOTVSGithubSync.fetchPublishedBundle();
+
+            if (!bundle) {
+                box.innerHTML = '<p class="helper-text">Não foi possível ler os dados do repositório agora.</p>';
+                return;
+            }
+
+            const found = TOTVSStorage.findMachinesInBundle(bundle, needle);
+            if (!found.length) {
+                box.innerHTML = `<p class="helper-text">Nenhuma máquina encontrada para "${needle}".</p>`;
+                return;
+            }
+
+            const state = TOTVSStorage.loadState();
+            const viewer = runtime.currentUser || { role: 'manager' };
+            box.innerHTML = found.slice(0, 10).map((machine) => renderSponDetails(state, machine, viewer)).join('');
+        } catch (error) {
+            box.innerHTML = `<p class="helper-text">Falha na consulta: ${error.message}</p>`;
+        }
+    }
+
+    function sponStatusBadge(machine) {
+        if (machine.swappedAt) return '<span class="badge badge-status-swapped">Trocada</span>';
+        if (machine.hasError || machine.status === 'ERRO') return '<span class="badge badge-status-err">Incidente</span>';
+        if (machine.status === 'AGUARDANDO_CHECKLIST') return '<span class="badge badge-status-check">Aguardando checklist</span>';
+        if (machine.status === 'CONCLUIDO') return '<span class="badge badge-status-done">Concluída</span>';
+        if (machine.status === 'PAUSADO') return '<span class="badge badge-status-pause">Pausado</span>';
+        return '<span class="badge badge-status-wip">Em andamento</span>';
+    }
+
+    function renderSponDetails(state, machine, viewer) {
+        const details = TOTVSStorage.getMachineDetailsForViewer(state, machine, viewer);
+
+        const stepRows = TOTVSStorage.PROCESS_STEPS.map((step) => {
+            const seconds = Number((details.stepDurations || {})[step] || 0);
+            return `
+                <li class="spon-step">
+                    <span>${step}</span>
+                    <span class="font-mono">${seconds > 0 ? formatDuration(seconds) : '--:--:--'}</span>
+                </li>
+            `;
+        }).join('');
+
+        const incident = details.hasError
+            ? `<div class="spon-alert">${(details.errorDetails && details.errorDetails.description) || 'Incidente registrado'}</div>`
+            : '<span class="helper-text">Nenhum problema registrado.</span>';
+
+        const checklist = details.checklist && details.checklist.doneAt
+            ? TOTVSStorage.CHECKLIST_ITEMS
+                .filter((item) => details.checklist[item.key])
+                .map((item) => item.label)
+                .join(' · ')
+            : 'Pendente';
+
+        const timeline = details.timeline.length
+            ? details.timeline.slice(0, 12).map((entry) => `
+                <li>
+                    <span class="font-mono">${TOTVSStorage.formatDateTime(entry.createdAt)}</span>
+                    <span>${entry.action}${entry.note ? ` · ${entry.note}` : ''}</span>
+                    ${entry.actorName ? `<span class="helper-text">por ${entry.actorName}</span>` : ''}
+                </li>
+            `).join('')
+            : '<li class="helper-text">Sem histórico registrado.</li>';
+
+        return `
+            <article class="spon-card">
+                <header class="spon-card-head">
+                    <div>
+                        <strong class="font-mono">${details.hostname}</strong>
+                        <span class="helper-text">${details.brand} · ${details.profile}</span>
+                    </div>
+                    ${sponStatusBadge(machine)}
+                </header>
+                <div class="spon-meta">
+                    <span>Data registrada: ${details.processDate || '--'}</span>
+                    <span>Tempo total: <strong class="font-mono">${formatDuration(details.totalElapsedSeconds)}</strong></span>
+                    <span class="spon-owner">Responsável: <strong>${details.analystName || '--'}</strong></span>
+                </div>
+                <h5>Procedimento por etapa</h5>
+                <ul class="spon-steps">${stepRows}</ul>
+                <h5>Problemas encontrados</h5>
+                ${incident}
+                <h5>Checklist final</h5>
+                <p class="helper-text">${checklist}</p>
+                ${details.notes ? `<h5>Observações</h5><p class="helper-text">${details.notes}</p>` : ''}
+                <h5>Linha do tempo</h5>
+                <ul class="spon-timeline">${timeline}</ul>
+            </article>
+        `;
+    }
+
     function init() {
         loadSession();
         updateClock();
@@ -1642,12 +1881,16 @@
         }
 
         buildAdjustRows();
+        TOTVSGithubSync.init();
+        TOTVSGithubSync.onStatus(renderSyncChip);
         bindActions();
         populateOpsFilterOptions();
         refresh();
         fillAdjustForm(TOTVSRollout.todayKey());
+        renderSyncChip(TOTVSGithubSync.getStatus());
         startLive();
-        pullNow(true);
+        // Vincula automaticamente (se preciso) e depois baixa os dados.
+        bootstrapAutoLink().then(() => pullNow(true));
 
         console.log('TOTVS Field Refresh 2026 - painel de gestao inicializado.');
     }

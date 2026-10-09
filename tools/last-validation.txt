@@ -1,12 +1,12 @@
 ﻿============================================================
  TOTVS FIELD REFRESH 2026 - VALIDACAO
- Data: 08/10/2026 23:52:57
+ Data: 09/10/2026 16:43:06
 ============================================================
 
 [1/3] Verificacao de IDs (JavaScript x HTML)
 ------------------------------------------------------------
 
-Pagina: gestao.html  (74 IDs, 8 script(s))
+Pagina: gestao.html  (87 IDs, 8 script(s))
    - js/vendor/chart.umd.js
    - js/storage.js
    - js/importer-exporter.js
@@ -16,7 +16,7 @@ Pagina: gestao.html  (74 IDs, 8 script(s))
    - js/print-layout.js
    - js/gestao.js
 
-Pagina: index.html  (163 IDs, 8 script(s))
+Pagina: index.html  (197 IDs, 8 script(s))
    - js/storage.js
    - js/importer-exporter.js
    - js/rollout.js
@@ -28,12 +28,12 @@ Pagina: index.html  (163 IDs, 8 script(s))
 
 === TOTVS Field Refresh 2026 :: Verificacao de IDs ===
 Paginas ..........: 2
-IDs distintos ....: 233
-Referencias no JS : 315
+IDs distintos ....: 269
+Referencias no JS : 363
 
 OK: toda referencia de JS aponta para um ID existente na pagina que carrega o script.
 
-Aviso: 27 ID(s) sem uso direto no JS (data-tab, label for, etc):
+Aviso: 45 ID(s) sem uso direto no JS (data-tab, label for, etc):
   - filterBrand
   - filterProfile
   - filterSpon
@@ -41,6 +41,17 @@ Aviso: 27 ID(s) sem uso direto no JS (data-tab, label for, etc):
   - ghSyncCard
   - histFilterFrom
   - histFilterTo
+  - ico-alert
+  - ico-check
+  - ico-clipboard
+  - ico-cloud
+  - ico-gauge
+  - ico-link
+  - ico-list
+  - ico-refresh
+  - ico-report
+  - ico-search
+  - ico-users
   - inputManualStep1
   - inputManualStep2
   - inputManualStep3
@@ -50,8 +61,10 @@ Aviso: 27 ID(s) sem uso direto no JS (data-tab, label for, etc):
   - mgmtSearch
   - mgmtSpon
   - modalBulkEdit
+  - modalChecklist
   - modalPassword
   - modalReports
+  - modalSponLookup
   - modalSync
   - okNew
   - pdNew
@@ -69,7 +82,7 @@ Navegador: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
 ------------------------------------------------------------
 [OK] Servidor local ativo em http://localhost:8765/
 
-Resumo do smoke test: TODOS OS TESTES PASSARAM: 147/147
+Resumo do smoke test: TODOS OS TESTES PASSARAM: 167/167
 [3/3] Carregamento da aplicacao real (app/index.html)
 ------------------------------------------------------------
   [OK  ] Pagina renderizou o titulo TOTVS
@@ -102,6 +115,19 @@ Resumo do smoke test: TODOS OS TESTES PASSARAM: 147/147
   [OK  ] Ordenacao de maquinas presente
   [OK  ] Atalhos de data presentes
   [OK  ] Login com seletor de usuario
+  [OK  ] Chip de sincronizacao no topo
+  [OK  ] Botao Clique para sincronizar
+  [OK  ] Botao de checklist final
+  [OK  ] Modal de checklist presente
+  [OK  ] Checklist: Certificado Microsoft
+  [OK  ] Checklist: Trellix
+  [OK  ] Checklist: Drivers HP
+  [OK  ] Checklist: Windows Update
+  [OK  ] Botao de concluir maquina (checklist)
+  [OK  ] Botao de consultar SPON
+  [OK  ] Modal de consulta de SPON
+  [OK  ] Campo de busca de SPON
+  [OK  ] KPI aguardando checklist
 
 Resultado carregamento: OK
 
@@ -124,6 +150,10 @@ Resultado carregamento: OK
   [OK  ] Historico diario
   [OK  ] Operacao: em andamento
   [OK  ] Operacao: aguardando troca
+  [OK  ] Operacao: aguardando checklist
+  [OK  ] Chip de sincronizacao no topo
+  [OK  ] Botao de consultar SPON
+  [OK  ] Modal de consulta de SPON
   [OK  ] Operacao: incidentes
   [OK  ] Operacao: tempo por etapa
   [OK  ] Operacao: atingimento por analista

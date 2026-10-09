@@ -199,9 +199,17 @@
                 TOTVSStorage.nextMachineStep(target.id, 'user_manager');
             }
             const concluded = TOTVSStorage.loadState().machines.find((m) => m.id === target.id);
-            equal('apos 4 avancos a maquina fica CONCLUIDO', concluded.status, 'CONCLUIDO');
-            equal('ao concluir o cronometro para', concluded.timerRunning, false);
-            ok('ao concluir grava a data de conclusao', Boolean(concluded.completedAt));
+            equal('apos 4 avancos a maquina fica AGUARDANDO_CHECKLIST', concluded.status, 'AGUARDANDO_CHECKLIST');
+            equal('ao aguardar checklist o cronometro para', concluded.timerRunning, false);
+            ok('ao aguardar checklist grava a preparacao', Boolean(concluded.preparedAt));
+            equal('aguardando checklist nao grava conclusao', concluded.completedAt, null);
+
+            TOTVSStorage.completeMachineChecklist(concluded.id, {
+                microsoftCert: true, trellix: true, hpDrivers: true, windowsUpdate: true
+            }, 'user_manager');
+            const finished = TOTVSStorage.loadState().machines.find((m) => m.id === target.id);
+            equal('checklist aprovado conclui a maquina', finished.status, 'CONCLUIDO');
+            ok('ao concluir grava a data de conclusao', Boolean(finished.completedAt));
 
             /* ---------------- Permissoes ---------------- */
             const openMachine = TOTVSStorage.loadState().machines.find(
@@ -523,6 +531,94 @@
                 manualUpsert.updatedItems[0].totalElapsedSeconds, 5 * 60);
             equal('lancamento manual preserva o flag apos atualizar',
                 manualUpsert.updatedItems[0].manualEntry, true);
+
+            /* ---------------- Novo status: aguardando checklist final ---------------- */
+            const finalMachine = TOTVSStorage.createMachines({
+                hostnames: 'SPON010177777',
+                analystId: 'user_isaque',
+                brand: 'HP',
+                profile: 'Local',
+                processDate: '2026-04-01',
+                step: '4 DOMINIO E ARGUS',
+                autoStart: true,
+                manualEntry: false,
+                hasError: false,
+                errorDescription: '',
+                notes: ''
+            }, 'user_manager').createdItems[0];
+
+            TOTVSStorage.nextMachineStep(finalMachine.id, 'user_manager');
+            const awaitingMachine = TOTVSStorage.loadState().machines.find((m) => m.id === finalMachine.id);
+            equal('avancar a ultima etapa cai em AGUARDANDO_CHECKLIST', awaitingMachine.status, 'AGUARDANDO_CHECKLIST');
+            equal('maquina aguardando checklist tem preparedAt', Boolean(awaitingMachine.preparedAt), true);
+            equal('maquina aguardando checklist nao tem completedAt', awaitingMachine.completedAt, null);
+            ok('isStepFinished reconhece as duas sentinelas',
+                TOTVSStorage.isStepFinished('CONCLUIDO') && TOTVSStorage.isStepFinished('AGUARDANDO_CHECKLIST'));
+
+            throws('checklist incompleto e recusado',
+                () => TOTVSStorage.completeMachineChecklist(finalMachine.id, { microsoftCert: true }, 'user_manager'),
+                'todos os itens');
+
+            const doneMachine = TOTVSStorage.completeMachineChecklist(finalMachine.id, {
+                microsoftCert: true, trellix: true, hpDrivers: true, windowsUpdate: true
+            }, 'user_manager');
+            equal('checklist completo conclui a maquina', doneMachine.status, 'CONCLUIDO');
+            equal('checklist grava doneAt', Boolean(doneMachine.checklist.doneAt), true);
+            equal('checklist grava o autor', doneMachine.checklist.doneBy, 'user_manager');
+
+            throws('checklist em maquina ja concluida e recusado',
+                () => TOTVSStorage.completeMachineChecklist(finalMachine.id, {
+                    microsoftCert: true, trellix: true, hpDrivers: true, windowsUpdate: true
+                }, 'user_manager'),
+                'aguardando checklist final');
+
+            /* ---------------- Filtros do novo status ---------------- */
+            const awaitingFiltered = TOTVSFilters.applyFilters(
+                [awaitingMachine, doneMachine, { id: 'x', status: 'EM_ANDAMENTO', analystId: 'user_isaque', hostname: 'H' }],
+                { status: 'AGUARDANDO_CHECKLIST' },
+                {}
+            );
+            equal('filtro de aguardando checklist isola o status', awaitingFiltered.length, 1);
+
+            /* ---------------- Consulta de SPON (visibilidade) ---------------- */
+            const lookupBundle = {
+                general: {
+                    records: [{
+                        id: 'spon_lookup_1',
+                        hostname: 'SPON010155555',
+                        analystId: 'user_isaque',
+                        status: 'CONCLUIDO',
+                        currentStep: 'CONCLUIDO',
+                        stepDurations: {},
+                        history: [{
+                            action: 'next_step', actorId: 'user_isaque', note: 'CONCLUIDO',
+                            createdAt: '2026-01-01T00:00:00.000Z'
+                        }],
+                        updatedAt: '2026-01-01T00:00:00.000Z'
+                    }]
+                },
+                analysts: [], users: null, management: null
+            };
+            equal('consulta encontra a maquina pelo SPON', TOTVSStorage.findMachinesInBundle(lookupBundle, '0155').length, 1);
+
+            const viewerState = TOTVSStorage.loadState();
+            const viewerManager = TOTVSStorage.getUserById(viewerState, 'user_manager');
+            const viewerAnalyst = TOTVSStorage.getUserById(viewerState, 'user_isaque');
+            const lookupMachine = lookupBundle.general.records[0];
+            ok('gerente ve o responsavel na consulta',
+                Boolean(TOTVSStorage.getMachineDetailsForViewer(viewerState, lookupMachine, viewerManager).analystName));
+            equal('analista NAO ve o responsavel na consulta',
+                TOTVSStorage.getMachineDetailsForViewer(viewerState, lookupMachine, viewerAnalyst).analystName, null);
+            equal('analista NAO ve o autor na linha do tempo',
+                TOTVSStorage.getMachineDetailsForViewer(viewerState, lookupMachine, viewerAnalyst).timeline[0].actorName, null);
+            ok('gerente ve o autor na linha do tempo',
+                Boolean(TOTVSStorage.getMachineDetailsForViewer(viewerState, lookupMachine, viewerManager).timeline[0].actorName));
+
+            /* ---------------- Vinculacao automatica (defaults) ---------------- */
+            const defaults = TOTVSGithubSync.getDefaultConfig();
+            equal('config padrao aponta para o repositorio do projeto',
+                defaults.owner + '/' + defaults.repo, 'isaque-medeiros/Refresh-Totvs-2026');
+            equal('config padrao usa a branch main', defaults.branch, 'main');
 
             /* ---------------- Leitura publica com manifest desatualizado ---------------- */
             const realPublishedFetch = window.fetch;

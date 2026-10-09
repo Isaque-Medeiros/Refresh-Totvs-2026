@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TOTVS Field Refresh 2026 | DB4 Serv</title>
+    <link rel="icon" type="image/png" href="assets/totvs-app-icon.png">
+    <link rel="apple-touch-icon" href="assets/totvs-app-icon.png">
+    <link rel="preload" as="image" href="assets/totvs-logo-print.png">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,10 +15,25 @@
 <body class="totvs-theme">
     <div class="background-glow"></div>
 
+    <!-- Iconografia inline (offline, sem dependencia externa) -->
+    <svg class="icon-sprite" aria-hidden="true" focusable="false">
+        <symbol id="ico-cloud" viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6 9.5A3.5 3.5 0 0 0 7 18Z"/></symbol>
+        <symbol id="ico-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></symbol>
+        <symbol id="ico-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14-4L4 9"/><path d="M4 5v4h4"/><path d="M4 13a8 8 0 0 0 14 4l2-2"/><path d="M20 19v-4h-4"/></symbol>
+        <symbol id="ico-clipboard" viewBox="0 0 24 24"><path d="M9 4h6v3H9z"/><path d="M8 6H6v14h12V6h-2"/><path d="M9 12l2 2 4-4"/></symbol>
+        <symbol id="ico-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></symbol>
+        <symbol id="ico-gauge" viewBox="0 0 24 24"><path d="M4 18a8 8 0 1 1 16 0"/><path d="M12 18l4-6"/></symbol>
+        <symbol id="ico-report" viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></symbol>
+        <symbol id="ico-check" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></symbol>
+        <symbol id="ico-alert" viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/></symbol>
+        <symbol id="ico-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 6a3 3 0 0 1 0 6M21 20a5 5 0 0 0-4-4.9"/></symbol>
+        <symbol id="ico-list" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+    </svg>
+
     <section class="login-shell" id="loginView">
         <div class="login-panel">
-            <div class="brand-logo-badge">
-                <span class="logo-totvs">TOTVS</span>
+            <div class="brand-logo-badge brand-logo-badge-hero">
+                <img class="brand-logo-wordmark" src="assets/totvs-logo-light.png" alt="TOTVS" width="220" height="52">
                 <span class="logo-tag">REFRESH 2026</span>
             </div>
 
@@ -49,8 +67,11 @@
         <header class="app-header">
             <div class="header-brand">
                 <div class="brand-logo-badge">
-                    <span class="logo-totvs">TOTVS</span>
-                    <span class="logo-tag">REFRESH 2026</span>
+                    <img class="brand-logo-img" src="assets/totvs-app-icon.png" alt="TOTVS" width="40" height="40">
+                    <div class="brand-logo-text">
+                        <span class="logo-totvs">TOTVS</span>
+                        <span class="logo-tag">REFRESH 2026</span>
+                    </div>
                 </div>
                 <div class="brand-meta">
                     <h1>Painel Operacional Field Service</h1>
@@ -61,6 +82,15 @@
             </div>
 
             <div class="header-widgets">
+                <div class="sync-chip is-pending" id="syncChip" role="status" aria-live="polite">
+                    <span class="sync-chip-dot" aria-hidden="true"></span>
+                    <div class="sync-chip-copy">
+                        <strong data-sync-label>Verificando vínculo...</strong>
+                        <span data-sync-detail>Nenhum envio ainda</span>
+                    </div>
+                    <button type="button" class="btn btn-outline btn-xs hidden" id="btnSyncRetry">Clique para sincronizar</button>
+                </div>
+
                 <div class="clock-card">
                     <span class="clock-label">Horário Local</span>
                     <span class="clock-time" id="localLiveClock">--:--:--</span>
@@ -74,11 +104,23 @@
                 </div>
 
                 <div class="header-actions">
-                    <button class="btn btn-primary manager-only" id="btnOpenManagement">Painel de Gestão</button>
-                    <button class="btn btn-secondary" id="btnOpenPasswordModal">Senhas</button>
-                    <button class="btn btn-secondary" id="btnOpenSyncModal">Sync / Exportar</button>
-                    <button class="btn btn-primary" id="btnOpenReports">Dashboard & Relatórios</button>
-                    <button class="btn btn-outline" id="btnLogout">Sair</button>
+                    <button class="btn btn-primary manager-only" id="btnOpenManagement">
+                        <svg class="ico" aria-hidden="true"><use href="#ico-gauge"></use></svg>Painel de Gestão
+                    </button>
+                    <button class="btn btn-secondary" id="btnOpenChecklist">
+                        <svg class="ico" aria-hidden="true"><use href="#ico-clipboard"></use></svg>Checklist Final
+                    </button>
+                    <button class="btn btn-secondary" id="btnOpenSponLookup">
+                        <svg class="ico" aria-hidden="true"><use href="#ico-search"></use></svg>Consultar SPON
+                    </button>
+                    <button class="btn btn-secondary" id="btnOpenReports">
+                        <svg class="ico" aria-hidden="true"><use href="#ico-report"></use></svg>Dashboard & Relatórios
+                    </button>
+                    <button class="btn btn-outline" id="btnOpenSyncModal">
+                        <svg class="ico" aria-hidden="true"><use href="#ico-cloud"></use></svg>Sync / Exportar
+                    </button>
+                    <button class="btn btn-outline" id="btnOpenPasswordModal">Senhas</button>
+                    <button class="btn btn-ghost" id="btnLogout">Sair</button>
                 </div>
             </div>
         </header>
@@ -107,8 +149,11 @@
 
                 <article class="hero-card">
                     <span class="section-eyebrow">Sincronização</span>
-                    <h3>Modo estático pronto para GitHub</h3>
-                    <p>Exporte os arquivos gerais e individuais para publicar manualmente quando precisar.</p>
+                    <h3>Vínculo automático com o GitHub</h3>
+                    <p>
+                        O sistema se vincula e envia os dados sozinho. O indicador no topo mostra
+                        se a máquina está vinculada; se não estiver, use “Clique para sincronizar”.
+                    </p>
                 </article>
             </section>
 
@@ -151,8 +196,20 @@
 
                 <div class="kpi-card">
                     <div class="kpi-header">
-                        <span>Incidentes</span>
+                        <span>Aguardando checklist</span>
                         <span class="kpi-icon">04</span>
+                    </div>
+                    <div class="kpi-body">
+                        <span class="kpi-value text-cyan" id="kpiAwaitingMachines">0</span>
+                        <span class="kpi-sub" id="kpiAwaitingSub">0 pendente(s) de revisão final</span>
+                    </div>
+                    <div class="kpi-progress"><div class="kpi-progress-bar bg-cyan" id="kpiBarAwaiting"></div></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>Incidentes</span>
+                        <span class="kpi-icon">05</span>
                     </div>
                     <div class="kpi-body">
                         <span class="kpi-value text-red" id="kpiErrorMachines">0</span>
@@ -260,7 +317,8 @@
                                 <option value="2 WINDOWS UPDATE">2. WINDOWS UPDATE</option>
                                 <option value="3 ATIVAR ADM E SUBIR DRIVERS">3. ATIVAR ADM E SUBIR DRIVERS</option>
                                 <option value="4 DOMINIO E ARGUS">4. DOMINIO E ARGUS</option>
-                                <option value="CONCLUIDO">CONCLUIDO</option>
+                                <option value="AGUARDANDO_CHECKLIST">Aguardando checklist final</option>
+                                <option value="CONCLUIDO">Concluído (checklist aprovado)</option>
                             </select>
                         </div>
 
@@ -735,7 +793,8 @@
                             <option value="2 WINDOWS UPDATE">2. WINDOWS UPDATE</option>
                             <option value="3 ATIVAR ADM E SUBIR DRIVERS">3. ATIVAR ADM E SUBIR DRIVERS</option>
                             <option value="4 DOMINIO E ARGUS">4. DOMINIO E ARGUS</option>
-                            <option value="CONCLUIDO">CONCLUIDO</option>
+                            <option value="AGUARDANDO_CHECKLIST">Aguardando checklist final</option>
+                            <option value="CONCLUIDO">Concluído (checklist aprovado)</option>
                         </select>
                     </div>
 
@@ -772,6 +831,94 @@
             <div class="modal-footer">
                 <button class="btn btn-primary" id="btnApplyBulkEdit">Aplicar em lote</button>
                 <button class="btn btn-secondary" data-close-modal="modalBulkEdit">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="modalChecklist">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h3>Checklist final</h3>
+                </div>
+                <button class="btn-close" data-close-modal="modalChecklist">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="search-box checklist-search">
+                    <svg class="ico" aria-hidden="true"><use href="#ico-search"></use></svg>
+                    <input type="text" id="checklistSponSearch" class="form-control font-mono text-uppercase" placeholder="Pesquisar SPON da máquina" aria-label="Pesquisar SPON">
+                    <button type="button" class="btn btn-primary" id="btnChecklistSearch">Buscar</button>
+                </div>
+
+                <div class="checklist-result" id="checklistResult">
+                    <p class="helper-text">Digite o SPON da máquina para consultar.</p>
+                </div>
+
+                <div class="checklist-panel hidden" id="checklistPanel">
+                    <div class="checklist-panel-head">
+                        <span class="section-eyebrow">Revisão final</span>
+                        <strong class="font-mono" id="checklistMachineLabel">--</strong>
+                    </div>
+                    <p class="helper-text">Marque os 4 itens conferidos para liberar a conclusão da máquina.</p>
+
+                    <div class="checklist-items">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="chkCertMicrosoft">
+                            <span class="checkmark"></span>
+                            <span class="checkbox-text">Certificado Microsoft</span>
+                        </label>
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="chkTreillix">
+                            <span class="checkmark"></span>
+                            <span class="checkbox-text">Trellix</span>
+                        </label>
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="chkHpDrivers">
+                            <span class="checkmark"></span>
+                            <span class="checkbox-text">Drivers HP</span>
+                        </label>
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="chkWindowsUpdate">
+                            <span class="checkmark"></span>
+                            <span class="checkbox-text">Windows Update</span>
+                        </label>
+                    </div>
+
+                    <p class="helper-text" id="checklistMsg">Marque os 4 itens para liberar o envio.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="btnSubmitChecklist" disabled>Concluir máquina</button>
+                <button type="button" class="btn btn-secondary" data-close-modal="modalChecklist">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="modalSponLookup">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h3>Consultar SPON</h3>
+                </div>
+                <button class="btn-close" data-close-modal="modalSponLookup">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="helper-text">
+                    Procedimento realizado, problemas encontrados e tempo por etapa.
+                    O responsável aparece apenas para o gerente.
+                </p>
+                <div class="search-box checklist-search">
+                    <svg class="ico" aria-hidden="true"><use href="#ico-search"></use></svg>
+                    <input type="text" id="sponLookupInput" class="form-control font-mono text-uppercase" placeholder="Digite o SPON (ex: SPON010132303)" aria-label="SPON para consulta">
+                    <button type="button" class="btn btn-primary" id="btnSponLookup">Consultar</button>
+                </div>
+
+                <div class="spon-result" id="sponLookupResult">
+                    <p class="helper-text">Digite o SPON e clique em Consultar.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-close-modal="modalSponLookup">Fechar</button>
             </div>
         </div>
     </div>

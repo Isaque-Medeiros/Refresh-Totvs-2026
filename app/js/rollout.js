@@ -74,7 +74,11 @@ const TOTVSRollout = (() => {
      * -------------------------------------------------------------------- */
 
     function isPrepared(machine) {
-        return Boolean(machine) && (machine.status === 'CONCLUIDO' || Boolean(machine.preparedAt));
+        return Boolean(machine) && (
+            machine.status === 'CONCLUIDO'
+            || machine.status === 'AGUARDANDO_CHECKLIST'
+            || Boolean(machine.preparedAt)
+        );
     }
 
     function officialPrepDateKey(machine) {

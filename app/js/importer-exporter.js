@@ -14,6 +14,18 @@ const TOTVSImporterExporter = (() => {
         return TOTVSStorage.getAnalystName(state, machine.analystId);
     }
 
+    // Resumo do checklist final: vazio quando ainda nao foi aprovado.
+    function checklistSummary(machine) {
+        const checklist = machine && machine.checklist;
+        if (!checklist || !checklist.doneAt) {
+            return '';
+        }
+        return TOTVSStorage.CHECKLIST_ITEMS
+            .filter((item) => checklist[item.key])
+            .map((item) => item.label)
+            .join(' / ');
+    }
+
     function exportToTSV(state, machines) {
         const headers = [
             'Data',
@@ -31,6 +43,7 @@ const TOTVSImporterExporter = (() => {
             'Possui Erro',
             'Descricao Erro',
             'Observacoes',
+            'Checklist Final',
             'Atualizado Em'
         ];
 
@@ -50,6 +63,7 @@ const TOTVSImporterExporter = (() => {
             machine.hasError ? 'SIM' : 'NAO',
             machine.errorDetails ? (machine.errorDetails.description || '') : '',
             (machine.notes || '').replace(/\t|\r?\n/g, ' '),
+            checklistSummary(machine),
             TOTVSStorage.formatDateTime(machine.updatedAt)
         ].join('\t'));
 
@@ -62,6 +76,7 @@ const TOTVSImporterExporter = (() => {
             : machines.filter((machine) => machine.analystId === selectedAnalystId);
 
         const done = filtered.filter((machine) => machine.status === 'CONCLUIDO').length;
+        const awaiting = filtered.filter((machine) => machine.status === 'AGUARDANDO_CHECKLIST').length;
         const wip = filtered.filter((machine) => machine.status === 'EM_ANDAMENTO').length;
         const paused = filtered.filter((machine) => machine.status === 'PAUSADO').length;
         const errors = filtered.filter((machine) => machine.hasError || machine.status === 'ERRO').length;
@@ -75,6 +90,7 @@ const TOTVSImporterExporter = (() => {
         text += `• Total: *${filtered.length}*\n`;
         text += `• Em andamento: *${wip}*\n`;
         text += `• Concluidas: *${done}*\n`;
+        text += `• Aguardando checklist: *${awaiting}*\n`;
         text += `• Pausadas: *${paused}*\n`;
         text += `• Incidentes: *${errors}*\n`;
         text += `--------------------------------------------------\n\n`;
@@ -89,6 +105,9 @@ const TOTVSImporterExporter = (() => {
             text += `   Data: ${machine.processDate || '--'}\n`;
             text += `   Etapa: ${machine.currentStep}\n`;
             text += `   Status: ${machine.status}\n`;
+            if (machine.checklist && machine.checklist.doneAt) {
+                text += `   Checklist final: ${checklistSummary(machine)}\n`;
+            }
             text += `   Tempo total: ${formatTimeFriendly(machine.totalElapsedSeconds)}\n`;
             text += `   BIOS: ${formatTimeFriendly(machine.stepDurations['1 FORMATAÇÃO E BIOS'])}\n`;
             text += `   Windows Update: ${formatTimeFriendly(machine.stepDurations['2 WINDOWS UPDATE'])}\n`;
@@ -196,6 +215,7 @@ const TOTVSImporterExporter = (() => {
         buildGeneralExport,
         buildUserExport,
         buildUsersExport,
+        checklistSummary,
         downloadJson,
         exportToTSV,
         exportToWhatsAppReport,

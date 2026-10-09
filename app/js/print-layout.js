@@ -27,7 +27,7 @@ const TOTVSPrintLayout = (() => {
         return `
             <header class="print-head">
                 <div class="print-brand">
-                    <span class="print-logo">TOTVS</span>
+                    <img class="print-logo-img" src="assets/totvs-logo-print.png" alt="TOTVS">
                     <span class="print-logo-tag">REFRESH 2026</span>
                 </div>
                 <div class="print-head-text">
