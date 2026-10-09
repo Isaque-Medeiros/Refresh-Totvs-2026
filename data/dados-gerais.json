@@ -1,6 +1,6 @@
 {
   "version": "3.0.0",
-  "exportedAt": "2026-10-09T16:09:40.450Z",
+  "exportedAt": "2026-10-09T16:11:50.885Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -50,26 +50,26 @@
     }
   },
   "summary": {
-    "total": 63,
-    "doneCount": 61,
+    "total": 64,
+    "doneCount": 62,
     "wipCount": 0,
     "pausedCount": 2,
     "errorCount": 0,
     "successRate": "100",
-    "globalPercent": "6.1",
-    "avgTimeString": "01h 59m 34s",
-    "manualCount": 47,
+    "globalPercent": "6.2",
+    "avgTimeString": "01h 59m 10s",
+    "manualCount": 48,
     "stepAvgTimes": {
-      "1 FORMATAÇÃO E BIOS": "50m 03s",
-      "2 WINDOWS UPDATE": "28m 04s",
-      "3 ATIVAR ADM E SUBIR DRIVERS": "23m 01s",
-      "4 DOMINIO E ARGUS": "17m 34s"
+      "1 FORMATAÇÃO E BIOS": "49m 53s",
+      "2 WINDOWS UPDATE": "28m 01s",
+      "3 ATIVAR ADM E SUBIR DRIVERS": "22m 58s",
+      "4 DOMINIO E ARGUS": "17m 27s"
     },
     "stepAvgSeconds": {
-      "1 FORMATAÇÃO E BIOS": 3003,
-      "2 WINDOWS UPDATE": 1684,
-      "3 ATIVAR ADM E SUBIR DRIVERS": 1381,
-      "4 DOMINIO E ARGUS": 1054
+      "1 FORMATAÇÃO E BIOS": 2993,
+      "2 WINDOWS UPDATE": 1681,
+      "3 ATIVAR ADM E SUBIR DRIVERS": 1378,
+      "4 DOMINIO E ARGUS": 1047
     },
     "analystStats": [
       {
@@ -95,12 +95,12 @@
       {
         "analystId": "user_guilherme",
         "name": "Guilherme",
-        "total": 16,
-        "done": 14,
+        "total": 17,
+        "done": 15,
         "wip": 0,
         "paused": 2,
         "errors": 0,
-        "goalPercent": "5.6"
+        "goalPercent": "6.0"
       },
       {
         "analystId": "user_davi",
@@ -116,6 +116,48 @@
     "errorList": []
   },
   "records": [
+    {
+      "id": "nb_1791562307910_e4owai",
+      "datasetId": "dataset_principal",
+      "hostname": "SPON010132271",
+      "analystId": "user_guilherme",
+      "brand": "HP",
+      "profile": "Local",
+      "processDate": "2026-10-09",
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
+      "stepDurations": {
+        "1 FORMATAÇÃO E BIOS": 2400,
+        "2 WINDOWS UPDATE": 1500,
+        "3 ATIVAR ADM E SUBIR DRIVERS": 1200,
+        "4 DOMINIO E ARGUS": 600
+      },
+      "totalElapsedSeconds": 5700,
+      "hasError": false,
+      "errorDetails": null,
+      "notes": "",
+      "manualEntry": true,
+      "manualEntryBy": "user_manager",
+      "manualEntryAt": "2026-10-09T16:11:47.910Z",
+      "history": [
+        {
+          "action": "machine_created_manual",
+          "actorId": "user_manager",
+          "note": "Lançamento manual com tempo digitado",
+          "createdAt": "2026-10-09T16:11:47.910Z"
+        }
+      ],
+      "currentStepStartedAt": "2026-10-09T16:11:47.910Z",
+      "lastTickAt": null,
+      "createdAt": "2026-10-09T16:11:47.910Z",
+      "updatedAt": "2026-10-09T16:11:47.910Z",
+      "completedAt": "2026-10-09T16:11:47.910Z",
+      "preparedAt": "2026-10-09T16:11:47.910Z",
+      "swappedAt": null,
+      "swappedBy": null
+    },
     {
       "id": "nb_1791562177446_u8bwni",
       "datasetId": "dataset_principal",
@@ -4400,8 +4442,8 @@
       "username": "guilherme",
       "displayName": "Guilherme",
       "file": "data/analistas/guilherme.json",
-      "records": 16,
-      "updatedAt": "2026-10-09T16:09:37.446Z"
+      "records": 17,
+      "updatedAt": "2026-10-09T16:11:47.910Z"
     },
     {
       "id": "user_davi",
