@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-09T17:33:24.670Z",
+  "exportedAt": "2026-10-09T17:54:54.479Z",
   "organization": {
     "appName": "TOTVS Field Refresh 2026",
     "signature": "DB4 Serv for Totvs by Isaque de Medeiros",
@@ -14,25 +14,25 @@
   },
   "summary": {
     "total": 15,
-    "doneCount": 13,
-    "wipCount": 2,
+    "doneCount": 14,
+    "wipCount": 1,
     "pausedCount": 0,
     "errorCount": 0,
     "successRate": "100",
-    "globalPercent": "1.3",
-    "avgTimeString": "02h 07m 20s",
+    "globalPercent": "1.4",
+    "avgTimeString": "02h 07m 30s",
     "manualCount": 11,
     "stepAvgTimes": {
       "1 FORMATAÇÃO E BIOS": "48m 39s",
       "2 WINDOWS UPDATE": "30m 48s",
       "3 ATIVAR ADM E SUBIR DRIVERS": "27m 21s",
-      "4 DOMINIO E ARGUS": "17m 39s"
+      "4 DOMINIO E ARGUS": "20m 31s"
     },
     "stepAvgSeconds": {
       "1 FORMATAÇÃO E BIOS": 2919,
       "2 WINDOWS UPDATE": 1848,
       "3 ATIVAR ADM E SUBIR DRIVERS": 1641,
-      "4 DOMINIO E ARGUS": 1059
+      "4 DOMINIO E ARGUS": 1231
     },
     "analystStats": [
       {
@@ -59,11 +59,11 @@
         "analystId": "user_guilherme",
         "name": "Guilherme",
         "total": 15,
-        "done": 13,
-        "wip": 2,
+        "done": 14,
+        "wip": 1,
         "paused": 0,
         "errors": 0,
-        "goalPercent": "5.2"
+        "goalPercent": "5.6"
       },
       {
         "analystId": "user_davi",
@@ -95,9 +95,9 @@
         "1 FORMATAÇÃO E BIOS": 2097,
         "2 WINDOWS UPDATE": 1674,
         "3 ATIVAR ADM E SUBIR DRIVERS": 2422,
-        "4 DOMINIO E ARGUS": 1
+        "4 DOMINIO E ARGUS": 1290
       },
-      "totalElapsedSeconds": 6194,
+      "totalElapsedSeconds": 7483,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -155,9 +155,9 @@
         }
       ],
       "currentStepStartedAt": "2026-10-09T17:33:23.162Z",
-      "lastTickAt": "2026-10-09T17:33:24.669Z",
+      "lastTickAt": "2026-10-09T17:54:54.478Z",
       "createdAt": "2026-10-09T14:07:41.470Z",
-      "updatedAt": "2026-10-09T17:33:24.669Z",
+      "updatedAt": "2026-10-09T17:54:54.478Z",
       "completedAt": null,
       "preparedAt": null,
       "swappedAt": null,
@@ -171,17 +171,17 @@
       "brand": "HP",
       "profile": "Local",
       "processDate": "2026-10-09",
-      "currentStep": "4 DOMINIO E ARGUS",
-      "currentStepIndex": 3,
-      "status": "EM_ANDAMENTO",
-      "timerRunning": true,
+      "currentStep": "CONCLUIDO",
+      "currentStepIndex": 4,
+      "status": "CONCLUIDO",
+      "timerRunning": false,
       "stepDurations": {
         "1 FORMATAÇÃO E BIOS": 1910,
         "2 WINDOWS UPDATE": 1682,
         "3 ATIVAR ADM E SUBIR DRIVERS": 1625,
-        "4 DOMINIO E ARGUS": 1278
+        "4 DOMINIO E ARGUS": 2566
       },
-      "totalElapsedSeconds": 6495,
+      "totalElapsedSeconds": 7783,
       "hasError": false,
       "errorDetails": null,
       "notes": "",
@@ -189,6 +189,12 @@
       "manualEntryBy": null,
       "manualEntryAt": null,
       "history": [
+        {
+          "action": "next_step",
+          "actorId": "user_guilherme",
+          "note": "CONCLUIDO",
+          "createdAt": "2026-10-09T17:54:52.968Z"
+        },
         {
           "action": "next_step",
           "actorId": "user_guilherme",
@@ -239,11 +245,11 @@
         }
       ],
       "currentStepStartedAt": "2026-10-09T17:12:05.477Z",
-      "lastTickAt": "2026-10-09T17:33:24.669Z",
+      "lastTickAt": null,
       "createdAt": "2026-10-09T14:02:37.985Z",
-      "updatedAt": "2026-10-09T17:33:24.669Z",
-      "completedAt": null,
-      "preparedAt": null,
+      "updatedAt": "2026-10-09T17:54:52.968Z",
+      "completedAt": "2026-10-09T17:54:52.968Z",
+      "preparedAt": "2026-10-09T17:54:52.968Z",
       "swappedAt": null,
       "swappedBy": null
     },
